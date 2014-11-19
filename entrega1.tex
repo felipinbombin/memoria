@@ -1,0 +1,304 @@
+\documentclass[itshape,12pt]{article}
+\usepackage[spanish]{babel} % hace que, entre otras, el rompimiento de palabras se haga de acuerdo a las reglas del español
+\selectlanguage{spanish}
+\usepackage[utf8]{inputenc} % Incluye caracteres con tilde
+
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{dsfont}
+
+\usepackage{graphicx}   % permite insertar figuras
+\usepackage{fancyhdr}   % para encabezado y pie de pagina
+\usepackage{listings}   % para escribir código
+%\usepackage{hyperref}   % crea links en el indice y notas al pie.
+\usepackage{float}      % permite dejar las imagenes es una posición fija   
+
+%\usepackage{anysize}   % Permite emplear cualquier medida de márgenes.
+%\marginsize{3cm}{2cm}{3cm}{2cm} % Controla los márgenes {izquierda}{derecha}{arriba}{abajo}. 
+
+\pagestyle{fancy}
+
+%\lhead{Introducción al trabajo de titulo}
+\chead{CC6908}
+\rhead{}%\includegraphics[width=30pt]{./images/LogoDCC.png}}
+
+\usepackage{enumerate}
+\usepackage{amsfonts} % para letras que representan conj numericos (R,Z,N,....)
+
+    \usepackage{setspace} % para controlar el interlineado
+
+    \newcommand*{\firma}[6]{
+        \noindent\makebox[1.5in]{\hrulefill}
+        \hfill\makebox[1.5in]{\hrulefill}
+        \hfill\makebox[1.5in]{\hrulefill}
+        \noindent\makebox[1.5in][l]{#1}\hfill
+            \noindent\makebox[1.5in][l]{#3}\hfill
+            \noindent\makebox[1.5in][l]{#5}\hfill
+            \noindent\makebox[1.5in][l]{#2}\hfill
+            \noindent\makebox[1.5in][l]{#4}\hfill
+            \noindent\makebox[1.5in][l]{#6}\hfill
+            \noindent\makebox[1.5in][l]{}\hfill
+            \noindent\makebox[1.5in][l]{}\hfill
+            \noindent\makebox[1.5in][l]{fhernand@dcc.uchile.cl}\hfill
+            \noindent\makebox[1.5in][l]{}\hfill
+            \noindent\makebox[1.5in][l]{}\hfill
+            \noindent\makebox[1.5in][l]{09-90977379}\hfill
+    }
+
+\begin{document}
+
+\renewcommand{\tablename}{Tabla} % Cambia la palabra cuadro por Tabla cuando se introducen tablas
+\renewcommand{\listtablename}{Índice de tablas} % Cambia titulo de indice de tabla
+%================================================================================================================
+\begin{titlepage}
+\vspace{2cm}
+\begin{center}
+{\large
+    UNIVERSIDAD DE CHILE
+        \\[0.5cm]
+        Facultad de Ciencias Físicas y Matemáticas
+        \\[0.5cm]
+        Departamento de ciencias de la computación
+        \\[0.5cm]
+        CC6908 Introducción al trabajo de titulo
+        \\[0.5cm]
+}
+\end{center}
+% Imagen de la portada
+\begin{figure}[h] %[h] para here [b] para bottom [t] para top
+\makebox[\textwidth]{\includegraphics[width=300pt]{./images/LogoFCFM.jpg}}
+\end{figure}
+\begin{center}
+{\bf \huge \it Visualización de estructuras espaciales de desplazamiento a partir de datos de transporte público}
+\\[1.0cm]
+\today
+\\[2.2cm]
+\firma{Profesor Guía:}{Marcela Munizaga}
+{Profesor Co-guía:}{Benjamín Bustos}
+{Memorista:}{Felipe A. Hernández G.}
+\end{center}
+%\vspace*{\hfill
+
+    \begin{center}
+          Semestre: 02/2014\\
+          {\large \sc {\large Santiago de Chile}}
+          \end{center}
+          \end{titlepage}
+
+          \newpage
+              %================================================================================================================
+              \tableofcontents   % Indice
+
+              %\listoftables % Indice de tablas
+
+              %\listoffigures   % Indice de figuras
+
+              \pagenumbering{roman} % las páginas correspondientes al índice serán enumeradas con números romanos
+              \newpage
+
+              \pagenumbering{arabic}
+
+
+          \newpage
+              %================================================================================================================
+              \section{Introducción}
+
+          %\linespread{1.7}\selectfont
+
+              En los últimos años la utilización de tecnología en el transporte público ha ido en aumento debido a varios factores, mayor regulación, usuarios más exigentes, aumento en seguridad, etc. Lo anterior ha llevado al sistema público de transporte a implantar diversos dispositivos que permiten controlar los aspectos mas relevantes al momento de transportar una persona de un punto a otro.
+
+              Dentro de las tecnologías más usadas podemos nombrar AVL (Automatic Vehicle Location), que permite conocer la posición geográfica de un vehículo en todo momento con un margen de error bajo y los sistemas AFC (Automated Fare Collection) que automatizan el proceso de pago, en particular, nos interesa el basado en tarjetas de pago, que albergan un chip que permite mantener un saldo para que sea utilizado al abordar un bus, esto implica la existencia (paralelamente) de dispositivos asociados a los buses o paraderos\footnote{Lugar físico donde un bus de transporte público se detiene para que personas ingresen y/o desciendan a el.} que permitan registrar el correcto descuento del valor asociado al pasaje, concepto que llamaremos validación.
+              % hablar de los APC (Automatic passenger counting)
+
+              Transantiago\footnote{fue implementado a partir del año 2007.} es el sistema de transporte público de Santiago de Chile que implementa las tecnologías nombradas anteriormente, por lo que hoy en día se sabe que se realizan aproximadamente 6.000.000 de validaciones durante un día laboral\footnote{Lunes, martes, miércoles, jueves o viernes.}, lo que genera una cifra cercana a los 35.000.000 de transacciones a la semana (incluyendo sábado y domingo) con aproximadamente 3.000.000 de tarjetas de pago. Por otro lado, hay 80.000.000 de emisiones proveniente de la tecnología AVL del sistema. Al procesar estos datos en conjunto es posible identificar el paradero de origen, recorrido utilizado para desplazarse y el paradero de destino, este último requiere un procesamiento adicional basado en una metodología desarrollada por Munizaga y Palma \cite{Procesamiento_datos} que logra una identificación acertada en el 80\% de las validaciones.
+
+              La estructura espacial moderna de las ciudades ha sido formada, en gran medida, por avances en transporte y comunicaciones \cite{Forma_ciudad_moderna}. La forma en la cual se mueven los habitantes de una ciudad ha ido modificando la estructura de esta, motivados por la transferencia de recursos como materiales, dinero, personas e información. Considerando una persona como un transportador de recursos de un área urbana a otra es que se identifican las siguientes estructuras espaciales urbanas \cite{Estructura_urbana}:
+
+              \begin{itemize}
+          \item Centros de flujo: Se refiere a las áreas que sirven para conectar otro par de áreas para transferencia de personas. Funcionan como puentes espaciales entre distintas áreas.
+              \item Centros: Se refiere a áreas que concentran personas. Pueden diferir de los Centros de flujo, pero a menudo, son lo mismo.
+              \item Bordes: Se refiere a límites socioeconómicos generados a partir de la agrupación de paraderos que divide la ciudad en pequeños barrios que llamamos comunidades.
+              \end{itemize}
+
+          %hablar a quien va dirigido la visualización. Personas de áreas que no se realacionan directamente con la computación. Gente de arquitectura y urbanismo.
+              % mencionar que el objetivo de la visualización es comunicar información.
+
+              Lo anterior se enmarca en la necesidad de comunicar esta información a personas sin una formación ingenieril dado que es un proyecto que abarcará muchos campos de investigación, como lo es la arquitectura o planificación urbana, por lo que es necesario transmitir datos de forma clara y concisa.
+
+              De todo lo relatado podemos ver que hoy en día el sistema de transporte público de Santiago cuenta con una gran cantidad de datos pasivos por lo que existe una gran base de datos que mantiene un potencial de información que puede mejorar la planificación y operación del sistema, además de tener la potencialidad de detectar otras necesidades. Sin embargo, con las capacidades de procesamiento actuales no es posible obtener información que complemente los resultados de los indicadores usados actualmente.
+
+              Según lo anterior, el problema que se busca resolver en esta memoria es interesante de abordar debido a que ayudará a entender la estructura espacial de los viajes realizados por la población y permitirá diseñar servicios pensando en las necesidades observadas de los usuarios. Esto ayudará a:
+
+              \begin{itemize}
+          \item Mejorar las posibilidades de realizar actividades en el entorno de la zona de residencia.
+              \item Disminución de la demanda en los Centros de flujo.
+              \item Disminución en el tiempo requerido para trasladarse hasta el punto de interés para una comunidad determinada.
+              \item Mejorar las condiciones de viaje de grupos vulnerables.
+              \end{itemize}
+
+          % hablar de esto en la motivación
+              %Para detectar estos elementos en la ciudad de Santiago haremos uso de los datos obtenidos de su  sistema de transporte público utilizando para ello el análisis de redes (grafos) y algoritmos de procesamiento de estructuras de grafos a gran escala como infomap, además de herramientas computacionales para diseñar una interfaz de visualización de los datos.
+
+              %Hoy en día la capacidad de procesamiento de datos a nivel industrial está muy lejos de lograr los que tienen los centros más avanzados, y a su vez, estos no tienen todo el procesamiento que desean. Según lo anterior es que debieron formularse diversos métodos de procesamiento que permiten acotar el tiempo en el cuál se puede extraer información. 
+
+
+              \newpage
+              %================================================================================================================
+              \section{Motivación}
+          %confort (tiene que ver con que la gente se pueda mover dentro del bus o metro)
+              %confiabilidad (variabilidad de intervalos)
+
+
+              Como hemos dado a conocer, existe una gran fuente de datos con mucha información pero que actualmente encuentra sus dificultades en el procesamiento y la forma en que puede ser comunicada. Por lo que una solución a este problema puede abrir las puertas a nuevas preguntas y según esto, nuevas investigaciones.
+
+              También es interesante académicamente debido a la masividad de los datos, ya que se deberá implementar una estrategia de procesamiento que permita manejar millones de registros y además realizar análisis sobre estos que permitan comunicar información por medio de la visualización.
+
+              %\newpage
+              %================================================================================================================
+              \section{Objetivos}
+
+          \subsection{Objetivo General}
+
+          ``Diseñar una herramienta que permita identificar y visualizar estructuras espaciales de movimiento en la ciudad de Santiago utilizando datos pasivos y masivos de transporte público.''
+              \subsection{Objetivos específicos}
+
+          \begin{enumerate}
+          \item Construir modelo de red para la ciudad de Santiago. %basado en los paraderos del transporte público.
+              \item Identificar patrones de viaje, centros y puntos de alto flujo de pasada.
+              \item Desarrollar una herramienta que permita visualizar las estructuras espaciales.
+              \end{enumerate}
+
+          \newpage
+              %================================================================================================================
+              \section{Metodología}
+
+          %===================================================================
+              % Arreglar aquí
+              %====================================================================
+
+              Esta metodología esta basada en una investigación publicada en la \textit{International Journal of Geographical Information Science} \cite{Estructura_urbana}, por lo que los procedimientos ya han sido probados en otro contexto, reduciendo de esta forma posibles inconvenientes que puedan ocurrir a lo largo del desarrollo de esta memoria. 
+
+              Los datos a utilizar se han definido como los producidos en una semana de calendario (lunes a domingo). Estos ya se encuentran procesados según la metodología diseñada por Munizaga y Palma \cite{Procesamiento_datos}, por lo que la data a utilizar corresponde a una tabla de una base de datos postgreSQL llamada \textit{tabla\_de\_viajes} donde cada fila representa un tramo de un viaje\footnote{un viaje puede tener uno o más tramos.}. Según lo anterior la cantidad de datos a utilizar es de aproximadamente 35.000.000, que corresponde a la cantidad de tramos realizados por el 80\% de las transacciones del sistema AFC.
+
+              Dado lo anterior, el desarrollo de esta memoria considera la siguiente metodología de trabajo:
+
+              \begin{enumerate}
+          \item Investigación bibliográfica
+
+              Se está realizando una recopilación y redacción de las ideas y estrategias más relevantes que aporten y justifiquen la base teórica de esta memoria.
+
+              \item Estudio de la data.
+
+              Se realizará un estudio de los datos existentes para comprender concretamente las bases de datos datos requeridos.  
+
+              \item Definición de estrategia de pre-procesamiento de datos.
+
+              Se investigará sobre las estrategias de pre-procesamiento y elegirá la que mejor se adapte en base al estudio realizado en el item anterior. Dentro de esta etapa de normalización y selección de la data para realizar los análisis.
+
+              \item Construcción de la red de nodos.
+
+              En esta etapa se realizará la construcción de un grafo dirigido con nodos a partir de la data estudiada.
+
+              \item Análisis de la red
+              \begin{enumerate}
+          \item Definición de propiedades básicas.
+
+              Aquí asociaremos un atributo de las estructuras urbanas a cada propiedad matemática de un grado a partir de las ideas obtenidas de la investigación bibliográfica.
+
+              \item Definición de centralidades.
+              \begin{enumerate}
+          \item Centro de flujo.
+
+              Se define el concepto de Centro de flujo en un grafo (\textit{betweenness centrality}) y se propone una fórmula para medirlo.
+
+              \item Centro
+
+              Aquí estudiaremos y definiremos la estrategia para detectar centros de la ciudad ocupando el algoritmo \textit{PageRank}.
+
+              \end{enumerate}
+          \item Estructura de comunidad.
+
+              Para la detección de estructuras de comunidad se utilizará el software \textit{infomap}. 
+              \end{enumerate}
+          \item Análisis espacial
+              \begin{enumerate}
+          \item Interpolación espacial.
+
+              Lo relevante de esta etapa es relacionar una zona geográfica a un paradero de bus de manera de poder particionar la ciudad.
+
+              \item Cálculo estadístico.
+
+              En esta etapa se realizará la asociación de las comunidades detectadas a las áreas geográficas establecidas en la interpolación espacial.
+
+              \end{enumerate}
+          \item Análisis de los resultados.
+
+              Se estudiarán los resultados obtenidos.
+
+              \item Definir visualizaciones y nivel de interactividad de cada una.
+
+              A partir del punto anterior se definirán las visualizaciones a realizar y las posibles interacciones que puedan haber en cada una de ellas.
+
+              \item Diseño de aplicación de visualización.
+
+              Se desarrollará una aplicación que permita ver cada una de las implementaciones definidas en el punto anterior.
+
+              \end{enumerate}
+
+          Este trabajo será realizado a lo largo de 2 semestres (2014-2 y 2015-1) por lo que se dividirá de la siguiente forma:
+
+              \begin{itemize}
+          \item Semestre 2014-2
+              \begin{enumerate}
+          \item Investigación bibliográfica 
+              \item Estudio de la data
+              \item Definición de estrategia de pre-procesamiento de datos
+              % mencionar que esta parte se intentará completar. El compromiso es medio.
+              \end{enumerate}
+          \item Semestre 2015-1
+              \begin{enumerate}\setcounter{enumi}{3}
+          \item Construcción de la red de nodos
+              \item Análisis de la red
+              \item Análisis espacial
+              \item Análisis de los resultados
+              \item Definir visualizaciones y nivel de interactividad de cada una
+              \item Diseño de aplicación de visualización
+              \end{enumerate}
+          \end{itemize}
+
+          Es importante decir que el punto 3 se espera abordarlo de manera parcial, realizando un acercamiento durante este período para luego finalizarlo previo inicio del segundo y así poder lograr el desarrollo del resto.
+
+              \newpage
+              %================================================================================================================
+              \section{Bibliografía}
+
+          \renewcommand{\section}[2]{} % elimina el titulo por default que pone thebibliography
+              \begin{thebibliography}{99}
+
+          %\setlength{\itemindent}{0.2in} % desplaza las líneas siguientes a la primera hacia la derecha.
+
+              \bibitem{Estructura_urbana} \emph{Detecting the dynamics of urban structure through spatial network analysis.}
+          {\scriptsize \textbf{Autores}: Chen Zhong, Stefan Müller Arisona, Xianfeng Huang, Michael Batty \& Gerhard Schmitt}
+          {\scriptsize \textbf{URL}: http://www.tandfonline.com/doi/abs/10.1080/13658816.2014.914521}
+
+
+          \bibitem{Procesamiento_datos} \emph{Estimation of a disaggregate multimodal public transport Origin–Destination matrix from passive smartcard data from Santiago, Chile} 
+          {\scriptsize \textbf{Autores}: Marcela A. Munizaga, Carolina Palma} 
+          {\scriptsize \textbf{URL}: http://www.sciencedirect.com/science/article/pii/S0968090X12000095}
+
+
+          \bibitem{Forma_ciudad_moderna} \emph{Urban spatial structure} 
+          {\scriptsize \textbf{Autores}: Alex Anas, Richard Arnott, Kenneth A. Small} 
+          {\scriptsize \textbf{URL}: http://www.sjsu.edu/people/allen.tai/courses/urbp255/s2/Urban\%20Spatial\%20Structure.PDF}
+
+
+          \bibitem{Libro_visualizacion} \emph{Interactive Data Visualization: Foundations, Techniques, and Applications} 
+          {\scriptsize \textbf{Autores}:  Matthew O. Ward, Georges Grinstein, Daniel Keim} 
+          {\scriptsize \textbf{URL}: http://www.amazon.com/Interactive-Data-Visualization-Foundations-Applications/dp/1568814739}
+
+
+          \end{thebibliography}
+
+          \end{document}
+
+
