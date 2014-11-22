@@ -12,6 +12,7 @@
 \usepackage{listings}   % para escribir código
 %\usepackage{hyperref}   % crea links en el indice y notas al pie.
 \usepackage{float}      % permite dejar las imagenes es una posición fija   
+\usepackage[colorinlistoftodos]{todonotes} % permite agregar comentarios al documento.
 
 %\usepackage{anysize}   % Permite emplear cualquier medida de márgenes.
 %\marginsize{3cm}{2cm}{3cm}{2cm} % Controla los márgenes {izquierda}{derecha}{arriba}{abajo}. 
@@ -390,6 +391,8 @@ El sistema de pago en Transantiago es tal que cada pasajero paga una tarifa cuan
 %Por otro lado el pago en metro difiere, ligeramente más alto, para los horarios de alta demanda, entonces si un pasajero usa primero bus y luego transborda a metro, la diferencia entre ambas líneas de transporte es cobrada cuando la persona accede a éste último.
 
 % actualizar datos
+\todo{actualizar con datos más recientes el siguiente párrafo.}
+
 El sistema se caracteriza por tener cerca de 300 rutas de buses, 6000 buses disponibles agrupados en 6 operadores\footnote{Un operador es una empresa que se encarga de prestar servicio a una zona de santiago.}, aproximadamente 10.000 paraderos y una cifra que bordea los 150 kilómetros de rieles para el metro. 
 
 Dada la alta demanda que ha experimentado, se crearon 150 zonas físicas llamadas ``zona paga" que están equipadas con sistema de pago (validadores) de vehículo donde el pasajero paga cuando entra a la estación, lo cual incrementa la eficiencia de las subidas a los buses pero genera una dificultad para determinar cual bus de todos los que allí se detienen tomó. Es importante decir que estas estaciones de buses operan durante los horarios de alta demanda en puntos de congestión identificados previamente.
@@ -418,17 +421,16 @@ Los supuestos para llevar a cabo esta estimación son:
 \begin{itemize}
 	\item Después de un viaje, el origen del siguiente determina el destino del primero. \cite{Supuesto_Barry}
 	\item al final del día, los usuarios van a volver a la estación donde abordaron en el primer viaje del mismo día. \cite{Supuesto_Barry}
-	\item Cada tarjeta corresponde a un usuario
+	\item Cada tarjeta corresponde a un usuario. \cite{Procesamiento_datos}
+	\item Se asume que una persona camina hasta la siguiente parada un máximo de 1.000 metros \cite{Procesamiento_datos}
 \end{itemize}
-, cada tarjeta corresponde a un usuario, 
-, esto se hace considerando supuestos razonables basados en investigaciones previas o  
 
-asumiendo que la próxima transacción bip! Ocurre después de la bajada.
-Se asume que cada tarjeta corresponde a un usuario, entonces la tarjeta bip! y el usuario son usados indistintamente. Básicamente la idea es seguir una cadena de viajes de una tarjeta e identificar la posición de bajada (de bus o metro) mirando la posición y el tiempo de la próxima subida de esta tarjeta. Esto es solamente posible cuando la actual y siguiente transacción tiene información de posición, la cual es tomada de la base de datos de localización automática de vehículos. En caso de la última transacción del día, se asume que el destino es cercano al punto donde el primer viaje del día comienza, encontrando así un viaje cíclico diario para los usuarios particulares. Si hay solo un viaje por tarjeta, no es posible inferir con solo un día de información.
+
+Según todo lo anterior sumado a un modelo ...\todo{¿cómo se llama el modelo?} Munizaga y Palma (2002)\cite{Procesamiento_datos} son capaces de estimar cerca del 80\% de los datos utilizados. Dado que es necesario conocer esta información, se restringe la data al porcentaje de datos que forman parte del resultado exitoso.
 
 \subsubsection{Descripción de los datos}
 
-A partir de la estimación de bajada se logra completar el proceso para obtener los datos de subida y bajada de cada etapa de un viaje. De lo anterior se obtiene una tabla con los siguientes atributos:
+El procedimiento anterior ya se encuentra realizado para los datos comprendidos entre el 14 de abril de 2013 al 20 de abril de 2013 por lo que será este tramo el que será utilizado para realizar el análisis espacial y dado que es requerido conocer cada etapa que realiza una persona, se opta por utiliza la tabla de etapas en donde una fila representa una etapa de un viaje determinado. Esta tabla actualmente contiene 42 columnas producto de diversos análisis que se han realizado con ellas pero que no son todos útiles para el desarrollo de esta memoria por lo que se omiten algunos.
 
 \begin{center}
   \begin{tabular}{| l | p{7cm} |}
