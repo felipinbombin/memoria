@@ -229,7 +229,7 @@
 
     Esta metodología está basada en una investigación publicada en la \textit{International Journal of Geographical Information Science} \cite{Estructura_urbana}, por lo que los procedimientos ya han sido probados en otro contexto, reduciendo de esta forma posibles inconvenientes que puedan ocurrir a lo largo del desarrollo de esta memoria. 
 
-    Los datos a utilizar se han definido como los producidos en una semana de calendario (lunes a domingo). Estos ya se encuentran procesados según la metodología diseñada por Munizaga y Palma \cite{Procesamiento_datos}, por lo que la data corresponde a una tabla de una base de datos postgreSQL llamada \textit{tabla\_de\_etapas} donde cada fila representa una etapa de un viaje\footnote{un viaje puede tener una o más etapas.}. Según lo anterior la cantidad de datos a utilizar es de aproximadamente 35.000.000, que corresponde a la cantidad de etapas realizadas por el 80\% de las transacciones del sistema AFC.
+    Los datos a utilizar se han definido como los producidos en una semana de calendario (lunes a domingo). Estos ya se encuentran procesados según la metodología diseñada por Munizaga y Palma \cite{Procesamiento_datos}, por lo que la data corresponde a una tabla de una base de datos postgreSQL llamada \textit{tabla\_de\_etapas} donde cada fila representa una etapa de un viaje\footnote{un viaje puede tener una o más etapas.}. Según lo anterior la cantidad de datos a utilizar es de aproximadamente 35.000.000, que corresponde a la cantidad de etapas realizadas por el 80\% de las transacciones del sistema AFC\footnote{Automatic Fare Collection}.
 
     Dado lo anterior, el desarrollo de esta memoria considera la siguiente metodología de trabajo:
 
@@ -244,7 +244,7 @@
 
     \item Definición de estrategia de pre-procesamiento de datos.
 
-    Se investigará sobre las estrategias de pre-procesamiento y elegirá la que mejor se adapte en base al estudio realizado en el item anterior. Dentro de esta etapa de normalización y selección de la data para realizar los análisis.
+    Se investigará sobre las estrategias de pre-procesamiento y elegirá la que mejor se adapte en base al estudio realizado en el item anterior. Dentro de esta etapa se llevará a cabo la normalización y selección de la data para realizar los análisis.
 
     \item Construcción de la red de nodos.
 
@@ -326,6 +326,39 @@
     \section{Revisión de antecendentes}
         \subsection{Análisis de bibliografía}
     
+    El documento principal en el cuál está basado esta memoria es el artículo \textit{Detecting the dynamics of urban structure through spatial network analysis} \cite{Estructura_urbana} por lo que la metodología aquí expuesta es utilizada para ser analizada con los datos locales de transporte público. El aporte de este documento radica en que provee un método cuantitativo para la detección de \textbf{Centro de flujo}, \textbf{Centros} y \textbf{Bordes} pudiendo detectar estructuras urbanas a partir de datos pasivos del transporte público, además de describir las técnicas que son aplicadas. Además establece una vinculación entre parámetros medibles con fenómenos urbanos reales, la cuál es posible aplicar a nuevas técnicas para detección de bordes basadas en otras metodologías que puedan aparecer en el futuro, permitiendo la comparación entre ellas.
+    
+	\subsubsection{Redes espaciales} 
+	
+	Una red espacial se entiende como un grafo cuyos vértices y arcos representan objetos geométricos del mundo real. Los nodos tienen una posición relativa a un sistema de referencia específico y los arcos expresan la forma física en que interactuan entre ellos, entendiendose esto último como la forma en que se puede llegar físicamente de uno a otro.
+	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
+	En los últimos años, los estudios sobre estás redes comenzaron a incorporar medidas de peso que reflejan los datos de movimientos urbanos como flujos sobre la red pero concentrado en el sistema de tránsito, no sobre los espacios urbanos asociados a estos. 
+	Además de los datos obtenidos a partir del transporte público han existido investigaciones basadas en otras fuentes de datos, como lo son los AVL basado en GPS (\textit{Global Positioning System}) o conjuntos de datos telefónicos.
+	Este trabajo al igual que el artículo en el que está basado utiliza los datos de la tarjetas inteligentes del transporte público de santiago de Chile para llevar la creación de la red espacial con el objetivo de analizar estructuras de movimiento urbano.
+	
+    
+    
+    \subsubsection{Construcción y representación} 
+    
+    \newpage
+    
+    
+    La estructura espacial moderna de las ciudades ha sido formada, en gran medida, por avances en transporte y comunicaciones \cite{Forma_ciudad_moderna}. La forma en la cual se mueven los habitantes de una ciudad ha ido modificando la estructura de ésta, motivados por la transferencia de recursos como materiales, dinero, personas e información. Considerando una persona como un transportador de recursos de un área urbana a otra es que se identifican las siguientes estructuras espaciales urbanas \cite{Estructura_urbana}:
+
+    \begin{itemize}
+    \item Centros de flujo: Se refiere a las áreas que sirven para conectar otro par de áreas para transferencia de personas. Funcionan como puentes espaciales entre distintas áreas.
+    \item Centros: Se refiere a áreas que concentran personas. Pueden diferir de los Centros de flujo, pero a menudo, son lo mismo.
+    \item Bordes: Se refiere a límites socioeconómicos generados a partir de la agrupación de paraderos que divide la ciudad en pequeños barrios que llamamos comunidades.
+    \end{itemize}
+    
+    
+    
+    Un sistema \textit{Automated Data Collection} (\textit{ADC}) se define como un conjunto tecnologías que permiten la captura de datos de un ecosistema. En el ámbito en el que se mueve esta memoria
+    
+    
+	explicar que es ADC
+	como está compuesto
+	y como se ocupa en chile.    
     
     
     El sistema de transporte público de santiago de Chile utiliza actualmente un sistema \textit{Automated Data Collection} (\textit{ADC}) para capturar distintas variables del sistema como lo son, los cobros, posición de las micros, entre otros. Si bien existen 
