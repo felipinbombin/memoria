@@ -13,6 +13,8 @@
 %\usepackage{hyperref}   % crea links en el indice y notas al pie.
 \usepackage{float}      % permite dejar las imagenes es una posición fija   
 \usepackage[colorinlistoftodos]{todonotes} % permite agregar comentarios al documento.
+\usepackage{mathtools}  % agrega funcionalidades nuevas a las fórmulas matemáticas.
+
 
 %\usepackage{anysize}   % Permite emplear cualquier medida de márgenes.
 %\marginsize{3cm}{2cm}{3cm}{2cm} % Controla los márgenes {izquierda}{derecha}{arriba}{abajo}. 
@@ -325,9 +327,10 @@
     %================================================================================================================
 
     \section{Revisión de antecendentes}
-        \subsection{Análisis de bibliografía}
     
-    El documento principal en el cuál está basado esta memoria es el artículo \textit{Detecting the dynamics of urban structure through spatial network analysis} \cite{Estructura_urbana} por lo que la metodología allí expuesta es utilizada en esta memoria para ser analizada con los datos locales de transporte público. El aporte de este documento al área radica en que provee un método cuantitativo para la detección de \textbf{Centro de flujo}, \textbf{Centros} y \textbf{Bordes} pudiendo detectar estructuras urbanas a partir de datos pasivos del transporte público, además de describir las técnicas que son aplicadas. Además establece una vinculación entre parámetros medibles con fenómenos urbanos reales, la cuál es posible aplicar a nuevas técnicas para detección de bordes basadas en otras metodologías que puedan aparecer en el futuro, permitiendo la comparación entre ellas.
+    \subsection{Análisis de bibliografía}
+    
+    El documento principal en el cuál está basado esta memoria es el artículo \textit{Detecting the dynamics of urban structure through spatial network analysis} \cite{Estructura_urbana} por lo que la metodología allí expuesta es utilizada en esta memoria para ser analizada con los datos locales de transporte público. El aporte de este documento al área radica en que provee un método cuantitativo para la detección de \textbf{Centro de flujo}, \textbf{Centros} y \textbf{Bordes} pudiendo detectar estructuras urbanas a partir de datos pasivos del transporte público, además de describir las técnicas que son aplicadas. También establece una vinculación entre parámetros medibles con fenómenos urbanos reales, la cuál es posible aplicar a nuevas técnicas para detección de bordes basadas en otras metodologías que puedan aparecer en el futuro, permitiendo la comparación entre ellas.
     
 	\subsubsection{Redes espaciales} 
 	
@@ -343,48 +346,66 @@
 
 
 	\subsubsection{Análisis complejo de redes}    
+			
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	
+	\subsubsection{Estructura de comunidad}
+	
+	Los bordes a identificar sobre la superficie a analizar sirven para particionar la estructura espacial y así crear pequeños vecindarios a partir de ésta que denominamos comunidades. Estos son obtenidos a partir de la detección de \textit{estructura de comunidad}, que se refiere a una propiedad de un grafo tal que permite agrupar nodos de éste tal que están densamente conectados entre ellos en comparación con el resto de nodos del grafo. Según lo anterior, los bordes son generados a partir de un descriptor de bordes que particiona la red en dos niveles donde los nodos forman modulos que llamamos comunidades y la división entre los modulos son los bordes. La formación de comunidad se hace basado en que la medida de densidad y el flujo de interacciones es mas fuerte y en términos de volumen que está dentro de cada comunidad es mayor en comparación con el resto de la red.
+	
+	Para la generación de las comunidades se utilizará el framework \textit{map equation} basado en un procedimiento llamado \textit{infomap} desarrollado por Rosvall y Bergstrom el 2008 \cite{infomap}. Es uno de los algoritmos que ha mostrado mejor rendimiento para la generación de comunidades y uno de los pocos adecuados para redes con peso y dirección. Otra característica relevante del algoritmo \textit{infomap} es que no solo considera la relación entre pares de nodos sino que también toma en cuenta los flujos presentes entre estos. Para llevar a cabo lo anterior se utilizan flujos probabilisticos creados a partir de generaciones aleatoreas de recprridos  sobre el grafo (utilizando el algoritmo \textit{PageRank}) y la probabilidad de visitar un nodo aletario, con el objetivo de modelar  comportamientos de flujo de un sistema real.
+	% falta hablar que tienen la mínima entropía.
+	
+	En resumen, el algoritmo divide los nodos del grafo en modulos que son altamente estructurados, lo que implica la entropía del grafo particionado es mínima. Esta entropía es una subdivisión de la entropía total del sistema distribuida entre los modulos con un peso entropico entre los módulos , esos pesos son relacionados a la probabilidad de ocurrencia de cada módulo. Por lo anterior, Rosvall y Bergstrom define esta entropía como:
+	$$
+	\begin{rcases}
+	Lg(M) &= H(P) + \sum\limits_{i=1}^m P_i H(p)_i \\
+	      &= -p\sum\limits_{i=1}^m P_i log P_i -\sum\limits_{i=1}^m P_i\sum\limits_{k=1}^{M_i} \frac{P_k}{P_i}log\frac{P_k}{P_i}
+	\end{rcases} , P_i = \sum_k p_k
+	$$
+	
+donde $P_i$	es la probabilidad de la comunidad $m$ de ser visitado y $P_k/P_i$ es la probabilidad de que el nodo $k$, que es parte de la comunidad $M_i$ de ser visitado
+	
+	\subsubsection{fenomeno de mundo pequeño}
+		% hablar de mundo pequeño
     \newpage
     
     
-    La estructura espacial moderna de las ciudades ha sido formada, en gran medida, por avances en transporte y comunicaciones \cite{Forma_ciudad_moderna}. La forma en la cual se mueven los habitantes de una ciudad ha ido modificando la estructura de ésta, motivados por la transferencia de recursos como materiales, dinero, personas e información. Considerando una persona como un transportador de recursos de un área urbana a otra es que se identifican las siguientes estructuras espaciales urbanas \cite{Estructura_urbana}:
+%    La estructura espacial moderna de las ciudades ha sido formada, en gran medida, por avances en transporte y comunicaciones \cite{Forma_ciudad_moderna}. La forma en la cual se mueven los habitantes de una ciudad ha ido modificando la estructura de ésta, motivados por la transferencia de recursos como materiales, dinero, personas e información. Considerando una persona como un transportador de recursos de un área urbana a otra es que se identifican las siguientes estructuras espaciales urbanas \cite{Estructura_urbana}:
 
-    \begin{itemize}
-    \item Centros de flujo: Se refiere a las áreas que sirven para conectar otro par de áreas para transferencia de personas. Funcionan como puentes espaciales entre distintas áreas.
-    \item Centros: Se refiere a áreas que concentran personas. Pueden diferir de los Centros de flujo, pero a menudo, son lo mismo.
-    \item Bordes: Se refiere a límites socioeconómicos generados a partir de la agrupación de paraderos que divide la ciudad en pequeños barrios que llamamos comunidades.
-    \end{itemize}
+%    \begin{itemize}
+%    \item Centros de flujo: Se refiere a las áreas que sirven para conectar otro par de áreas para transferencia de personas. Funcionan como puentes espaciales entre distintas áreas.
+%    \item Centros: Se refiere a áreas que concentran personas. Pueden diferir de los Centros de flujo, pero a menudo, son lo mismo.
+%    \item Bordes: Se refiere a límites socioeconómicos generados a partir de la agrupación de paraderos que divide la ciudad en pequeños barrios que llamamos comunidades.
+%    \end{itemize}
     
     
     
-    Un sistema \textit{Automated Data Collection} (\textit{ADC}) se define como un conjunto tecnologías que permiten la captura de datos de un ecosistema. En el ámbito en el que se mueve esta memoria
+%    Un sistema \textit{Automated Data Collection} (\textit{ADC}) se define como un conjunto tecnologías que permiten la captura de datos de un ecosistema. En el ámbito en el que se mueve esta memoria
     
     
-	explicar que es ADC
-	como está compuesto
-	y como se ocupa en chile.    
+%	explicar que es ADC
+%	como está compuesto
+%	y como se ocupa en chile.    
     
     
-    El sistema de transporte público de santiago de Chile utiliza actualmente un sistema \textit{Automated Data Collection} (\textit{ADC}) para capturar distintas variables del sistema como lo son, los cobros, posición de las micros, entre otros. Si bien existen 
+%    El sistema de transporte público de santiago de Chile utiliza actualmente un sistema \textit{Automated Data Collection} (\textit{ADC}) para capturar distintas variables del sistema como lo son, los cobros, posición de las micros, entre otros. Si bien existen 
 
-    La captura masiva de datos pasivos a partir del transporte público es un hecho reciente y ha revolucionado la forma de analizar el transporte de una ciudad(y no tan solo eso). Anterior a este re
-    La captura de datos hoy en día se hace a través de tecnología conocida como \textit{Automated Data Collection systems (ADC)}, dentro de ésta es posible agruparla en tres grupos
+%    La captura masiva de datos pasivos a partir del transporte público es un hecho reciente y ha revolucionado la forma de analizar el transporte de una ciudad(y no tan solo eso). Anterior a este re
+%    La captura de datos hoy en día se hace a través de tecnología conocida como \textit{Automated Data Collection systems (ADC)}, dentro de ésta es posible agruparla en tres grupos
 
-    \begin{itemize}
-        \item 
-    \end{itemize}
+%    Estos sistemas tienen grandes beneficios versus su 
+%    La documentación existente respecto a los sistemas de transporte público específican 3 áreas de inte AVL AFC
 
-    Estos sistemas tienen grandes beneficios versus su 
-    La documentación existente respecto a los sistemas de transporte público específican 3 áreas de inte AVL AFC
-
-
-    Otro fenómeno interesante de evluar es la existencia de estructuras de small world
+%    Otro fenómeno interesante de evluar es la existencia de estructuras de small world    
     
-    
-        \subsection{Análisis de datos}
+    \subsection{Análisis de datos}
 
 	A continuación se detalla la forma en que funciona el sistema de transporte público que origina los datos, como se estima el proceso de bajada y por último los detalles de las tablas obtenidas posterior a la estimación.
 	
-			\subsubsection{Sistema tarifario}
+	\subsubsection{Sistema tarifario}
 En Santiago de Chile, el sistema AFC utilizado corresponde a las tarjetas de pago, donde en buses es el único método disponible y en metro es el más utilizado.
 
 El sistema de pago en Transantiago es tal que cada pasajero paga una tarifa cuando accede al sistema, que permite a él o ella hacer tres transbordos dentro de las dos horas siguientes al pago. La estructura de pago es diferente entre el metro y buses. En buses, el único sistema de pago es mediante la tarjeta de pago (llamada comercialmente tarjeta bip!), mientras que en metro, es posible comprar un ticket o usar la tarjeta bip!, sin embargo el porcentaje de usuarios que compra el ticket es de aproximadamente 3\%.
@@ -428,61 +449,71 @@ Los supuestos para llevar a cabo esta estimación son:
 
 Según todo lo anterior sumado a un modelo ...\todo{¿cómo se llama el modelo?} Munizaga y Palma (2002)\cite{Procesamiento_datos} son capaces de estimar cerca del 80\% de los datos utilizados. Dado que es necesario conocer esta información, se restringe la data al porcentaje de datos que forman parte del resultado exitoso.
 
+\subsubsection{Identificación de actividades}
+% hablar de paper de deteccion de actividades.
+
 \subsubsection{Descripción de los datos}
 
-El procedimiento anterior ya se encuentra realizado para los datos comprendidos entre el 14 de abril de 2013 al 20 de abril de 2013 por lo que será este tramo el que será utilizado para realizar el análisis espacial y dado que es requerido conocer cada etapa que realiza una persona, se opta por utiliza la tabla de etapas en donde una fila representa una etapa de un viaje determinado. Esta tabla actualmente contiene 42 columnas producto de diversos análisis que se han realizado con ellas pero que no son todos útiles para el desarrollo de esta memoria por lo que se omiten algunos.
+El procedimiento anterior ya se encuentra realizado para los datos comprendidos entre el 14 de abril de 2013 al 20 de abril de 2013 por lo que será este tramo el que será utilizado para realizar el análisis espacial y dado que es requerido conocer cada etapa que realiza una persona, se opta por utiliza la tabla de etapas en donde una fila representa una etapa de un viaje determinado. Esta tabla actualmente contiene 42 columnas producto de diversos análisis que se han realizado con ellas pero que no son todos útiles para el desarrollo de esta memoria por lo que se omiten algunos. A continuación se listan los campos a ser utilizados para el procesamiento:
 
 \begin{center}
   \begin{tabular}{| l | p{7cm} |}
     \hline
     Nombre campo & Descripción \\ \hline \hline
-    tiempo\_subida & fecha y hora en que se realizó una validación en el sistema  \\ \hline
+%    tiempo\_subida & fecha y hora en que se realizó una validación en el sistema  \\ \hline
     id & identificador de la tarjeta que realizó la validación \\ \hline
-    pago &  \\ \hline
-    x\_subida &  \\ \hline
-    y\_subida &  \\ \hline
-    tipo\_transporte &  \\ \hline
-    serviciosentidovariante &  \\ \hline
-    tipo\_dia &  \\ \hline
-    nviaje &  \\ \hline
-    netapa &  \\ \hline
-    x\_bajada &  \\ \hline
-    y\_bajada &  \\ \hline
-    tiempo\_bajada &  \\ \hline
-    par\_subida &  \\ \hline
-    par\_bajada &  \\ \hline
-    comuna\_subida &  \\ \hline
-    comuna\_bajada &  \\ \hline
-    zona\_subida &  \\ \hline
-    zona\_bajada &  \\ \hline
-    distonroutesubidabajada &  \\ \hline
-    disteuclidsubidabajada &  \\ \hline
-    distonrouteparsubidaparbajada &  \\ \hline
-    disteuclidparsubidaparbajada &  \\ \hline
-    serv\_un\_zp2 &  \\ \hline
-    sitio2 &  \\ \hline
-    tiempo2 &  \\ \hline
-    media\_hora &  \\ \hline
-    tiempo\_trasbordo &  \\ \hline
-    dist\_trasbordo &  \\ \hline
-    tiempo\_caminata &  \\ \hline
-    tiempo\_espera &  \\ \hline
-    tiempo\_etapa &  \\ \hline
-    tiempo\_espera\_estimado &  \\ \hline
-    escolar &  \\ \hline
-    factor\_exp\_etapa &  \\ \hline
-    nbusesanteriores &  \\ \hline
-    tiempo\_busanterior &  \\ \hline
-    busanterior1er &  \\ \hline
-    busanterior2do &  \\ \hline
-    busanterior3er &  \\ \hline
-    tipocorte &  \\ \hline
-    proposito &  \\ \hline
+%    pago &  \\ \hline
+%    x\_subida &  \\ \hline
+%    y\_subida &  \\ \hline
+%    tipo\_transporte &  \\ \hline
+%    serviciosentidovariante &  \\ \hline
+%    tipo\_dia &  \\ \hline
+    nviaje &  Indica el número de viaje asociado al id de la tarteja de pago\\ \hline
+    netapa &  lugar que ocupa la etapa dentro de un viaje.\\ \hline
+%    x\_bajada &  \\ \hline
+%    y\_bajada &  \\ \hline
+%    tiempo\_bajada &  \\ \hline
+    par\_subida & Indica el paradero en donde abordo el servicio. \\ \hline
+    par\_bajada & Señala el paradero de donde descendió del servicio. \\ \hline
+%    comuna\_subida &  \\ \hline
+%    comuna\_bajada &  \\ \hline
+%    zona\_subida &  \\ \hline
+%    zona\_bajada &  \\ \hline
+%    distonroutesubidabajada &  \\ \hline
+%    disteuclidsubidabajada &  \\ \hline
+%    distonrouteparsubidaparbajada &  \\ \hline
+%    disteuclidparsubidaparbajada &  \\ \hline
+%    serv\_un\_zp2 &  \\ \hline
+%    sitio2 &  \\ \hline
+%    tiempo2 &  \\ \hline
+%    media\_hora &  \\ \hline
+%    tiempo\_trasbordo &  \\ \hline
+%    dist\_trasbordo &  \\ \hline
+%    tiempo\_caminata &  \\ \hline
+%    tiempo\_espera &  \\ \hline
+%    tiempo\_etapa &  \\ \hline
+%    tiempo\_espera\_estimado &  \\ \hline
+%    escolar &  \\ \hline
+%    factor\_exp\_etapa &  \\ \hline
+%    nbusesanteriores &  \\ \hline
+%    tiempo\_busanterior &  \\ \hline
+%    busanterior1er &  \\ \hline
+%    busanterior2do &  \\ \hline
+%    busanterior3er &  \\ \hline
+%    tipocorte &  \\ \hline
+%    proposito &  \\ \hline
   \end{tabular}
 \end{center}
 
-Es importante recalcar que esta tabla debe ser filtrada debido a que el proceso de estimación no logra detectar un destino para el 20\% de los casos por lo que se trabajará con el 80\% de la data de la tabla que corresponde a 
+No se descarta que una vez realizada la etapa de visualizar los datos puedan requerirse más datos con respecto a cada etapa, como puede ser la fecha y hora, tipo de transporte, entre otros.
 
+Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que tambien se utiliza la tabla \todo{nombre de tabla de paraderos} en conjunto con la tabla \todo{nombre de la tabla de estaciones de metro} que contiene los datos de las estaciones de metro, que para efectos de este análisis son considerados paraderos adicionales.
+
+
+    %\newpage
+    %================================================================================================================
+    %\section{Estrate de procesamiento}
+    
 
     %\newpage
     %================================================================================================================
