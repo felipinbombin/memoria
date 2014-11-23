@@ -353,24 +353,50 @@
 	
 	\subsubsection{Estructura de comunidad}
 	
-	Los bordes a identificar sobre la superficie a analizar sirven para particionar la estructura espacial y así crear pequeños vecindarios a partir de ésta que denominamos comunidades. Estos son obtenidos a partir de la detección de \textit{estructura de comunidad}, que se refiere a una propiedad de un grafo tal que permite agrupar nodos de éste tal que están densamente conectados entre ellos en comparación con el resto de nodos del grafo. Según lo anterior, los bordes son generados a partir de un descriptor de bordes que particiona la red en dos niveles donde los nodos forman modulos que llamamos comunidades y la división entre los modulos son los bordes. La formación de comunidad se hace basado en que la medida de densidad y el flujo de interacciones es mas fuerte y en términos de volumen que está dentro de cada comunidad es mayor en comparación con el resto de la red.
+	Los bordes a identificar sobre la superficie a analizar sirven para particionar la estructura espacial y así crear pequeños vecindarios a partir de ésta que denominamos comunidades. Estos son obtenidos a partir de la detección de \textit{estructura de comunidad}, que se refiere a una \textbf{propiedad de un grafo que permite agrupar nodos de éste que están densamente conectados entre ellos en comparación con el resto de nodos del grafo}. Según lo anterior, los bordes son generados a partir de un descriptor de bordes que particiona la red en dos niveles donde los nodos forman módulos que llamamos comunidades y la división entre los modulos que llamamos bordes. Existen varias formas de generar comunidades pero una condición necesaria para este trabajo es la consideración de las variables  de \textbf{densidad} y \textbf{flujo de interacciones} al momento de crear ástas. Lo anterior basado en que estas dos variables sean mas fuertes dentro de una comunidad y que el volumne que está dentro de cada comunidad es mayor en comparación con el resto de la red.
 	
-	Para la generación de las comunidades se utilizará el framework \textit{map equation} basado en un procedimiento llamado \textit{infomap} desarrollado por Rosvall y Bergstrom el 2008 \cite{infomap}. Es uno de los algoritmos que ha mostrado mejor rendimiento para la generación de comunidades y uno de los pocos adecuados para redes con peso y dirección. Otra característica relevante del algoritmo \textit{infomap} es que no solo considera la relación entre pares de nodos sino que también toma en cuenta los flujos presentes entre estos. Para llevar a cabo lo anterior se utilizan flujos probabilisticos creados a partir de generaciones aleatoreas de recprridos  sobre el grafo (utilizando el algoritmo \textit{PageRank}) y la probabilidad de visitar un nodo aletario, con el objetivo de modelar  comportamientos de flujo de un sistema real.
+	Para la generación de las comunidades se utilizará el framework \textit{map equation} basado en un procedimiento llamado \textit{infomap} desarrollado por Rosvall y Bergstrom el 2008 \cite{infomap}. Es uno de los algoritmos que ha mostrado mejor rendimiento para la generación de comunidades y uno de los pocos adecuados para redes con peso y dirección. Otra característica relevante del algoritmo \textit{infomap} es que no solo considera la relación entre pares de nodos sino que también toma en cuenta los flujos presentes entre estos. Para llevar a cabo lo anterior se utilizan flujos probabilisticos creados a partir de generaciones aleatoreas que simulan recorridos sobre el grafo y que asignan también probabilidades a cada nodo de ser visitado aletariamente (utilizando el algoritmo \textit{PageRank}), con el objetivo de modelar los comportamientos de flujo de un sistema real.
 	% falta hablar que tienen la mínima entropía.
 	
-	En resumen, el algoritmo divide los nodos del grafo en modulos que son altamente estructurados, lo que implica la entropía del grafo particionado es mínima. Esta entropía es una subdivisión de la entropía total del sistema distribuida entre los modulos con un peso entropico entre los módulos , esos pesos son relacionados a la probabilidad de ocurrencia de cada módulo. Por lo anterior, Rosvall y Bergstrom define esta entropía como:
+	\todo{Revisar parrafo siguiente. Falta explicar porque tiene entropía mínima.}
+	En resumen, el algoritmo divide los nodos del grafo en modulos que son altamente estructurados, lo que implica que la entropía del grafo particionado es mínima. Esta entropía es una subdivisión de la entropía total del sistema distribuida entre los modulos con un peso entropico entre los módulos , esos pesos son relacionados a la probabilidad de ocurrencia de cada módulo. Por lo anterior, Rosvall y Bergstrom define esta entropía como:
 	$$
 	\begin{rcases}
 	Lg(M) &= H(P) + \sum\limits_{i=1}^m P_i H(p)_i \\
 	      &= -p\sum\limits_{i=1}^m P_i log P_i -\sum\limits_{i=1}^m P_i\sum\limits_{k=1}^{M_i} \frac{P_k}{P_i}log\frac{P_k}{P_i}
 	\end{rcases} , P_i = \sum_k p_k
 	$$
+% Es la entropía del módulo más la entropía que aporta cada nodo del módulo normalizada(por ello la división de P_i)
 	
-donde $P_i$	es la probabilidad de la comunidad $m$ de ser visitado y $P_k/P_i$ es la probabilidad de que el nodo $k$, que es parte de la comunidad $M_i$ de ser visitado
-	
-	\subsubsection{fenomeno de mundo pequeño}
-		% hablar de mundo pequeño
-    \newpage
+donde $P_i$	es la probabilidad de la comunidad $i$ de ser visitada y $P_k/P_i$ es la probabilidad de que el nodo $k$ sea visitado. Por último $M_i$ es la cantidad de nodos que contiene la comunidad $i$. La división por $P_i$ que afecta a los $P_k$ cumple la función de normalizar.
+
+La forma en que trabaja es primeramente configurando cada nodo al módulo que pertenece para luego, en cada paso, identificar que nodo se puede agregar a que módulo tal que la entropía general decrezca. Este proceso continua hasta que no se pueda reducir más la entropía, asegurando que con esa configuración se obtiene la partición más estructurada.
+
+Es importante decir que $M_i$ es un módulo que contiene un conjunto de $k \in M_i$ nodos y que llega a ser estable (sin alteraciones) una vez que se obtiene la entropía mínima. Luego, estas comunidades son mapeadas a sus respectivas ubicaciones geográficas.
+
+Lo que resta por hacer en este punto es transformar un conjunto de puntos discretos en regiones que particionan el espacio. Para lo anterior se realiza una interpolación espacial, para esto se considera el siguiente supuesto:
+
+\begin{center}
+	\textit{``Cada persona escoge el paradero de bus/metro más cercano"}
+\end{center} 
+
+Según lo anterior, aplicamos la interpolación a cada zona geográfica cercana a un paradero de bus/metro. La variante de interpolación escogida corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) lo que hace disminuir la influencia de un paradero de bus en función de la distancia. Estos pesos son definidos de la siguiente forma 
+
+$$
+	W_i(x,y) = d_{ij} (x,y)^\lambda
+$$
+
+Donde $W_i(x,y)$ es el peso de la ubicación del paradero $i$ en las coordenadas $x,y$ que son los puntos vecinos más cercanos a $j$ y $d_{ij} (x,y)$ es la distancia a la coordenada $x,y$ desde el paradero $i$ hacia el paradero vecino más cercano $j$.
+
+Una observación que se desprende de la fórmula es que los pesos están normalizados tal que su suma sea 1, es decir, $\sum_{\forall x,y} W_i (x,y)=1$ y $\lambda$ es un parámetro arbitrario que en este caso es $2$, lo que implica que sigue la ley del inverso al cuadrado.
+
+Por último cada coordenada espacial debe ser asignada a una única comunidad, esto se hace utilizando un  \textit{resumen estadísticos}\footnote{Se entiende como la información dada por una rápida y simple descripción de los datos como la media, mediana, moda, rango y desviación estándar.}. El principal problema aquí es tratar aquellas coordenadas que pertenecen a una comunidad en la red pero que no están geográficamente adyacentes al grupo principal que define la comunidad	, esto se origina porque el algoritmo de detección de comunidades no está restringido a lograr áreas geográficamente contiguas.
+
+Aunque la investigación reporta que esto no ocurre muy amenudo, y que cuando sucede, es en los limites de las áreas que definen las comunidades y se da principalmente porque las personas que viven en esas áreas tienen diferentes preferencias de viajes.
+
+Para solucionar el problema planteado se cuenta el número de puntos en las comunidades en conflicto y se computa el algoritmo \textit{PageRank}, esto provoca que las coordenadas en disputa sean asignadas a su comunidad más cercana geográficamente. En la practica lo que se ocurre es un desplazamiento de los límites entre comunidades, de esta forma se obtiene una particón geográfica que abarca todo el espacio.
+
+	\newpage
     
     
 %    La estructura espacial moderna de las ciudades ha sido formada, en gran medida, por avances en transporte y comunicaciones \cite{Forma_ciudad_moderna}. La forma en la cual se mueven los habitantes de una ciudad ha ido modificando la estructura de ésta, motivados por la transferencia de recursos como materiales, dinero, personas e información. Considerando una persona como un transportador de recursos de un área urbana a otra es que se identifican las siguientes estructuras espaciales urbanas \cite{Estructura_urbana}:
@@ -512,7 +538,12 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 
     %\newpage
     %================================================================================================================
-    %\section{Estrate de procesamiento}
+    %\section{Estrategía de procesamiento}
+    
+    
+    %\newpage
+    %================================================================================================================
+    %\section{Implementación}
     
 
     %\newpage
