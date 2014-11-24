@@ -1,14 +1,11 @@
 \documentclass[12pt]{article}
-\usepackage[spanish]{babel} % hace que, entre otras, el rompimiento de palabras se haga de acuerdo a las reglas del español
+\usepackage[spanish, es-tabla]{babel} % hace que, entre otras, el rompimiento de palabras se haga de acuerdo a las reglas del español
 \selectlanguage{spanish}
 \usepackage[utf8]{inputenc} % Incluye caracteres con tilde
 
 \usepackage{pdfpages}
 \usepackage{amsmath}
 \usepackage{dsfont}
-
-\usepackage{titlesec}		% permite extender los niveles de profundidad de las subsecciones
-\setcounter{secnumdepth}{4} % expande en un nivel adicional la profundidad de las secciones.
 
 \usepackage{graphicx}   % permite insertar figuras
 \usepackage{fancyhdr}   % para encabezado y pie de pagina
@@ -146,7 +143,7 @@
         %================================================================================================================
         \tableofcontents   % Indice
 
-        %\listoftables % Indice de tablas
+        \listoftables % Indice de tablas
 
         %\listoffigures   % Indice de figuras
 
@@ -332,29 +329,29 @@
     
     \subsection{Análisis de bibliografía}\label{sec:Analisis_bibliografia}
     
-    El documento principal en el cuál está basado esta memoria es la metodología propuesta por Cheng Zhong et al. (2014) \cite{Estructura_urbana}, la cual provee un método cuantitativo para la detección de \textbf{Centro de flujo}, \textbf{Centros} y \textbf{Bordes} pudiendo identificar estructuras urbanas a partir de datos pasivos del transporte público, además de describir las técnicas que son aplicadas. También establece una vinculación entre parámetros medibles con fenómenos urbanos reales, la cuál es posible aplicar a nuevas técnicas para detección de bordes basadas en otras metodologías que puedan aparecer en el futuro, permitiendo la comparación entre ellas. Por lo tanto, la metodología allí expuesta es utilizada en esta memoria para ser analizada con los datos locales de transporte público.
+    Esta memoria se basa principalmente en la metodología propuesta por Cheng Zhong et al. (2014) \cite{Estructura_urbana}, la cual provee un método cuantitativo para la detección de \textbf{Centros de flujo}, \textbf{Centros} y \textbf{Bordes} pudiendo identificar estructuras urbanas a partir de datos pasivos de transporte público. Dentro de este mismo documento se establece una vinculación entre los centros de flujo, centros y bordes con fenómenos urbanos reales dado que utiliza un grafo generado a partir de datos obtenidos del comportamiento de la gente. Además permite aplicar nuevas técnicas para detección de bordes basadas en otras metodologías que puedan aparecer en el futuro, permitiendo la comparación entre ellas. Por lo tanto, la metodología allí expuesta es utilizada en esta memoria para la generación de las mismas estructuras pero para ser analizada con los datos locales de transporte público.
     
 	\subsubsection{Redes espaciales} 
 	
-	Una red espacial se entiende como un grafo cuyos vértices y arcos representan objetos geométricos del mundo real. Los nodos tienen una posición relativa a un sistema de referencia específico y los arcos expresan la forma física en que interactuan entre ellos, entendiendose esto último como la forma en que se puede llegar físicamente de uno a otro.
-	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
-	En los últimos años, los estudios sobre estás redes comenzaron a incorporar medidas de peso que reflejan los datos de movimientos urbanos como flujos sobre la red pero concentrado en el sistema de tránsito, no sobre los espacios urbanos asociados a estos. 
-	Además de los datos obtenidos a partir del transporte público han existido investigaciones basadas en otras fuentes de datos, como lo son los AVL basado en GPS (\textit{Global Positioning System}) o conjuntos de datos telefónicos.
-	Este trabajo al igual que el artículo en el que está basado utiliza los datos de la tarjetas inteligentes del transporte público de santiago de Chile para llevar la creación de la red espacial con el objetivo de analizar estructuras de movimiento urbano.
+	Una red espacial se entiende como un grafo cuyos vértices y arcos representan objetos geométricos del mundo real. Los nodos tienen una posición relativa a un sistema de referencia específico y los arcos expresan la forma física en que interactúan entre ellos, entendiéndose esto último como la forma en que se puede llegar físicamente de uno a otro.
 	
+	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
+	
+	En los últimos años, los estudios sobre estás redes comenzaron a incorporar medidas de peso que reflejan los datos de movimientos urbanos como flujos sobre la red pero concentrado en el sistema de tránsito, no sobre los espacios urbanos asociados a estos.
+	Además de los datos obtenidos a partir del transporte público han existido investigaciones basadas en otras fuentes de datos, como lo son los AVL basado en GPS (\textit{Global Positioning System}) o conjuntos de datos telefónicos. En particular, el artículo de Cheng Zhong et al. (2014)  utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público de singapur.
     
     
     \subsubsection{Construcción y representación de la red} 
 	
-	Los datos a partir de las tarjetas de pago contienen información de cada servicio abordado y más el tratamiento hecho por Munizaga y Palma el 2011 \cite{Procesamiento_datos} (explicado en la sección \ref{sec:Analisis_datos}) logramos obtener el destino. Con lo anterior se construirá una \textit{matriz O-D}\footnote{Matrix origen-destino} donde se registran los volumemenes de etapas realizas. Esta matriz será convertida posteriormente en un grafo dirigido con pesos. Es importante destacar que el grafo formado no es una matriz de viajes sino que una red social formada por actividades urbanas.
-	
 	Formalmente definimos un grafo dirigido con pesos como $G=(N,L,W)$ que representa todas las etapas realizadas sobre cada para de paraderos durante una semana. $N$ denota los paraderos o nodos que representa el área o sector donde está ubicado, el conjunto $L$ denota los traslados entre dos paraderos o áreas, por lo que $L$ corresponde a un conjunto de pares ordenados de $N$, y el conjunto $W$ denota el volumen (cantidad) de traslados entre dos paraderos. Según lo anterior, $N$ son los nodos del grafo, $L$ representa los arcos y $W$ denota los pesos de cada arco en $L$.
+	
+	Por otro lado, Munizaga y Palma (2011) \cite{Procesamiento_datos} (explicado en la sección \ref{sec:Analisis_datos}) proponen una metodología para crear una \textit{matriz Origen-Destino}, generando la oportunidad de modelar la construcción teórica descrita en el párrafo anterior en sistemas donde solo se valida en un sentido, como lo es en el caso de Chile.
 	
 	\subsubsection{Análisis complejo de la red}    
 
-Este análisis se abarca desde 3 perspectivas: propiedades globales, información local asociada a \textit{centros}y \textit{centros de flujo}, y en la detección de comunidades. 
+Este análisis se abarca desde 3 perspectivas: propiedades globales, información local asociada a \textit{centros} y \textit{centros de flujo}, y en la detección de comunidades. 
 
-	\subsubsection{Propiedades globales}
+	\paragraph{Propiedades globales}
 
 Las propiedades topologicas de un grafo puede proveer importante información sobre las interacciones espaciales que se producen en el modelo real, según esto, se define lo siguiente
 
@@ -382,7 +379,7 @@ the whole area.
 
 Estas propiedades permiten descubrir los niveles de actividad que mantiene cada área de una ciudad y su participación en los flujos que se realizan.
 
-	\paragraph{Centralidad local}
+	\paragraph{Centralidades}
 	
 	A las propiedades generales agregamos 2 tipos de centralidad adicionales, una es la \textit{centralidad de intermediación}, la que se usará para definir los \textbf{centros de flujo} y el segundo es el \textit{PageRank} que mide la accesibilidad en la red tomando en cuenta todos los vínculos, directos e indirectos, sus pesos y dirección. Este último indicador para medir el grado en que cada nodo es un \textbf{centro}.
 	
@@ -392,26 +389,34 @@ $$
 	C_{intermediacion}(k) = \sum_{ij} \frac{\delta_{ij} (k)}{\delta_{ij}}
 $$
 
-donde $\delta_{ij}(k)$ es el número de caminos más cortos entre $i$ y $j$ que pasan por $k$, mientras que $\delta_{ij}$ es el número total de caminos entre $i$ y $j$. En ciertos casos esta medida se normaliza dividiéndola por $N$ (cantidad de nodos) pero para este caso se utilizará como aparece en la definición.
+donde $\delta_{ij}(k)$ es el número de caminos más cortos entre $i$ y $j$ que pasan por $k$, mientras que $\delta_{ij}$ es el número total de caminos entre $i$ y $j$. En ciertos casos esta medida se normaliza dividiéndola por $N$ (cantidad de nodos) lo cual ellos no realizaron, utilizando la forma tal cual aparece en la definición. 
 
-Por otro lado, PageRank mide el rol de un nodo o área local en atraer flujos desde todos los nodos de la red. Esta medida es una representación genérica de las probabilidades de un peatón cualquiera de visitar un nodo cualquiera, en este sentido está relacionado con procesos de Markov de primer orden, que es la base de muchos procesos de interacción social, en este contexto  fue originalmente usado para extraer información acerca de las estructuras de los vínculos de Internet (Rosvall y Bergstrom 2008)\cite{Infomap} y la medida que se ocupará en esta memoria es la misma que se ellos ocuparon para determinar la importancia de un nodo en una red, muy similar al \textit{ranking de páginas de Google}. Según lo anterior de define la probabilidad $r_j$ de visitar el nodo $j$ como:
+Por otro lado, PageRank mide el rol de un nodo o área local en atraer flujos desde todos los nodos de la red. Esta medida es una representación genérica de las probabilidades de un peatón cualquiera de visitar un nodo cualquiera, en este sentido está relacionado con procesos de Markov de primer orden, que es la base de muchos procesos de interacción social, en este contexto  fue originalmente usado para extraer información acerca de las estructuras de los vínculos de Internet (Rosvall y Bergstrom 2008)\cite{Infomap}, muy similar al \textit{ranking de páginas de Google}. Según lo anterior de define la probabilidad $r_j$ de visitar el nodo $j$ como:
 
 $$
 	r_j = [(1-\rho)/N]+\rho\sum_i r_ip_{ij}
 $$
+% tiene toda la cara de ser probabilidades totales = 
 
-Donde $1-\rho$ puede ser visto como la probabilidad de que un caminante j haciendo una elección aleatoria sobre si ir a otro nodo en la red o no, y $p_{ij}$  es la probabilidad de escoger ir al nodo $i$ que al $j$, que es proporcional al peso del arco de $i$ a $j$, en resumen
+% 1° termino = probabilidad de quedarme en el nodo j X la prob de elegir el nodo j.
+% 2° termino = probabilidad de irme X la probabilidad de elegir algun otro nodo distinto de j
+
+% probas totales r_j = P(de llegar a j | estoy en j)X P(estoy en j) + P(llegar a j | estoy en i)X P(estoy en i) 
+%                    = (1-\rho)X(1/N) + \rhoXp_ijXr_i
+%                       me quedo        sum (P(querer irme)X P(irme a j)X P(estar en i)) -> se repite para todos los nodos, luego se factoriza por \rho en la sumatoria
+
+Donde $1-\rho$ puede ser visto como la probabilidad de que un caminante decida quedarse en el nodo $j$, y $p_{ij}$ como la probabilidad de escoger ir al nodo $j$ dado que estoy en el nodo $i$, este valor es proporcional al peso del arco de $i$ a $j$, en resumen
 
 \begin{center}
-$	p_{ij}=w_{ij}/\sum\limits_k w_{ij}$ , y $\sum\limits_j p_{ij}= 1$
+$	p_{ij}=w_{ij}/\sum\limits_k w_{ik}$ , y $\sum\limits_j p_{ij}= 1$
 \end{center}
 
-Para obtener $r_j$ es necesario resolver un sistema matricial
-\todo{Explicar más.}
+%Dado que $r_j$ está definido en función de otros $r_k$ es necesario resolver un sistema matricial
+%\todo{Explicar más.}
 
 El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma valores entre $0$ y $1$, en esta oportunidad será fijado en $0.85$. Si $\rho=1$ entonces todos los nodos tienen una probabilidad positiva y luego, la matriz $\{p_{ij}\}$ tiene que estar fuertemente conectada.
 
-	\subsubsection{Estructura de comunidad}
+	\paragraph{Estructura de comunidad}
 	
 	Los bordes a identificar sobre la superficie a analizar sirven para particionar la estructura espacial y así crear pequeños vecindarios a partir de ésta que denominamos comunidades. Estos son obtenidos a partir de la detección de \textit{estructura de comunidad}, que se refiere a una \textbf{propiedad de un grafo que permite agrupar nodos de éste que están densamente conectados entre ellos en comparación con el resto de nodos del grafo}. Según lo anterior, los bordes son generados a partir de un descriptor de bordes que particiona la red en dos niveles donde los nodos forman módulos que llamamos comunidades y la división entre los modulos que llamamos bordes. Existen varias formas de generar comunidades pero una condición necesaria para este trabajo es la consideración de las variables  de \textbf{densidad} y \textbf{flujo de interacciones} al momento de crear ástas. Lo anterior basado en que estas dos variables sean mas fuertes dentro de una comunidad y que el volumen que está dentro de cada comunidad es mayor en comparación con el resto de la red.
 	
@@ -428,7 +433,7 @@ El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma v
 	$$
 % Es la entropía del módulo más la entropía que aporta cada nodo del módulo normalizada(por ello la división de P_i)
 	
-donde $P_i$	es la probabilidad de la comunidad $i$ de ser visitada y $P_k/P_i$ es la probabilidad de que el nodo $k$ sea visitado. Por último $M_i$ es la cantidad de nodos que contiene la comunidad $i$. La división por $P_i$ que afecta a los $P_k$ cumple la función de normalizar.
+donde $P_i$	es la probabilidad de se visitada la comunidad $i$ y $P_k/P_i$ es la probabilidad de visitar el nodo $k$ dado que la comunidad $i$ es visitada. Por último $M_i$ es la cantidad de nodos que contiene la comunidad $i$. Por último, La división por $P_i$ que afecta a los $P_k$ cumple la función de normalizar.
 
 La forma en que trabaja es primeramente configurando cada nodo al módulo que pertenece para luego, en cada paso, identificar que nodo se puede agregar a que módulo tal que la entropía general decrezca. Este proceso continua hasta que no se pueda reducir más la entropía, asegurando que con esa configuración se obtiene la partición más estructurada.
 
@@ -457,14 +462,14 @@ Aunque la investigación reporta que esto no ocurre muy a menudo, y que cuando s
 Para solucionar el problema planteado se cuenta el número de puntos en las comunidades en conflicto y se computa el algoritmo \textit{PageRank}, esto provoca que las coordenadas en disputa sean asignadas a su comunidad más cercana geográficamente. En la practica lo que se ocurre es un desplazamiento de los límites entre comunidades, de esta forma se obtiene una partición geográfica que abarca todo el espacio.
     
 	\subsubsection{Visualización de información}    
-
+    \todo{Falta documentar toda esta sección.}
 	En esta sección serán descritos algunos aspectos relevantes de la visualización de información con el fin de justificar teóricamente preguntas como: ¿que colores utilizar? ¿que tipo de visualización mostrar? ¿cuál es el objetivo de la visualización que estoy creando? entre otras. 
 	
 	Toda la información necesaria será obtenida del libro \textit{Interactive Data Visualization: Foundations, Techniques, and Applications} \cite{libro_visualizacion}.
     
     \subsection{Análisis de datos}\label{sec:Analisis_datos}
 
-	A continuación se detalla la forma en que funciona el sistema de transporte público que origina los datos, como se estima el proceso de bajada y por último los detalles de las tablas obtenidas posterior a la estimación.
+	A continuación se detalla la forma en que funciona el sistema de transporte público que origina los datos, como se estima el proceso de bajada y por último los detalles de las tablas obtenidas posterior a la estimación. Tanto la metodología como los supuestos aquí explicados son expuestos y propuestos por Munizaga y Palma (2011) \cite{Procesamiento_datos}.
 	
 	\subsubsection{Sistema tarifario}
 En Santiago de Chile, el sistema AFC utilizado corresponde a las tarjetas de pago, donde en buses es el único método disponible y en metro es el más utilizado.
@@ -508,8 +513,7 @@ Los supuestos para llevar a cabo esta estimación son:
 	\item Si el tiempo de transbordo\footnote{entendido como el tiempo entre que se bajó de un servicio y se subió al siguiente.} es inferior a 30 minutos, entonces este último servicio forma parte del mismo viaje, de lo contrario se considera como uno nuevo.\cite{Procesamiento_datos}
 \end{itemize}
 
-
-Según todo lo anterior sumado a un modelo ...\todo{¿cómo se llama el modelo?} Munizaga y Palma (2002)\cite{Procesamiento_datos} son capaces de estimar cerca del 80\% de los datos utilizados. Dado que es necesario conocer esta información, se restringe la data al porcentaje de datos que forman parte del resultado exitoso.
+Según todo lo anterior Munizaga y Palma (2011)\cite{Procesamiento_datos} son capaces de estimar correctamente cerca del 80\% de los datos utilizados. Dado que es necesario conocer esta información, se restringe la data al porcentaje de datos que forman parte del resultado exitoso.
 
 %\subsubsection{Identificación de actividades}
 % evaluar si esto es necesario ya que pareciera que no.
@@ -519,6 +523,7 @@ Según todo lo anterior sumado a un modelo ...\todo{¿cómo se llama el modelo?}
 
 El procedimiento anterior ya se encuentra realizado para los datos comprendidos entre el 14 de abril de 2013 al 20 de abril de 2013 por lo que será este tramo el que será utilizado para realizar el análisis espacial y dado que es requerido conocer cada etapa que realiza una persona, se opta por utiliza la tabla de etapas en donde una fila representa una etapa de un viaje determinado. Esta tabla actualmente contiene 42 columnas producto de diversos análisis que se han realizado con ellas pero que no son todos útiles para el desarrollo de esta memoria por lo que se omiten algunos. A continuación se listan los campos a ser utilizados para el procesamiento:
 
+\begin{table}
 \begin{center}
   \begin{tabular}{| l | p{7cm} |}
     \hline
@@ -567,12 +572,28 @@ El procedimiento anterior ya se encuentra realizado para los datos comprendidos 
 %    proposito &  \\ \hline
   \end{tabular}
 \end{center}
+\caption{Atributos a utilizar de la tabla ETAPAS}:
+\label{tabla:etapa}
+\end{table}
 
 No se descarta que una vez realizada la etapa de visualizar los datos puedan requerirse más datos con respecto a cada etapa, como puede ser la fecha y hora, tipo de transporte, entre otros.
 
 Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla \todo{nombre de tabla de paraderos} en conjunto con la tabla \todo{nombre de la tabla de estaciones de metro} que contiene los datos de las estaciones de metro, que para efectos de este análisis son considerados paraderos adicionales.
 
-
+    \subsubsection{Conclusiones}
+    
+    Este trabajo al igual que el artículo en el que está basado, utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público, 
+	con la salvedad de que aquí son  de santiago de Chile para llevar la creación de la red espacial con el objetivo de analizar estructuras de movimiento urbano.
+	
+	logramos obtener el destino. Con lo anterior se construirá una  donde se registran los volúmenes de etapas realizas. Esta matriz será convertida posteriormente en un grafo dirigido con pesos. Es importante destacar que el grafo formado no es una matriz de viajes sino que una red social formada por actividades urbanas.
+	
+	Nuestro caso tampoco normalizará la denición de centralidad intermedia 
+	pero para este caso se utilizará como aparece en la definición.
+	
+	
+	para el page rank se decide esto, la medida que se ocupará en esta memoria es la misma que se ellos ocuparon para determinar la importancia de un nodo en una red
+	
+	Hablar de que se ha mejorado el porcentaje de estimación exitosa.
     \newpage
     %================================================================================================================
     \section{Estrategia de procesamiento}
@@ -610,5 +631,3 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
     \nocite{libro_visualizacion} % agrega el libro en la bibliografia porque no está citado en ninguna parte.
 
     \end{document}
-
-
