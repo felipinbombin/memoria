@@ -7,6 +7,9 @@
 \usepackage{amsmath}
 \usepackage{dsfont}
 
+\usepackage{titlesec}		% permite extender los niveles de profundidad de las subsecciones
+\setcounter{secnumdepth}{4} % expande en un nivel adicional la profundidad de las secciones.
+
 \usepackage{graphicx}   % permite insertar figuras
 \usepackage{fancyhdr}   % para encabezado y pie de pagina
 \usepackage{listings}   % para escribir código
@@ -133,14 +136,13 @@
 
         \newpage
         %================================================================================================================
+        %\section{Resumen ejecutivo}
 
-        \section{Resumen ejecutivo}
+        %Aquí va el resumen ejecutivo
 
-        Aquí va el resumen ejecutivo
+        %\thispagestyle{empty} % para que no se numere esta pagina+
 
-        \thispagestyle{empty} % para que no se numere esta pagina+
-
-        \newpage
+        %\newpage
         %================================================================================================================
         \tableofcontents   % Indice
 
@@ -342,18 +344,76 @@
 	
     
     
-    \subsubsection{Construcción y representación} 
-
-
-	\subsubsection{Análisis complejo de redes}    
-			
-	\begin{itemize}
-		\item 
-	\end{itemize}
+    \subsubsection{Construcción y representación de la red} 
 	
+	Los datos a partir de las tarjetas de pago contienen información de cada servicio abordado y más el tratamiento hecho por Munizaga y Palma el 2011 \cite{Procesamiento_datos} (explicado en la sección \ref{sec:Analisis_datos}) logramos obtener el destino. Con lo anterior se construirá una \textit{matriz O-D}\footnote{Matrix origen-destino} donde se registran los volumemenes de etapas realizas. Esta matriz será convertida posteriormente en un grafo dirigido con pesos. Es importante destacar que el grafo formado no es una matriz de viajes sino que una red social formada por actividades urbanas.
+	
+	Formalmente definimos un grafo dirigido con pesos como $G=(N,L,W)$ que representa todas las etapas realizadas sobre cada para de paraderos durante una semana. $N$ denota los paraderos o nodos que representa el área o sector donde está ubicado, el conjunto $L$ denota los traslados entre dos paraderos o áreas, por lo que $L$ corresponde a un conjunto de pares ordenados de $N$, y el conjunto $W$ denota el volumen (cantidad) de traslados entre dos paraderos. Según lo anterior, $N$ son los nodos del grafo, $L$ representa los arcos y $W$ denota los pesos de cada arco en $L$.
+	
+	\subsubsection{Análisis complejo de la red}    
+
+Este análisis se abarca desde 3 perspectivas: propiedades globales, información local asociada a \textit{centros}y \textit{centros de flujo}, y en la detección de comunidades. 
+
+	\subsubsection{Propiedades globales}
+
+Las propiedades topologicas de un grafo puede proveer importante información sobre las interacciones espaciales que se producen en el modelo real, según esto, se define lo siguiente
+
+	\begin{itemize}
+	
+		\item El número $N$ de nodos indica cuantos paraderos o áreas son accesibles, y el número de arcos $J$ indica cuantos paraderos o áreas son directamente conectadas.
+		\item El \textbf{grado} de cada nodo en la red indica cuantos paraderos o áreas son directamente conectadas desde una en particular, aquí podemos diferenciar entre \textbf{grado de salida} (cantidad de nodos que tienen traslados cuyo origen es ese paradero) y \textbf{grado de entrada} ( cantidad de nodos que tienen como destino ese paradero).
+		
+		\item El \textbf{peso} de cada arco indica la intensidad (volumen) de traslados desde un paradero a otro.
+		
+		\item La \textbf{ruta más corta} se refiere al camino mínmo posible de un área a otra.
+		
+		\item clustering centrality es un índice que mide cuán cohesionado están los nodos a uno nodo en términos de su accesibilidad.
+		
+		\item closeness centrality es un índice que evalúa cuan rápido se expande la información en el grafo.
+
+\todo{Mejorar descripción}
+ the clustering centrality is an index that measures how ‘close’/‘cohesive’ the areas
+are to one another in terms of their accessibility to shared neighbors; and
+
+\todo{Mejorar descripción}
+ the closeness centrality is an index that evaluates how fast information spreads in
+the whole area.
+	\end{itemize}
+
+Estas propiedades permiten descubrir los niveles de actividad que mantiene cada área de una ciudad y su participación en los flujos que se realizan.
+
+	\subsubsection{Centralidad local}
+	
+	A las propiedades generales agregamos 2 tipos de centralidad adicionales, una es la \textit{centralidad de intermediación}, la que se usará para definir los \textbf{centros de flujo} y el segundo es el \textit{PageRank} que mide la accesibilidad en la red tomando en cuenta todos los vínculos, directos e indirectos, sus pesos y dirección. Este último indicador para medir el grado en que cada nodo es un \textbf{centro}.
+	
+	La centralidad de intermediación es un indicador que mide cuán bien conectada está un área o paradero, formalmente se define para un nodo $k$ como el número el número de caminos más cortos que conecta dos áreas $i$ y $j$ en el grafo que pasan a través del nodo $k$, y se define como
+	
+$$
+	C_{intermediacion}(k) = \sum_{ij} \frac{\delta_{ij} (k)}{\delta_{ij}}
+$$
+
+donde $\delta_{ij}(k)$ es el número de caminos más cortos entre $i$ y $j$ que pasan por $k$, mientras que $\delta_{ij}$ es el número total de caminos entre $i$ y $j$. En ciertos casos esta medida se normaliza dividiéndola por $N$ (cantidad de nodos) pero para este caso se utilizará como aparece en la definición.
+
+Por otro lado, PageRank mide el rol de un nodo o área local en atraer flujos desde todos los nodos de la red. Esta medida es una representación genérica de las probabilidades de un peatón cualquiera de visitar un nodo cualquiera, en este sentido está relacionado con procesos de Markov de primer orden, que es la base de muchos procesos de interacción social, en este contexto  fue originalmente usado para extraer información acerca de las estructuras de los vínculos de Internet (Rosvall y Bergstrom 2008)\cite{Infomap} y la medida que se ocupará en esta memoria es la misma que se ellos ocuparon para determinar la importancia de un nodo en una red, muy similar al \textit{ranking de páginas de Google}. Según lo anterior de define la probabilidad $r_j$ de visitar el nodo $j$ como:
+
+$$
+	r_j = [(1-\rho)/N]+\rho\sum_i r_ip_{ij}
+$$
+
+Donde $1-\rho$ puede ser visto como la probabilidad de que un caminante j haciendo una elección aleatoria sobre si ir a otro nodo en la red o no, y $p_{ij}$  es la probabilidad de escoger ir al nodo $i$ que al $j$, que es proporcional al peso del arco de $i$ a $j$, en resumen
+
+\begin{center}
+$	p_{ij}=w_{ij}/\sum\limits_k w_{ij}$ , y $\sum\limits_j p_{ij}= 1$
+\end{center}
+
+Para obtener $r_j$ es necesario resolver un sistema matricial
+\todo{Explicar más.}
+
+El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma valores entre $0$ y $1$, en esta oportunidad será fijado en $0.85$. Si $\rho=1$ entonces todos los nodos tienen una probabilidad positiva y luego, la matriz $\{p_{ij}\}$ tiene que estar fuertemente conectada.
+
 	\subsubsection{Estructura de comunidad}
 	
-	Los bordes a identificar sobre la superficie a analizar sirven para particionar la estructura espacial y así crear pequeños vecindarios a partir de ésta que denominamos comunidades. Estos son obtenidos a partir de la detección de \textit{estructura de comunidad}, que se refiere a una \textbf{propiedad de un grafo que permite agrupar nodos de éste que están densamente conectados entre ellos en comparación con el resto de nodos del grafo}. Según lo anterior, los bordes son generados a partir de un descriptor de bordes que particiona la red en dos niveles donde los nodos forman módulos que llamamos comunidades y la división entre los modulos que llamamos bordes. Existen varias formas de generar comunidades pero una condición necesaria para este trabajo es la consideración de las variables  de \textbf{densidad} y \textbf{flujo de interacciones} al momento de crear ástas. Lo anterior basado en que estas dos variables sean mas fuertes dentro de una comunidad y que el volumne que está dentro de cada comunidad es mayor en comparación con el resto de la red.
+	Los bordes a identificar sobre la superficie a analizar sirven para particionar la estructura espacial y así crear pequeños vecindarios a partir de ésta que denominamos comunidades. Estos son obtenidos a partir de la detección de \textit{estructura de comunidad}, que se refiere a una \textbf{propiedad de un grafo que permite agrupar nodos de éste que están densamente conectados entre ellos en comparación con el resto de nodos del grafo}. Según lo anterior, los bordes son generados a partir de un descriptor de bordes que particiona la red en dos niveles donde los nodos forman módulos que llamamos comunidades y la división entre los modulos que llamamos bordes. Existen varias formas de generar comunidades pero una condición necesaria para este trabajo es la consideración de las variables  de \textbf{densidad} y \textbf{flujo de interacciones} al momento de crear ástas. Lo anterior basado en que estas dos variables sean mas fuertes dentro de una comunidad y que el volumen que está dentro de cada comunidad es mayor en comparación con el resto de la red.
 	
 	Para la generación de las comunidades se utilizará el framework \textit{map equation} basado en un procedimiento llamado \textit{infomap} desarrollado por Rosvall y Bergstrom el 2008 \cite{infomap}. Es uno de los algoritmos que ha mostrado mejor rendimiento para la generación de comunidades y uno de los pocos adecuados para redes con peso y dirección. Otra característica relevante del algoritmo \textit{infomap} es que no solo considera la relación entre pares de nodos sino que también toma en cuenta los flujos presentes entre estos. Para llevar a cabo lo anterior se utilizan flujos probabilisticos creados a partir de generaciones aleatoreas que simulan recorridos sobre el grafo y que asignan también probabilidades a cada nodo de ser visitado aletariamente (utilizando el algoritmo \textit{PageRank}), con el objetivo de modelar los comportamientos de flujo de un sistema real.
 	% falta hablar que tienen la mínima entropía.
@@ -392,42 +452,17 @@ Una observación que se desprende de la fórmula es que los pesos están normali
 
 Por último cada coordenada espacial debe ser asignada a una única comunidad, esto se hace utilizando un  \textit{resumen estadísticos}\footnote{Se entiende como la información dada por una rápida y simple descripción de los datos como la media, mediana, moda, rango y desviación estándar.}. El principal problema aquí es tratar aquellas coordenadas que pertenecen a una comunidad en la red pero que no están geográficamente adyacentes al grupo principal que define la comunidad	, esto se origina porque el algoritmo de detección de comunidades no está restringido a lograr áreas geográficamente contiguas.
 
-Aunque la investigación reporta que esto no ocurre muy amenudo, y que cuando sucede, es en los limites de las áreas que definen las comunidades y se da principalmente porque las personas que viven en esas áreas tienen diferentes preferencias de viajes.
+Aunque la investigación reporta que esto no ocurre muy a menudo, y que cuando sucede, es en los limites de las áreas que definen las comunidades y se da principalmente porque las personas que viven en esas áreas tienen diferentes preferencias de viajes.
 
-Para solucionar el problema planteado se cuenta el número de puntos en las comunidades en conflicto y se computa el algoritmo \textit{PageRank}, esto provoca que las coordenadas en disputa sean asignadas a su comunidad más cercana geográficamente. En la practica lo que se ocurre es un desplazamiento de los límites entre comunidades, de esta forma se obtiene una particón geográfica que abarca todo el espacio.
+Para solucionar el problema planteado se cuenta el número de puntos en las comunidades en conflicto y se computa el algoritmo \textit{PageRank}, esto provoca que las coordenadas en disputa sean asignadas a su comunidad más cercana geográficamente. En la practica lo que se ocurre es un desplazamiento de los límites entre comunidades, de esta forma se obtiene una partición geográfica que abarca todo el espacio.
+    
+	\subsubsection{Visualización de información}    
 
-	\newpage
+	En esta sección serán descritos algunos aspectos relevantes de la visualización de información con el fin de justificar teóricamente preguntas como: ¿que colores utilizar? ¿que tipo de visualización mostrar? ¿cuál es el objetivo de la visualización que estoy creando? entre otras. 
+	
+	Toda la información necesaria será obtenida del libro \textit{Interactive Data Visualization: Foundations, Techniques, and Applications} \cite{libro_visualizacion}.
     
-    
-%    La estructura espacial moderna de las ciudades ha sido formada, en gran medida, por avances en transporte y comunicaciones \cite{Forma_ciudad_moderna}. La forma en la cual se mueven los habitantes de una ciudad ha ido modificando la estructura de ésta, motivados por la transferencia de recursos como materiales, dinero, personas e información. Considerando una persona como un transportador de recursos de un área urbana a otra es que se identifican las siguientes estructuras espaciales urbanas \cite{Estructura_urbana}:
-
-%    \begin{itemize}
-%    \item Centros de flujo: Se refiere a las áreas que sirven para conectar otro par de áreas para transferencia de personas. Funcionan como puentes espaciales entre distintas áreas.
-%    \item Centros: Se refiere a áreas que concentran personas. Pueden diferir de los Centros de flujo, pero a menudo, son lo mismo.
-%    \item Bordes: Se refiere a límites socioeconómicos generados a partir de la agrupación de paraderos que divide la ciudad en pequeños barrios que llamamos comunidades.
-%    \end{itemize}
-    
-    
-    
-%    Un sistema \textit{Automated Data Collection} (\textit{ADC}) se define como un conjunto tecnologías que permiten la captura de datos de un ecosistema. En el ámbito en el que se mueve esta memoria
-    
-    
-%	explicar que es ADC
-%	como está compuesto
-%	y como se ocupa en chile.    
-    
-    
-%    El sistema de transporte público de santiago de Chile utiliza actualmente un sistema \textit{Automated Data Collection} (\textit{ADC}) para capturar distintas variables del sistema como lo son, los cobros, posición de las micros, entre otros. Si bien existen 
-
-%    La captura masiva de datos pasivos a partir del transporte público es un hecho reciente y ha revolucionado la forma de analizar el transporte de una ciudad(y no tan solo eso). Anterior a este re
-%    La captura de datos hoy en día se hace a través de tecnología conocida como \textit{Automated Data Collection systems (ADC)}, dentro de ésta es posible agruparla en tres grupos
-
-%    Estos sistemas tienen grandes beneficios versus su 
-%    La documentación existente respecto a los sistemas de transporte público específican 3 áreas de inte AVL AFC
-
-%    Otro fenómeno interesante de evluar es la existencia de estructuras de small world    
-    
-    \subsection{Análisis de datos}
+    \subsection{Análisis de datos}\label{sec:Analisis_datos}
 
 	A continuación se detalla la forma en que funciona el sistema de transporte público que origina los datos, como se estima el proceso de bajada y por último los detalles de las tablas obtenidas posterior a la estimación.
 	
@@ -470,12 +505,14 @@ Los supuestos para llevar a cabo esta estimación son:
 	\item al final del día, los usuarios van a volver a la estación donde abordaron en el primer viaje del mismo día. \cite{Supuesto_Barry}
 	\item Cada tarjeta corresponde a un usuario. \cite{Procesamiento_datos}
 	\item Se asume que una persona camina hasta la siguiente parada un máximo de 1.000 metros \cite{Procesamiento_datos}
+	\item Si el tiempo de transbordo\footnote{entendido como el tiempo entre que se bajó de un servicio y se subió al siguiente.} es inferior a 30 minutos, entonces este último servicio forma parte del mismo viaje, de lo contrario se considera como uno nuevo.\cite{Procesamiento_datos}
 \end{itemize}
 
 
 Según todo lo anterior sumado a un modelo ...\todo{¿cómo se llama el modelo?} Munizaga y Palma (2002)\cite{Procesamiento_datos} son capaces de estimar cerca del 80\% de los datos utilizados. Dado que es necesario conocer esta información, se restringe la data al porcentaje de datos que forman parte del resultado exitoso.
 
-\subsubsection{Identificación de actividades}
+%\subsubsection{Identificación de actividades}
+% evaluar si esto es necesario ya que pareciera que no.
 % hablar de paper de deteccion de actividades.
 
 \subsubsection{Descripción de los datos}
@@ -533,13 +570,19 @@ El procedimiento anterior ya se encuentra realizado para los datos comprendidos 
 
 No se descarta que una vez realizada la etapa de visualizar los datos puedan requerirse más datos con respecto a cada etapa, como puede ser la fecha y hora, tipo de transporte, entre otros.
 
-Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que tambien se utiliza la tabla \todo{nombre de tabla de paraderos} en conjunto con la tabla \todo{nombre de la tabla de estaciones de metro} que contiene los datos de las estaciones de metro, que para efectos de este análisis son considerados paraderos adicionales.
+Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla \todo{nombre de tabla de paraderos} en conjunto con la tabla \todo{nombre de la tabla de estaciones de metro} que contiene los datos de las estaciones de metro, que para efectos de este análisis son considerados paraderos adicionales.
 
 
-    %\newpage
-    %================================================================================================================
-    %\section{Estrategía de procesamiento}
-    
+    \newpage
+    ================================================================================================================
+    \section{Estrategia de procesamiento}
+  
+	En esta sección se describirán las acciones que se deben llevar a cabo detalladamente para pasar desde un 
+	
+	se describe la forma en la que se llevará a cabo el procedimiento para elaborar la red. Para lo anterior es necesario primero detallar las herramientas que se utilizarán para luego pasar a describir 
+	
+	\subsubsection{Filtrar la data}
+		
     
     %\newpage
     %================================================================================================================
