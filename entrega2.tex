@@ -330,9 +330,9 @@
 
     \section{Revisión de antecendentes}
     
-    \subsection{Análisis de bibliografía}
+    \subsection{Análisis de bibliografía}\label{sec:Analisis_bibliografia}
     
-    El documento principal en el cuál está basado esta memoria es el artículo \textit{Detecting the dynamics of urban structure through spatial network analysis} \cite{Estructura_urbana} por lo que la metodología allí expuesta es utilizada en esta memoria para ser analizada con los datos locales de transporte público. El aporte de este documento al área radica en que provee un método cuantitativo para la detección de \textbf{Centro de flujo}, \textbf{Centros} y \textbf{Bordes} pudiendo detectar estructuras urbanas a partir de datos pasivos del transporte público, además de describir las técnicas que son aplicadas. También establece una vinculación entre parámetros medibles con fenómenos urbanos reales, la cuál es posible aplicar a nuevas técnicas para detección de bordes basadas en otras metodologías que puedan aparecer en el futuro, permitiendo la comparación entre ellas.
+    El documento principal en el cuál está basado esta memoria es la metodología propuesta por Cheng Zhong et al. (2014) \cite{Estructura_urbana}, la cual provee un método cuantitativo para la detección de \textbf{Centro de flujo}, \textbf{Centros} y \textbf{Bordes} pudiendo detectar estructuras urbanas a partir de datos pasivos del transporte público, además de describir las técnicas que son aplicadas. También establece una vinculación entre parámetros medibles con fenómenos urbanos reales, la cuál es posible aplicar a nuevas técnicas para detección de bordes basadas en otras metodologías que puedan aparecer en el futuro, permitiendo la comparación entre ellas. Por lo tanto, la metodología allí expuesta es utilizada en esta memoria para ser analizada con los datos locales de transporte público.
     
 	\subsubsection{Redes espaciales} 
 	
@@ -382,7 +382,7 @@ the whole area.
 
 Estas propiedades permiten descubrir los niveles de actividad que mantiene cada área de una ciudad y su participación en los flujos que se realizan.
 
-	\subsubsection{Centralidad local}
+	\paragraph{Centralidad local}
 	
 	A las propiedades generales agregamos 2 tipos de centralidad adicionales, una es la \textit{centralidad de intermediación}, la que se usará para definir los \textbf{centros de flujo} y el segundo es el \textit{PageRank} que mide la accesibilidad en la red tomando en cuenta todos los vínculos, directos e indirectos, sus pesos y dirección. Este último indicador para medir el grado en que cada nodo es un \textbf{centro}.
 	
@@ -574,14 +574,19 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 
 
     \newpage
-    ================================================================================================================
+    %================================================================================================================
     \section{Estrategia de procesamiento}
   
-	En esta sección se describirán las acciones que se deben llevar a cabo detalladamente para pasar desde un 
+	En esta sección se describirán las acciones a llevar a cabo en el procesamiento de la data, esto consiste en describir la forma en la que se llevará a cabo el procedimiento para elaborar el grafo y calcular los distintos indicadores descritos en la sección \ref{sec:Analisis_bibliografia}. Para lo anterior es necesario primero detallar las herramientas que se utilizarán para luego pasar a describir 
+
+	\subsection{Herramientas a utilizar}
 	
-	se describe la forma en la que se llevará a cabo el procedimiento para elaborar la red. Para lo anterior es necesario primero detallar las herramientas que se utilizarán para luego pasar a describir 
+	La base de datos que contiene las etapas se encuentra en un Sistema Gestor de Base de Datos (\textit{SGBD}) \textbf{Postgres} versión 9.1 y para gestionar los datos se posee una Graphic Unit Interface (\textit{GUI}) llamada \textit{PgAdmin III} cuya versión es 1.18.1 con la cuál se manipulan los distintos requerimientos al SGBD. 
 	
-	\subsubsection{Filtrar la data}
+	
+	\subsection{Filtrar la data}
+	
+	
 		
     
     %\newpage
