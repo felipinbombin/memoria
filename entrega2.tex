@@ -10,6 +10,8 @@
 \usepackage{graphicx}   % permite insertar figuras
 \usepackage{fancyhdr}   % para encabezado y pie de pagina
 \usepackage{listings}   % para escribir código
+\lstset{}	% para configurar parámetros generales del código a mostrar en este documento
+
 %\usepackage{hyperref}   % crea links en el indice y notas al pie.
 \usepackage{float}      % permite dejar las imagenes es una posición fija   
 \usepackage[colorinlistoftodos]{todonotes} % permite agregar comentarios al documento.
@@ -143,9 +145,9 @@
         %================================================================================================================
         \tableofcontents   % Indice
 
-        \listoftables % Indice de tablas
+        \listoftables 	 % Indice de tablas
 
-        %\listoffigures   % Indice de figuras
+        \listoffigures   % Indice de figuras
 
         \pagenumbering{roman} % las páginas correspondientes al índice serán enumeradas con números romanos
         \newpage
@@ -364,17 +366,12 @@ Las propiedades topologicas de un grafo puede proveer importante información so
 		
 		\item La \textbf{ruta más corta} se refiere al camino mínmo posible de un área a otra.
 		
-		\item clustering centrality es un índice que mide cuán cohesionado están los nodos a uno nodo en términos de su accesibilidad.
+		\item \textbf{``clustering centrality''}\todo{Buscar traducción a español} es un índice que mide cuán cohesionados o cercanos están los nodos a otro en términos de su accesibilidad para compartir vecinos.
+
+% the clustering centrality is an index that measures how ‘close’/‘cohesive’ the areas are to one another in terms of their accessibility to shared neighbors
 		
-		\item closeness centrality es un índice que evalúa cuan rápido se expande la información en el grafo.
+		\item \textbf{Centralidad de cercanía} es un índice que evalúa cuan rápido viaja la información en un grafo.
 
-\todo{Mejorar descripción}
- the clustering centrality is an index that measures how ‘close’/‘cohesive’ the areas
-are to one another in terms of their accessibility to shared neighbors; and
-
-\todo{Mejorar descripción}
- the closeness centrality is an index that evaluates how fast information spreads in
-the whole area.
 	\end{itemize}
 
 Estas propiedades permiten descubrir los niveles de actividad que mantiene cada área de una ciudad y su participación en los flujos que se realizan.
@@ -478,7 +475,6 @@ El sistema de pago en Transantiago es tal que cada pasajero paga una tarifa cuan
 %Por otro lado el pago en metro difiere, ligeramente más alto, para los horarios de alta demanda, entonces si un pasajero usa primero bus y luego transborda a metro, la diferencia entre ambas líneas de transporte es cobrada cuando la persona accede a éste último.
 
 % actualizar datos
-\todo{actualizar con datos más recientes el siguiente párrafo.}
 
 El sistema se caracteriza por tener cerca de 300 rutas de buses, 6000 buses disponibles agrupados en 6 operadores\footnote{Un operador es una empresa que se encarga de prestar servicio a una zona de santiago.}, aproximadamente 10.000 paraderos y una cifra que bordea los 150 kilómetros de rieles para el metro. 
 
@@ -523,7 +519,7 @@ Según todo lo anterior Munizaga y Palma (2012)\cite{Procesamiento_datos} son ca
 
 El procedimiento anterior ya se encuentra realizado para los datos comprendidos entre el 14 de abril de 2013 al 20 de abril de 2013 por lo que será este tramo el que será utilizado para realizar el análisis espacial y dado que es requerido conocer cada etapa que realiza una persona, se opta por utiliza la tabla de etapas en donde una fila representa una etapa de un viaje determinado. Esta tabla actualmente contiene 42 columnas producto de diversos análisis que se han realizado con ellas pero que no son todos útiles para el desarrollo de esta memoria por lo que se omiten algunos. En la tabla \ref{tabla:etapa} se listan los campos a ser utilizados para el procesamiento.
 
-\begin{table}
+\begin{table}[h]
 \begin{center}
   \begin{tabular}{| l | p{7cm} |}
     \hline
@@ -578,35 +574,47 @@ El procedimiento anterior ya se encuentra realizado para los datos comprendidos 
 
 No se descarta que una vez realizada la etapa de visualizar los datos puedan requerirse más datos con respecto a cada etapa, como puede ser la fecha y hora, tipo de transporte, entre otros.
 
-Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla \todo{nombre de tabla de paraderos} en conjunto con la tabla \todo{nombre de la tabla de estaciones de metro} que contiene los datos de las estaciones de metro, que para efectos de este análisis son considerados paraderos adicionales.
+Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla \textbf{redpadaras} en conjunto con la tabla \textbf{estaciones\_metro} que contiene los datos de las estaciones de metro, que para efectos de este análisis son considerados paraderos adicionales.
 
     \subsubsection{Conclusiones}
     
-    Este trabajo al igual que el artículo en el que está basado, utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público, 
-	con la salvedad de que aquí son  de santiago de Chile para llevar la creación de la red espacial con el objetivo de analizar estructuras de movimiento urbano.
+	Es importante destacar que la particularidad del estudio radica en que el grafo formado para construir las estructuras espaciales no representa viajes sino actividades urbanas que realizan las personas, construyendo así una red social formada por actividades urbanas.
 	
-	logramos obtener el destino. Con lo anterior se construirá una  donde se registran los volúmenes de etapas realizas. Esta matriz será convertida posteriormente en un grafo dirigido con pesos. Es importante destacar que el grafo formado no es una matriz de viajes sino que una red social formada por actividades urbanas.
+	Tanto las definiciones de propiedades globales como las formulas definidas aquí serán ocupadas tal cual aparecen de manera de más adelante poder comparar los resultados obtenidos con los mostrados en el artículo, que está basado en el sistema de transporte público de Singapur.
+
+    Este trabajo al igual que el artículo en el que está basado, utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público, con la salvedad de que aquí corresponden al sistema de transporte de santiago de Chile, con estos se construirá  la red espacial para la posterior construcción de las estructuras descritas (centros, centros de flujo y bordes).
 	
-	Nuestro caso tampoco normalizará la denición de centralidad intermedia 
-	pero para este caso se utilizará como aparece en la definición.
-	
-	
-	para el page rank se decide esto, la medida que se ocupará en esta memoria es la misma que se ellos ocuparon para determinar la importancia de un nodo en una red
-	
-	Hablar de que se ha mejorado el porcentaje de estimación exitosa.
+	Como los datos de Santiago de Chile presentan las mismas características luego de aplicar el método de estimación de Munizaga y Palma (2012), se observa que estos son aptos para replicar el análisis de Singapur. Es importante decir que este procesamiento fue realizado con anterioridad a este trabajo y aquí se documenta con fines explicativos.
+		
+%	Hablar de que se ha mejorado el porcentaje de estimación exitosa.
     \newpage
     %================================================================================================================
     \section{Estrategia de procesamiento}
   
-	En esta sección se describirán las acciones a llevar a cabo en el procesamiento de los datos, esto consiste en describir la forma en la que se llevará a cabo el procedimiento para elaborar el grafo y calcular los distintos indicadores descritos en la sección \ref{sec:Analisis_bibliografia}. Para lo anterior es necesario primero detallar las herramientas que se utilizarán para luego pasar a describir 
+	En esta sección se describen las acciones a llevar a cabo en el procesamiento de los datos, esto consiste en describir la forma en la que se llevará a cabo el procedimiento para elaborar el grafo y calcular los distintos indicadores descritos en la sección \ref{sec:Analisis_bibliografia}. Para lo anterior es necesario primero detallar las herramientas que se utilizarán para luego pasar a describir 
 
 	\subsection{Herramientas a utilizar}
 	
-	La base de datos que contiene las etapas se encuentra en un Sistema Gestor de Base de Datos (\textit{SGBD}) \textbf{Postgres} versión 9.1 y para gestionar los datos se posee una Graphic Unit Interface (\textit{GUI}) llamada \textit{PgAdmin III} cuya versión es 1.18.1 con la cuál se manipulan los distintos requerimientos al SGBD. 
-	
+	La base de datos que contiene las etapas se encuentra en un Sistema Gestor de Base de Datos (\textit{SGBD}) \textbf{Postgres} versión 9.1 y para gestionar los datos se posee una interfaz gráfica (\textit{GUI}) llamada \textit{PgAdmin III} cuya versión es 1.18.1 con la cuál se manipulan los distintos requerimientos al SGBD. 
+	%Para el calculo de las 
 	
 	\subsection{Filtrar los datos}
 	
+	En este paso se deben quitar aquellos datos que no cumplen con el requisito de tener un paradero de bajada asociado, para esto se extraen los datos que cumplen con la siguiente consulta en lenguaje \textit{SQL} (\textit{Structure Query Language})
+	
+\begin{figure}[h]
+\begin{center}
+\begin{lstlisting}[breaklines=true, language=SQL]
+	SELECT id, nviaje, netapa, par_subida, par_bajada 
+	FROM etapa 
+	WHERE par_bajada IS NOT NULL;
+\end{lstlisting}
+\end{center}
+\caption{Consulta para quitar etapas sin paradero de bajada.}
+\label{fig:limpiar_datos}
+\end{figure}
+	
+	Los resultados de la consulta anterior son almacenados en una nueva tabla que contiene solo los campos a ser utilizados (ver figura \ref{fig:limpiar_datos}).
 	
 		
     
@@ -628,6 +636,11 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 
     \bibliographystyle{plain}
     \bibliography{references}
-    \nocite{libro_visualizacion} % agrega el libro en la bibliografia porque no está citado en ninguna parte.
+    
+    \newpage
+    %================================================================================================================
+	\section{Anexos}
+	
+%			\subsubsection{Tabla de completa de Etapas}
 
     \end{document}
