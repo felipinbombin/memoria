@@ -164,7 +164,7 @@
         Dentro de las tecnologías más usadas podemos nombrar AVL (Automatic Vehicle Location), que permite conocer la posición geográfica de un vehículo en todo momento con un margen de error bajo y los sistemas AFC (Automated Fare Collection) que automatizan el proceso de pago, en particular, nos interesa el basado en tarjetas de pago, que albergan un chip que permite mantener un saldo para que sea utilizado al abordar un bus, esto implica la existencia (paralelamente) de dispositivos asociados a los buses o paraderos\footnote{Lugar físico donde un bus de transporte público se detiene para que personas ingresen y/o desciendan a el.} que permitan registrar el correcto descuento del valor asociado al pasaje, concepto que llamaremos validación.
 % hablar de los APC (Automatic passenger counting)
 
-    Transantiago\footnote{fue implementado a partir del año 2007.} es el sistema de transporte público de Santiago de Chile que implementa las tecnologías nombradas anteriormente, por lo que hoy en día se sabe que se realizan aproximadamente 6.000.000 de validaciones durante un día laboral\footnote{Lunes, martes, miércoles, jueves o viernes.}, lo que genera una cifra cercana a los 35.000.000 de transacciones a la semana (incluyendo sábado y domingo) con aproximadamente 3.000.000 de tarjetas de pago. Por otro lado, hay 80.000.000 de emisiones proveniente de la tecnología AVL del sistema. Al procesar estos datos en conjunto es posible identificar el paradero de origen, recorrido utilizado para desplazarse y el paradero de destino, este último requiere un procesamiento adicional basado en una metodología desarrollada por Munizaga y Palma \cite{Procesamiento_datos} que logra una identificación acertada en el 80\% de las validaciones.
+    Transantiago\footnote{fue implementado a partir del año 2007.} es el sistema de transporte público de Santiago de Chile que implementa las tecnologías nombradas anteriormente, por lo que hoy en día se sabe que se realizan aproximadamente 6.000.000 de validaciones durante un día laboral\footnote{Lunes, martes, miércoles, jueves o viernes.}, lo que genera una cifra cercana a los 35.000.000 de transacciones a la semana (incluyendo sábado y domingo) con aproximadamente 3.000.000 de tarjetas de pago. Por otro lado, hay 80.000.000 de emisiones proveniente de la tecnología AVL del sistema. Al procesar estos datos en conjunto es posible identificar el paradero de origen, recorrido utilizado para desplazarse y el paradero de destino, este último requiere un procesamiento adicional basado en una metodología desarrollada por Munizaga y Palma (2012) \cite{Procesamiento_datos} que logra una identificación en el 80\% de las validaciones.
 
     La estructura espacial moderna de las ciudades ha sido formada, en gran medida, por avances en transporte y comunicaciones \cite{Forma_ciudad_moderna}. La forma en la cual se mueven los habitantes de una ciudad ha ido modificando la estructura de esta, motivados por la transferencia de recursos como materiales, dinero, personas e información. Considerando una persona como un transportador de recursos de un área urbana a otra es que se identifican las siguientes estructuras espaciales urbanas \cite{Estructura_urbana}:
 
@@ -177,7 +177,7 @@
     %hablar a quien va dirigido la visualización. Personas de áreas que no se realacionan directamente con la computación. Gente de arquitectura y urbanismo.
     % mencionar que el objetivo de la visualización es comunicar información.
 
-    Lo anterior se enmarca en la necesidad de comunicar esta información a personas sin una formación ingenieril dado que es un proyecto que abarcará muchos campos de investigación, como lo es la arquitectura o planificación urbana, por lo que es necesario transmitir datos de forma clara y concisa.
+    Lo anterior se enmarca en la necesidad de comunicar esta información de manera sintética dado que comprende una gran cantidad de datos y además abarcará otros campos de investigación, como lo es la arquitectura o planificación urbana, por lo que es necesario transmitir datos de forma clara y concisa.
 
     De todo lo relatado podemos ver que hoy en día el sistema de transporte público de Santiago cuenta con una gran cantidad de datos pasivos por lo que existe una gran base de datos que mantiene un potencial de información que puede mejorar la planificación y operación del sistema, además de tener la potencialidad de detectar otras necesidades. Sin embargo, con las capacidades de procesamiento actuales no es posible obtener información que complemente los resultados de los indicadores usados actualmente.
 
@@ -231,7 +231,7 @@
 
     Esta metodología está basada en una investigación publicada en la \textit{International Journal of Geographical Information Science} \cite{Estructura_urbana}, por lo que los procedimientos ya han sido probados en otro contexto, reduciendo de esta forma posibles inconvenientes que puedan ocurrir a lo largo del desarrollo de esta memoria. 
 
-    Los datos a utilizar se han definido como los producidos en una semana de calendario (lunes a domingo). Estos ya se encuentran procesados según la metodología diseñada por Munizaga y Palma \cite{Procesamiento_datos}, por lo que la data corresponde a una tabla de una base de datos postgreSQL llamada \textit{tabla\_de\_etapas} donde cada fila representa una etapa de un viaje\footnote{un viaje puede tener una o más etapas.}. Según lo anterior la cantidad de datos a utilizar es de aproximadamente 35.000.000, que corresponde a la cantidad de etapas realizadas por el 80\% de las transacciones del sistema AFC\footnote{Automatic Fare Collection}.
+    Los datos a utilizar se han definido como los producidos en una semana de calendario (lunes a domingo). Estos ya se encuentran procesados según la metodología diseñada por Munizaga y Palma (2012)\cite{Procesamiento_datos}, por lo que los datos corresponden a una tabla de una base de datos postgreSQL llamada \textit{tabla\_de\_etapas} donde cada fila representa una etapa de un viaje\footnote{un viaje puede tener una o más etapas.}. Según lo anterior la cantidad de datos a utilizar es de aproximadamente 35.000.000, que corresponde a la cantidad de etapas realizadas por el 80\% de las transacciones del sistema AFC\footnote{Automatic Fare Collection}.
 
     Dado lo anterior, el desarrollo de esta memoria considera la siguiente metodología de trabajo:
 
@@ -240,17 +240,17 @@
 
     Se está realizando una recopilación y redacción de las ideas y estrategias más relevantes que aporten y justifiquen la base teórica de esta memoria.
 
-    \item Estudio de la data.
+    \item Estudio de los datos.
 
     Se realizará un estudio de los datos existentes para comprender concretamente las bases de datos datos requeridos.  
 
     \item Definición de estrategia de pre-procesamiento de datos.
 
-    Se investigará sobre las estrategias de pre-procesamiento y elegirá la que mejor se adapte en base al estudio realizado en el item anterior. Dentro de esta etapa se llevará a cabo la normalización y selección de la data para realizar los análisis.
+    Se investigará sobre las estrategias de pre-procesamiento y elegirá la que mejor se adapte en base al estudio realizado en el item anterior. Dentro de esta etapa se llevará a cabo la normalización y selección de los datos para realizar los análisis.
 
     \item Construcción de la red de nodos.
 
-    En esta etapa se realizará la construcción de un grafo dirigido con nodos a partir de la data estudiada.
+    En esta etapa se realizará la construcción de un grafo dirigido con nodos a partir de los estudiados.
 
     \item Análisis de la red
     \begin{enumerate}
@@ -304,7 +304,7 @@
     \item Semestre 2014-2
     \begin{enumerate}
     \item Investigación bibliográfica 
-    \item Estudio de la data
+    \item Estudio de los datos
     \item Definición de estrategia de pre-procesamiento de datos
     % mencionar que esta parte se intentará completar. El compromiso es medio.
     \end{enumerate}
@@ -345,7 +345,7 @@
 	
 	Formalmente definimos un grafo dirigido con pesos como $G=(N,L,W)$ que representa todas las etapas realizadas sobre cada para de paraderos durante una semana. $N$ denota los paraderos o nodos que representa el área o sector donde está ubicado, el conjunto $L$ denota los traslados entre dos paraderos o áreas, por lo que $L$ corresponde a un conjunto de pares ordenados de $N$, y el conjunto $W$ denota el volumen (cantidad) de traslados entre dos paraderos. Según lo anterior, $N$ son los nodos del grafo, $L$ representa los arcos y $W$ denota los pesos de cada arco en $L$.
 	
-	Por otro lado, Munizaga y Palma (2011) \cite{Procesamiento_datos} (explicado en la sección \ref{sec:Analisis_datos}) proponen una metodología para crear una \textit{matriz Origen-Destino}, generando la oportunidad de modelar la construcción teórica descrita en el párrafo anterior en sistemas donde solo se valida en un sentido, como lo es en el caso de Chile.
+	Por otro lado, Munizaga y Palma (2012) \cite{Procesamiento_datos} (explicado en la sección \ref{sec:Analisis_datos}) proponen una metodología para crear una \textit{matriz Origen-Destino}, generando la oportunidad de modelar la construcción teórica descrita en el párrafo anterior en sistemas donde solo se valida en un sentido, como lo es en el caso de Chile.
 	
 	\subsubsection{Análisis complejo de la red}    
 
@@ -469,7 +469,7 @@ Para solucionar el problema planteado se cuenta el número de puntos en las comu
     
     \subsection{Análisis de datos}\label{sec:Analisis_datos}
 
-	A continuación se detalla la forma en que funciona el sistema de transporte público que origina los datos, como se estima el proceso de bajada y por último los detalles de las tablas obtenidas posterior a la estimación. Tanto la metodología como los supuestos aquí explicados son expuestos y propuestos por Munizaga y Palma (2011) \cite{Procesamiento_datos}.
+	A continuación se detalla la forma en que funciona el sistema de transporte público que origina los datos, como se estima el proceso de bajada y por último los detalles de las tablas obtenidas posterior a la estimación. Tanto la metodología como los supuestos aquí explicados son expuestos y propuestos por Munizaga y Palma (2012) \cite{Procesamiento_datos}.
 	
 	\subsubsection{Sistema tarifario}
 En Santiago de Chile, el sistema AFC utilizado corresponde a las tarjetas de pago, donde en buses es el único método disponible y en metro es el más utilizado.
@@ -494,10 +494,10 @@ Cruzando la información de transacción y posición de las bases de datos por c
 
 \subsubsection{Estimación de bajadas}
 
-Como en el sistema de tarifa solo se validan las subidas, es necesario estimar los puntos de bajadas de las transacciones. Es aquí donde se utilizan una serie de supuestos para entender el comportamiento general de los usuarios dentro del sistema. Para lo anterior debemos definir lo que se entiende como un viaje, y \textit{Ortúzar and willumsen, 2011}\cite{Viaje} lo definen como:
+Como en el sistema de tarifa solo se validan las subidas, es necesario estimar los puntos de bajadas de las transacciones. Es aquí donde Munizaga y Palma (2012)\cite{Procesamiento_datos} utilizan una serie de supuestos para entender el comportamiento general de los usuarios dentro del sistema. Para lo anterior debemos definir lo que se entiende como un viaje, y \textit{Ortúzar and Willumsen, 2011}\cite{Viaje} lo definen como:
 
 \begin{center}
-	\textit{``Un viaje se define como un movimiento desde un punto de origen a un punto de destino"}
+	\textit{``Un viaje se define como un movimiento desde un punto de origen a un punto de destino donde se realiza una actividad"}
 \end{center} 
 
 Esta definición origina la consideración de etapas dentro de un viaje, una etapa es la utilización de un servicio en particular (bus o metro). Es importante notar que no se consideran los cambios entre líneas de metro.
@@ -513,7 +513,7 @@ Los supuestos para llevar a cabo esta estimación son:
 	\item Si el tiempo de transbordo\footnote{entendido como el tiempo entre que se bajó de un servicio y se subió al siguiente.} es inferior a 30 minutos, entonces este último servicio forma parte del mismo viaje, de lo contrario se considera como uno nuevo.\cite{Procesamiento_datos}
 \end{itemize}
 
-Según todo lo anterior Munizaga y Palma (2011)\cite{Procesamiento_datos} son capaces de estimar correctamente cerca del 80\% de los datos utilizados. Dado que es necesario conocer esta información, se restringe la data al porcentaje de datos que forman parte del resultado exitoso.
+Según todo lo anterior Munizaga y Palma (2012)\cite{Procesamiento_datos} son capaces de estimar cerca del 80\% de los datos utilizados. Dado que es necesario conocer esta información, se restringe los datos al porcentaje de datos que forman parte del resultado exitoso.
 
 %\subsubsection{Identificación de actividades}
 % evaluar si esto es necesario ya que pareciera que no.
@@ -521,7 +521,7 @@ Según todo lo anterior Munizaga y Palma (2011)\cite{Procesamiento_datos} son ca
 
 \subsubsection{Descripción de los datos}
 
-El procedimiento anterior ya se encuentra realizado para los datos comprendidos entre el 14 de abril de 2013 al 20 de abril de 2013 por lo que será este tramo el que será utilizado para realizar el análisis espacial y dado que es requerido conocer cada etapa que realiza una persona, se opta por utiliza la tabla de etapas en donde una fila representa una etapa de un viaje determinado. Esta tabla actualmente contiene 42 columnas producto de diversos análisis que se han realizado con ellas pero que no son todos útiles para el desarrollo de esta memoria por lo que se omiten algunos. A continuación se listan los campos a ser utilizados para el procesamiento:
+El procedimiento anterior ya se encuentra realizado para los datos comprendidos entre el 14 de abril de 2013 al 20 de abril de 2013 por lo que será este tramo el que será utilizado para realizar el análisis espacial y dado que es requerido conocer cada etapa que realiza una persona, se opta por utiliza la tabla de etapas en donde una fila representa una etapa de un viaje determinado. Esta tabla actualmente contiene 42 columnas producto de diversos análisis que se han realizado con ellas pero que no son todos útiles para el desarrollo de esta memoria por lo que se omiten algunos. En la tabla \ref{tabla:etapa} se listan los campos a ser utilizados para el procesamiento.
 
 \begin{table}
 \begin{center}
@@ -598,14 +598,14 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
     %================================================================================================================
     \section{Estrategia de procesamiento}
   
-	En esta sección se describirán las acciones a llevar a cabo en el procesamiento de la data, esto consiste en describir la forma en la que se llevará a cabo el procedimiento para elaborar el grafo y calcular los distintos indicadores descritos en la sección \ref{sec:Analisis_bibliografia}. Para lo anterior es necesario primero detallar las herramientas que se utilizarán para luego pasar a describir 
+	En esta sección se describirán las acciones a llevar a cabo en el procesamiento de los datos, esto consiste en describir la forma en la que se llevará a cabo el procedimiento para elaborar el grafo y calcular los distintos indicadores descritos en la sección \ref{sec:Analisis_bibliografia}. Para lo anterior es necesario primero detallar las herramientas que se utilizarán para luego pasar a describir 
 
 	\subsection{Herramientas a utilizar}
 	
 	La base de datos que contiene las etapas se encuentra en un Sistema Gestor de Base de Datos (\textit{SGBD}) \textbf{Postgres} versión 9.1 y para gestionar los datos se posee una Graphic Unit Interface (\textit{GUI}) llamada \textit{PgAdmin III} cuya versión es 1.18.1 con la cuál se manipulan los distintos requerimientos al SGBD. 
 	
 	
-	\subsection{Filtrar la data}
+	\subsection{Filtrar los datos}
 	
 	
 		
