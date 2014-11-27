@@ -334,20 +334,21 @@
     Esta memoria se basa principalmente en la metodología propuesta por Cheng Zhong et al. (2014) \cite{Estructura_urbana}, la cual provee un método cuantitativo para la detección de \textbf{Centros de flujo}, \textbf{Centros} y \textbf{Bordes} pudiendo identificar estructuras urbanas a partir de datos pasivos de transporte público. Dentro de este mismo documento se establece una vinculación entre los centros de flujo, centros y bordes con fenómenos urbanos reales dado que utiliza un grafo generado a partir de datos obtenidos del comportamiento de la gente. Además permite aplicar nuevas técnicas para detección de bordes basadas en otras metodologías que puedan aparecer en el futuro, permitiendo la comparación entre ellas. Por lo tanto, la metodología allí expuesta es utilizada en esta memoria para la generación de las mismas estructuras pero para ser analizada con los datos locales de transporte público.
     
 	\subsubsection{Redes espaciales} 
-	
+	\todo{Quizás detallar maś.}
 	Una red espacial se entiende como un grafo cuyos vértices y arcos representan objetos geométricos del mundo real. Los nodos tienen una posición relativa a un sistema de referencia específico y los arcos expresan la forma física en que interactúan entre ellos, entendiéndose esto último como la forma en que se puede llegar físicamente de uno a otro.
 	
 	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
 	
 	En los últimos años, los estudios sobre estás redes comenzaron a incorporar medidas de peso que reflejan los datos de movimientos urbanos como flujos sobre la red pero concentrado en el sistema de tránsito, no sobre los espacios urbanos asociados a estos.
+	
 	Además de los datos obtenidos a partir del transporte público han existido investigaciones basadas en otras fuentes de datos, como lo son los AVL basado en GPS (\textit{Global Positioning System}) o conjuntos de datos telefónicos. En particular, el artículo de Cheng Zhong et al. (2014)  utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público de singapur.
     
     
     \subsubsection{Construcción y representación de la red} 
 	
-	Formalmente definimos un grafo dirigido con pesos como $G=(N,L,W)$ que representa todas las etapas realizadas sobre cada para de paraderos durante una semana. $N$ denota los paraderos o nodos que representa el área o sector donde está ubicado, el conjunto $L$ denota los traslados entre dos paraderos o áreas, por lo que $L$ corresponde a un conjunto de pares ordenados de $N$, y el conjunto $W$ denota el volumen (cantidad) de traslados entre dos paraderos. Según lo anterior, $N$ son los nodos del grafo, $L$ representa los arcos y $W$ denota los pesos de cada arco en $L$.
+	Formalmente definimos un grafo dirigido con pesos como $G=(N,L,W)$ que representa todas las etapas de viajes realizadas. $N$ denota los paraderos existentes, a éste se asocia el área o sector donde está ubicado, el conjunto $L$ denota los traslados entre dos paraderos o áreas, por lo que $L$ corresponde a un conjunto de pares ordenados de $N$, y el conjunto $W$ denota el volumen (cantidad) de traslados entre dos paraderos. Según lo anterior, $N$ son los nodos del grafo, $L$ representa los arcos y $W$ denota los pesos de cada arco en $L$.
 	
-	Por otro lado, Munizaga y Palma (2012) \cite{Procesamiento_datos} (explicado en la sección \ref{sec:Analisis_datos}) proponen una metodología para crear una \textit{matriz Origen-Destino}, generando la oportunidad de modelar la construcción teórica descrita en el párrafo anterior en sistemas donde solo se valida en un sentido, como lo es en el caso de Chile.
+	Por otro lado, Munizaga y Palma (2012) \cite{Procesamiento_datos} (explicado en la sección \ref{sec:Analisis_datos}) proponen una metodología para crear una \textit{matriz Origen-Destino}, generando la oportunidad de modelar la construcción teórica descrita en el párrafo anterior en sistemas donde solo se valida en un sentido, como lo es en el caso de Santiago de Chile.
 	
 	\subsubsection{Análisis complejo de la red}    
 
@@ -378,17 +379,18 @@ Estas propiedades permiten descubrir los niveles de actividad que mantiene cada 
 
 	\paragraph{Centralidades}
 	
-	A las propiedades generales agregamos 2 tipos de centralidad adicionales, una es la \textit{centralidad de intermediación}, la que se usará para definir los \textbf{centros de flujo} y el segundo es el \textit{PageRank} que mide la accesibilidad en la red tomando en cuenta todos los vínculos, directos e indirectos, sus pesos y dirección. Este último indicador para medir el grado en que cada nodo es un \textbf{centro}.
+	A las propiedades generales agregamos 2 tipos de centralidad adicionales, una es la \textit{centralidad de intermediación}, la que se usará para definir los \textbf{centros de flujo} y el segundo es el \textit{PageRank} que mide la accesibilidad en la red tomando en cuenta todos los vínculos, directos e indirectos, sus pesos y dirección. Este último indicador será útil para medir el grado en que cada nodo es un \textbf{centro}.
 	
-	La centralidad de intermediación es un indicador que mide cuán bien conectada está un área o paradero, formalmente se define para un nodo $k$ como el número el número de caminos más cortos que conecta dos áreas $i$ y $j$ en el grafo que pasan a través del nodo $k$, y se define como
+	La centralidad de intermediación es un indicador que mide cuán bien conectada está un área o paradero, formalmente se define para un nodo $k$ como el número de caminos más cortos que conecta dos áreas $i$ y $j$ en el grafo que pasan a través del nodo $k$, y se define como
 	
 $$
 	C_{intermediacion}(k) = \sum_{ij} \frac{\delta_{ij} (k)}{\delta_{ij}}
 $$
 
-donde $\delta_{ij}(k)$ es el número de caminos más cortos entre $i$ y $j$ que pasan por $k$, mientras que $\delta_{ij}$ es el número total de caminos entre $i$ y $j$. En ciertos casos esta medida se normaliza dividiéndola por $N$ (cantidad de nodos) lo cual ellos no realizaron, utilizando la forma tal cual aparece en la definición. 
+donde $\delta_{ij}(k)$ es el número de caminos más cortos entre $i$ y $j$ que pasan por $k$, mientras que $\delta_{ij}$ es el número total de caminos entre $i$ y $j$. 
+%En ciertos casos esta medida se normaliza dividiéndola por $N$ (cantidad de nodos) lo cual ellos no realizaron, utilizando la forma tal cual aparece en la definición. 
 
-Por otro lado, PageRank mide el rol de un nodo o área local en atraer flujos desde todos los nodos de la red. Esta medida es una representación genérica de las probabilidades de un peatón cualquiera de visitar un nodo cualquiera, en este sentido está relacionado con procesos de Markov de primer orden, que es la base de muchos procesos de interacción social, en este contexto  fue originalmente usado para extraer información acerca de las estructuras de los vínculos de Internet (Rosvall y Bergstrom 2008)\cite{Infomap}, muy similar al \textit{ranking de páginas de Google}. Según lo anterior de define la probabilidad $r_j$ de visitar el nodo $j$ como:
+Por otro lado, \textit{PageRank} mide el rol de un nodo o área local en atraer flujos desde todos los nodos de la red. Esta medida puede ser vista como una representación genérica de las probabilidades de un peatón cualquiera de visitar un nodo cualquiera, en este sentido está relacionado con procesos de Markov de primer orden (Brin y Page 1998)\cite{markov}, que es la base de muchos procesos de interacción social, en este contexto  fue originalmente usado para extraer información acerca de las estructuras de los vínculos de Internet (Rosvall y Bergstrom 2008)\cite{Infomap}, muy similar al \textit{ranking de páginas de Google}. Según lo anterior de define la probabilidad $r_j$ de visitar el nodo $j$ como:
 
 $$
 	r_j = [(1-\rho)/N]+\rho\sum_i r_ip_{ij}
@@ -411,26 +413,27 @@ $	p_{ij}=w_{ij}/\sum\limits_k w_{ik}$ , y $\sum\limits_j p_{ij}= 1$
 %Dado que $r_j$ está definido en función de otros $r_k$ es necesario resolver un sistema matricial
 %\todo{Explicar más.}
 
-El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma valores entre $0$ y $1$, en esta oportunidad será fijado en $0.85$. Si $\rho=1$ entonces todos los nodos tienen una probabilidad positiva y luego, la matriz $\{p_{ij}\}$ tiene que estar fuertemente conectada.
+El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma valores entre $0$ y $1$, en el estudio de Chen Zhong et. al. (2014) fue fijado en $0.85$. Si $\rho=1$ entonces todos los nodos tienen una probabilidad positiva y luego, la matriz $\{p_{ij}\}$ tiene que estar fuertemente conectada.
 
 	\paragraph{Estructura de comunidad}
 	
-	Los bordes a identificar sobre la superficie a analizar sirven para particionar la estructura espacial y así crear pequeños vecindarios a partir de ésta que denominamos comunidades. Estos son obtenidos a partir de la detección de \textit{estructura de comunidad}, que se refiere a una \textbf{propiedad de un grafo que permite agrupar nodos de éste que están densamente conectados entre ellos en comparación con el resto de nodos del grafo}. Según lo anterior, los bordes son generados a partir de un descriptor de bordes que particiona la red en dos niveles donde los nodos forman módulos que llamamos comunidades y la división entre los modulos que llamamos bordes. Existen varias formas de generar comunidades pero una condición necesaria para este trabajo es la consideración de las variables  de \textbf{densidad} y \textbf{flujo de interacciones} al momento de crear ástas. Lo anterior basado en que estas dos variables sean mas fuertes dentro de una comunidad y que el volumen que está dentro de cada comunidad es mayor en comparación con el resto de la red.
+	Los bordes a identificar sobre la superficie a analizar sirven para particionar la estructura espacial y así crear pequeños vecindarios a partir de ésta que denominamos comunidades. Estos son obtenidos a partir de la detección de una \textit{estructura de comunidad}, que se refiere a una \textbf{propiedad de un grafo que permite agrupar nodos de éste que están densamente conectados entre ellos en comparación con el resto de nodos del grafo}. Según lo anterior, los bordes son generados a partir de un descriptor de bordes que particiona la red en dos niveles donde los nodos forman módulos que llamamos comunidades y la división entre estos que llamamos bordes. Existen varias formas de generar comunidades pero una condición necesaria para este trabajo es la consideración de las variables  de \textbf{densidad} y \textbf{flujo de interacciones} al momento de crear éstas. Lo anterior basado en que estas dos variables deben ser mas fuertes dentro de una comunidad y que el volumen que está dentro de cada comunidad es mayor en comparación con el resto de la red.
 	
-	Para la generación de las comunidades se utilizará el framework \textit{map equation} basado en un procedimiento llamado \textit{infomap} desarrollado por Rosvall y Bergstrom el 2008 \cite{infomap}. Es uno de los algoritmos que ha mostrado mejor rendimiento para la generación de comunidades y uno de los pocos adecuados para redes con peso y dirección. Otra característica relevante del algoritmo \textit{infomap} es que no solo considera la relación entre pares de nodos sino que también toma en cuenta los flujos presentes entre estos. Para llevar a cabo lo anterior se utilizan flujos probabilisticos creados a partir de generaciones aleatoreas que simulan recorridos sobre el grafo y que asignan también probabilidades a cada nodo de ser visitado aletariamente (utilizando el algoritmo \textit{PageRank}), con el objetivo de modelar los comportamientos de flujo de un sistema real.
-	% falta hablar que tienen la mínima entropía.
+	Para la generación de las comunidades se utiliza el framework \textit{map equation} basado en un procedimiento llamado \textit{infomap} desarrollado por Rosvall y Bergstrom el 2008 \cite{Infomap}. Lo anterior se justifica por Lancichinetti y Fortunato (2009)\cite{Comparar_generador_comunidad}, donde concluyen que es uno de los algoritmos que ha mostrado mejor rendimiento para la generación de comunidades y uno de los pocos adecuados para redes con peso y dirección. Otra característica relevante del algoritmo \textit{infomap} es que no solo considera la relación entre pares de nodos sino que también toma en cuenta los flujos presentes entre estos. 
 	
-	\todo{Revisar parrafo siguiente. Falta explicar porque tiene entropía mínima.}
-	En resumen, el algoritmo divide los nodos del grafo en modulos que son altamente estructurados, lo que implica que la entropía del grafo particionado es mínima. Esta entropía es una subdivisión de la entropía total del sistema distribuida entre los modulos con un peso entropico entre los módulos , esos pesos son relacionados a la probabilidad de ocurrencia de cada módulo. Por lo anterior, Rosvall y Bergstrom define esta entropía como:
+	Para llevar a cabo lo anterior se utilizan flujos probabilisticos creados a partir de generaciones aleatoreas que simulan recorridos sobre el grafo y que asignan también probabilidades a cada nodo de ser visitado aleatoriamente (utilizando el algoritmo \textit{PageRank}), con el objetivo de modelar los comportamientos de flujo de un sistema real.
+	% falta hablar que tienen la mínima entropía. Se justifica con la cita.
+	
+	En resumen, el algoritmo divide los nodos del grafo en módulos que son altamente estructurados, lo que implica que la entropía del grafo particionado es mínima (Rosvall y Bergstrom, 2008)\cite{Infomap}. Esta entropía total del sistema está dividida en la entropía de moverse entre los módulos más en la entropía de moverse dentro de un módulo , las proporciones son relacionados a la probabilidad de ocurrencia de cada uno. Por lo anterior, Rosvall y Bergstrom (2008) define esta entropía como:
 	$$
 	\begin{rcases}
 	Lg(M) &= H(P) + \sum\limits_{i=1}^m P_i H(p)_i \\
 	      &= -p\sum\limits_{i=1}^m P_i log P_i -\sum\limits_{i=1}^m P_i\sum\limits_{k=1}^{M_i} \frac{P_k}{P_i}log\frac{P_k}{P_i}
 	\end{rcases} , P_i = \sum_k p_k
 	$$
-% Es la entropía del módulo más la entropía que aporta cada nodo del módulo normalizada(por ello la división de P_i)
+% Es la entropía de moverse entre módulos más la entropía de moverse dentro de un módulo, normalizada(por ello la división de P_i)
 	
-donde $P_i$	es la probabilidad de se visitada la comunidad $i$ y $P_k/P_i$ es la probabilidad de visitar el nodo $k$ dado que la comunidad $i$ es visitada. Por último $M_i$ es la cantidad de nodos que contiene la comunidad $i$. Por último, La división por $P_i$ que afecta a los $P_k$ cumple la función de normalizar.
+donde $P_i$	es la probabilidad de ser visitada la comunidad $i$ y $P_k/P_i$ es la probabilidad de visitar el nodo $k$ dado que la comunidad $i$ es visitada. Además $M_i$ es la cantidad de nodos que contiene la comunidad $i$ y la división por $P_i$ que afecta a los $P_k$ cumple la función de normalizar.
 
 La forma en que trabaja es primeramente configurando cada nodo al módulo que pertenece para luego, en cada paso, identificar que nodo se puede agregar a que módulo tal que la entropía general decrezca. Este proceso continua hasta que no se pueda reducir más la entropía, asegurando que con esa configuración se obtiene la partición más estructurada.
 
@@ -582,6 +585,10 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 	
 	Tanto las definiciones de propiedades globales como las formulas definidas aquí serán ocupadas tal cual aparecen de manera de más adelante poder comparar los resultados obtenidos con los mostrados en el artículo, que está basado en el sistema de transporte público de Singapur.
 
+	El \textit{factor de amortiguación} será ajustado al propuesto por Chen Zhong (2014)\cite{Estructura_urbana}, no es campo de esta memoria el considerar variaciones de este factor, pro lo tanto será fijado en $0.85$.
+
+	Se utilizará el framework \textit{map equation}	 para llevar a cabo la generación de comunidades dado que plantea el mejor desempeño según Lancichinetti y Fortunato (2009) \cite{Comparar_generador_comunidad}.
+	
     Este trabajo al igual que el artículo en el que está basado, utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público, con la salvedad de que aquí corresponden al sistema de transporte de santiago de Chile, con estos se construirá  la red espacial para la posterior construcción de las estructuras descritas (centros, centros de flujo y bordes).
 	
 	Como los datos de Santiago de Chile presentan las mismas características luego de aplicar el método de estimación de Munizaga y Palma (2012), se observa que estos son aptos para replicar el análisis de Singapur. Es importante decir que este procesamiento fue realizado con anterioridad a este trabajo y aquí se documenta con fines explicativos.
