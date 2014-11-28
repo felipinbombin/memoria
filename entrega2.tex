@@ -424,7 +424,7 @@ El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma v
 	Para llevar a cabo lo anterior se utilizan flujos probabilisticos creados a partir de generaciones aleatoreas que simulan recorridos sobre el grafo y que asignan también probabilidades a cada nodo de ser visitado aleatoriamente (utilizando el algoritmo \textit{PageRank}), con el objetivo de modelar los comportamientos de flujo de un sistema real.
 	% falta hablar que tienen la mínima entropía. Se justifica con la cita.
 	
-	En resumen, el algoritmo divide los nodos del grafo en módulos que son altamente estructurados, lo que implica que la entropía del grafo particionado es mínima (Rosvall y Bergstrom, 2008)\cite{Infomap}. Esta entropía total del sistema está dividida en la entropía de moverse entre los módulos más en la entropía de moverse dentro de un módulo , las proporciones son relacionados a la probabilidad de ocurrencia de cada uno. Por lo anterior, Rosvall y Bergstrom (2008) define esta entropía como:
+	En resumen, el algoritmo divide los nodos del grafo en módulos que son altamente estructurados, lo que implica que la entropía del grafo particionado es mínima (Rosvall y Bergstrom, 2008)\cite{Infomap}. Esta entropía total del sistema está dividida en la entropía de moverse entre los módulos más en la entropía de moverse dentro de un módulo, las proporciones son relacionados a la probabilidad de ocurrencia de cada uno. Por lo anterior, Rosvall y Bergstrom (2008) define esta entropía como:
 	$$
 	\begin{rcases}
 	Lg(M) &= H(P) + \sum\limits_{i=1}^m P_i H(p)_i \\
@@ -433,29 +433,29 @@ El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma v
 	$$
 % Es la entropía de moverse entre módulos más la entropía de moverse dentro de un módulo, normalizada(por ello la división de P_i)
 	
-donde $P_i$	es la probabilidad de ser visitada la comunidad $i$ y $P_k/P_i$ es la probabilidad de visitar el nodo $k$ dado que la comunidad $i$ es visitada. Además $M_i$ es la cantidad de nodos que contiene la comunidad $i$ y la división por $P_i$ que afecta a los $P_k$ cumple la función de normalizar.
+donde $P_i$	es la probabilidad de ser visitada la comunidad $i$, $p$ es la probabilidad que un caminante cualquiera de cambiarse de modulo y $P_k$ es la probabilidad de visitar el nodo $k$. Además $M_i$ es la cantidad de nodos que contiene la comunidad $i$ y la división por $P_i$ que afecta a los $P_k$ cumple la función de normalizar.
 
-La forma en que trabaja es primeramente configurando cada nodo al módulo que pertenece para luego, en cada paso, identificar que nodo se puede agregar a que módulo tal que la entropía general decrezca. Este proceso continua hasta que no se pueda reducir más la entropía, asegurando que con esa configuración se obtiene la partición más estructurada.
+La forma en que trabaja es primeramente asociando cada nodo al módulo que pertenece, donde en cada paso, se identifica que nodo se puede agregar a que módulo tal que la entropía general decrezca. Este proceso continua hasta que no se pueda reducir más la entropía, asegurando que con esa configuración se obtiene la partición más estructurada.
 
-Es importante decir que $M_i$ es un módulo que contiene un conjunto de $k \in M_i$ nodos y que llega a ser estable (sin alteraciones) una vez que se obtiene la entropía mínima. Luego, estas comunidades son mapeadas a sus respectivas ubicaciones geográficas.
+Es importante decir que $M_i$ es un módulo que contiene un conjunto de $k \in M_i$ nodos y que llega a ser estable (sin alteraciones) una vez que se obtiene la entropía mínima (Rosvall y Bergstrom, 2008). Luego, estas comunidades son mapeadas a sus respectivas ubicaciones geográficas.
 
-Lo que resta por hacer en este punto es transformar un conjunto de puntos discretos en regiones que particionan el espacio. Para lo anterior se realiza una interpolación espacial, para esto se considera el siguiente supuesto:
+Con lo anterior ya hecho, lo que resta por hacer es transformar los conjuntos de puntos discretos obtenidos por \textit{PageRank} en regiones que particionan el espacio geográfico, para esto se realiza una interpolación espacial que considera el siguiente supuesto:
 
 \begin{center}
-	\textit{``Cada persona escoge el paradero de bus/metro más cercano"}
+	\textit{``Cada persona escoge el paradero de bus/metro más cercano a la posición en la que se encuentra"}
 \end{center} 
 
-Según lo anterior, aplicamos la interpolación a cada zona geográfica cercana a un paradero de bus/metro. La variante de interpolación escogida corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) lo que hace disminuir la influencia de un paradero de bus en función de la distancia. Estos pesos son definidos de la siguiente forma 
+Según lo anterior, Chen Zhong et. al. (2014) propone aplicar una interpolación a cada zona geográfica cercana a un paradero de bus/metro. La variante de interpolación escogida corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) lo que hace disminuir la influencia de un paradero de bus en función de la distancia. Estos pesos son definidos de la siguiente forma 
 
 $$
-	W_i(x,y) = d_{ij} (x,y)^\lambda
+	W_i(x,y) = 1/d_{ij} (x,y)^\lambda
 $$
 
-Donde $W_i(x,y)$ es el peso de la ubicación del paradero $i$ en las coordenadas $x,y$ que son los puntos vecinos más cercanos a $j$ y $d_{ij} (x,y)$ es la distancia a la coordenada $x,y$ desde el paradero $i$ hacia el paradero vecino más cercano $j$.
+Donde $W_i(x,y)$ es el peso de la ubicación del paradero $i$ en las coordenadas $(x,y)$ que son los puntos vecinos más cercanos a $j$ y $d_{ij} (x,y)$ es la distancia a la coordenada $(x,y)$ desde el paradero $i$ hacia el paradero vecino más cercano $j$.
 
 Una observación que se desprende de la fórmula es que los pesos están normalizados tal que su suma sea 1, es decir, $\sum_{\forall x,y} W_i (x,y)=1$ y $\lambda$ es un parámetro arbitrario que en este caso es $2$, lo que implica que sigue la ley del inverso al cuadrado.
 
-Por último cada coordenada espacial debe ser asignada a una única comunidad, esto se hace utilizando un  \textit{resumen estadísticos}\footnote{Se entiende como la información dada por una rápida y simple descripción de los datos como la media, mediana, moda, rango y desviación estándar.}. El principal problema aquí es tratar aquellas coordenadas que pertenecen a una comunidad en la red pero que no están geográficamente adyacentes al grupo principal que define la comunidad	, esto se origina porque el algoritmo de detección de comunidades no está restringido a lograr áreas geográficamente contiguas.
+Por último cada coordenada espacial debe ser asignada a una única comunidad, esto lo logran utilizando un  \textit{resumen estadísticos}\footnote{Se entiende como la información dada por una rápida y simple descripción de los datos como la media, mediana, moda, rango y desviación estándar.}. El principal problema aquí es tratar aquellas coordenadas que pertenecen a una comunidad en la red pero que no están geográficamente adyacentes al grupo principal que define la comunidad	, esto se origina porque el algoritmo de detección de comunidades no está restringido a lograr áreas geográficamente contiguas.
 
 Aunque la investigación reporta que esto no ocurre muy a menudo, y que cuando sucede, es en los limites de las áreas que definen las comunidades y se da principalmente porque las personas que viven en esas áreas tienen diferentes preferencias de viajes.
 
@@ -481,25 +481,25 @@ El sistema de pago en Transantiago es tal que cada pasajero paga una tarifa cuan
 
 El sistema se caracteriza por tener cerca de 300 rutas de buses, 6000 buses disponibles agrupados en 6 operadores\footnote{Un operador es una empresa que se encarga de prestar servicio a una zona de santiago.}, aproximadamente 10.000 paraderos y una cifra que bordea los 150 kilómetros de rieles para el metro. 
 
-Dada la alta demanda que ha experimentado, se crearon 150 zonas físicas llamadas ``zona paga" que están equipadas con sistema de pago (validadores) de vehículo donde el pasajero paga cuando entra a la estación, lo cual incrementa la eficiencia de las subidas a los buses pero genera una dificultad para determinar cual bus de todos los que allí se detienen tomó. Es importante decir que estas estaciones de buses operan durante los horarios de alta demanda en puntos de congestión identificados previamente.
+Dada la alta demanda que ha experimentado, se crearon 150 zonas físicas llamadas ``zona paga" que están equipadas con sistema de pago (validadores) de vehículo donde el pasajero paga cuando entra a la estación, lo cual incrementa la eficiencia de las subidas a los buses pero genera una dificultad para determinar cual bus de todos los que allí se detienen tomó un usuario. Es importante decir que estas estaciones de buses operan durante los horarios de alta demanda en puntos de congestión identificados previamente.
 
-Todas las transacciones bip! Son guardadas en una base de datos que contiene información sobre los operadores y el instante en que la transacción fue hecha. Lo anterior se lleva a cabo por cada pasajero acercando su tarjeta al validador, cuando ingresa al bus, zona paga o metro. Cada validador adjunta a cada transacción que realiza un id asociado a el y que está a su vez, asociado con un bus, estación de bus o metro. La información recolectada por cada transacción incluye: \textbf{id de la tarjeta}, \textbf{tipo}\footnote{puede ser comercial o estudiante.},  \textbf{código de bus o sitio donde se realizó la transacción}, \textbf{fecha y hora}, \textbf{monto de pago}. La posición espacial de la transacción puede ser conocida directamente para las zonas paga y las estaciones de metro dado que son conocidas con anterioridad, para las transacciones hechas en buses es posible pero no está disponible en la base de datos de transacciones.
+Todas las transacciones bip! Son guardadas en una base de datos que contiene información sobre los operadores y el instante en que la transacción fue hecha. Lo anterior se lleva a cabo por cada pasajero acercando su tarjeta al validador cuando ingresa al bus, zona paga o metro. Cada validador adjunta a cada transacción que realiza un id asociado a el y que está a su vez, asociado con un bus, zona paga o metro. La información recolectada por cada transacción incluye: \textbf{id de la tarjeta}, \textbf{tipo}\footnote{puede ser comercial o estudiante.},  \textbf{código de bus o sitio donde se realizó la transacción}, \textbf{fecha y hora}, \textbf{monto de pago}. La posición espacial de la transacción puede ser conocida directamente para las zonas paga y las estaciones de metro dado que son conocidas con anterioridad, para las transacciones hechas en buses es posible pero no está disponible en la base de datos de transacciones.
 
 %Todas las semanas se realizan alrededor de 35 millones de transacciones con cerca de 3 millones de tarjetas bip!. Por otro lado, 
 
-Otra base de datos contiene información sobre la localización de todos los buses, como la \textbf{latitud}, \textbf{longitud}, \textbf{tiempo}, \textbf{fecha} y \textbf{velocidad instantánea}. Estos datos obtenidos a intervalos de 30 segundos y son asociados a cada bus a través de un número de placa y código de operador.
+Otra base de datos contiene información sobre la localización de todos los buses, como la \textbf{latitud}, \textbf{longitud}, \textbf{tiempo}, \textbf{fecha} y \textbf{velocidad instantánea}. Estos datos son obtenidos a intervalos de 30 segundos y son asociados a cada bus a través de un número de placa y código de operador.
 
-Cruzando la información de transacción y posición de las bases de datos por cada placa de bus o código de metro/estación de bus y tiempo, es posible identificar la localización espacial donde la transacción es realizada. Es así como en datos analizados del año 2009 y 2010 se logra una estimación exitosa en el 98,5\% y 99,9\% de los casos respectivamente.\cite{Procesamiento_datos}.
+Cruzando la información de transacción y posición de las bases de datos por cada placa de bus o código de metro/zona paga y tiempo, es posible identificar la localización espacial donde la transacción es realizada. Es así como en datos analizados del año 2009 y 2010 se logra una estimación en el 98,5\% y 99,9\% de los casos respectivamente.\cite{Procesamiento_datos}.
 
 \subsubsection{Estimación de bajadas}
 
-Como en el sistema de tarifa solo se validan las subidas, es necesario estimar los puntos de bajadas de las transacciones. Es aquí donde Munizaga y Palma (2012)\cite{Procesamiento_datos} utilizan una serie de supuestos para entender el comportamiento general de los usuarios dentro del sistema. Para lo anterior debemos definir lo que se entiende como un viaje, y \textit{Ortúzar and Willumsen, 2011}\cite{Viaje} lo definen como:
+Como en el sistema de tarifa solo se validan las subidas, es necesario estimar los puntos de bajadas de las transacciones. Es aquí donde Munizaga y Palma (2012)\cite{Procesamiento_datos} utilizan una serie de supuestos para entender el comportamiento general de los usuarios dentro del sistema. Para lo anterior utilizan la definición de viaje dada por \textit{Ortúzar y Willumsen, 2011}\cite{Viaje}:
 
 \begin{center}
 	\textit{``Un viaje se define como un movimiento desde un punto de origen a un punto de destino donde se realiza una actividad"}
 \end{center} 
 
-Esta definición origina la consideración de etapas dentro de un viaje, una etapa es la utilización de un servicio en particular (bus o metro). Es importante notar que no se consideran los cambios entre líneas de metro.
+Esta definición origina la consideración de etapas dentro de un viaje, una etapa es la utilización de un servicio en particular (bus o metro), entonces la combinación de estos hecha hasta que el usuario llegue al lugar donde debe llevar a cabo su actividad es lo que entendemos como un viaje. Es importante notar que no se consideran los cambios entre líneas de metro.
 
 Básicamente la idea es seguir una cadena de viajes de una tarjeta e identificar la posición de bajada (de bus o metro) mirando la posición y el tiempo de la próxima subida de esta tarjeta. Esto es solamente posible cuando la actual y siguiente transacción tiene información de posición, la cual es tomada de la base de datos de localización automática de vehículos. En el caso de la última transacción del día, se asume que el destino es cercano al punto donde el primer viaje del día comienza, encontrando así un viaje cíclico diario para los usuarios particulares. Si hay solo un viaje por tarjeta, no es posible inferir con solo un día de información.
 
@@ -520,7 +520,7 @@ Según todo lo anterior Munizaga y Palma (2012)\cite{Procesamiento_datos} son ca
 
 \subsubsection{Descripción de los datos}
 
-El procedimiento anterior ya se encuentra realizado para los datos comprendidos entre el 14 de abril de 2013 al 20 de abril de 2013 por lo que será este tramo el que será utilizado para realizar el análisis espacial y dado que es requerido conocer cada etapa que realiza una persona, se opta por utiliza la tabla de etapas en donde una fila representa una etapa de un viaje determinado. Esta tabla actualmente contiene 42 columnas producto de diversos análisis que se han realizado con ellas pero que no son todos útiles para el desarrollo de esta memoria por lo que se omiten algunos. En la tabla \ref{tabla:etapa} se listan los campos a ser utilizados para el procesamiento.
+El procedimiento anterior ya se encuentra realizado para los datos comprendidos entre el 14 de abril de 2013 al 20 de abril de 2013 por lo que será este tramo el que será utilizado para realizar el análisis espacial y dado que es requerido conocer cada etapa que realiza una persona, se opta por utilizar la tabla de etapas en donde una fila representa una etapa de un viaje determinado. Esta tabla actualmente contiene 42 columnas producto de diversos análisis que se han realizado con ellas pero que no son todos útiles para el desarrollo de esta memoria por lo que se omite la mayoría. En la tabla \ref{tabla:etapa} se listan los campos a ser utilizados para el procesamiento de los datos.
 
 \begin{table}[h]
 \begin{center}
@@ -575,9 +575,38 @@ El procedimiento anterior ya se encuentra realizado para los datos comprendidos 
 \label{tabla:etapa}
 \end{table}
 
-No se descarta que una vez realizada la etapa de visualizar los datos puedan requerirse más datos con respecto a cada etapa, como puede ser la fecha y hora, tipo de transporte, entre otros.
+No se descarta que una vez realizada la etapa de visualización puedan requerirse más datos con respecto a cada etapa, como puede ser la fecha y hora, tipo de transporte, entre otros.
 
-Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla \textbf{redpadaras} en conjunto con la tabla \textbf{estaciones\_metro} que contiene los datos de las estaciones de metro, que para efectos de este análisis son considerados paraderos adicionales.
+Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla \textbf{redpadaras}(ver tabla \ref{tabla:paradero}) en conjunto con la tabla \textbf{estaciones\_metro} (ver tabla \ref{tabla:estacion_metro}) que contiene los datos de las estaciones de metro, que para efectos de este análisis son considerados paraderos adicionales.
+
+
+\begin{table}[H]
+\begin{center}
+  \begin{tabular}{| l | p{7cm} |}
+    \hline
+    Nombre campo & Descripción \\ \hline \hline
+    cmp & desc. del campo \\ \hline
+  \end{tabular}
+\end{center}
+\caption{Atributos a utilizar de la tabla REDPARADAS}:
+\label{tabla:paradero}
+\end{table}
+
+\todo{explicar tabla paradero}
+
+\begin{table}[H]
+\begin{center}
+  \begin{tabular}{| l | p{7cm} |}
+    \hline
+    Nombre campo & Descripción \\ \hline \hline
+    cmp & desc. del campo \\ \hline
+  \end{tabular}
+\end{center}
+\caption{Atributos a utilizar de la tabla ESTACION\_METRO}:
+\label{tabla:estacion_metro}
+\end{table}
+
+\todo{explicar tabla est. metro}
 
     \subsubsection{Conclusiones}
     
@@ -588,6 +617,8 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 	El \textit{factor de amortiguación} será ajustado al propuesto por Chen Zhong (2014)\cite{Estructura_urbana}, no es campo de esta memoria el considerar variaciones de este factor, pro lo tanto será fijado en $0.85$.
 
 	Se utilizará el framework \textit{map equation}	 para llevar a cabo la generación de comunidades dado que plantea el mejor desempeño según Lancichinetti y Fortunato (2009) \cite{Comparar_generador_comunidad}.
+	
+La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) dado que no se hacen supuestos adicionales a los propuestos.
 	
     Este trabajo al igual que el artículo en el que está basado, utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público, con la salvedad de que aquí corresponden al sistema de transporte de santiago de Chile, con estos se construirá  la red espacial para la posterior construcción de las estructuras descritas (centros, centros de flujo y bordes).
 	
@@ -623,7 +654,17 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 	
 	Los resultados de la consulta anterior son almacenados en una nueva tabla que contiene solo los campos a ser utilizados (ver figura \ref{fig:limpiar_datos}).
 	
-		
+	\subsection{Cálculo de centralidades}	
+	
+	
+	\subsection{Cálculo de Bordes}
+		\subsubsection{Centralidad de intermediación}
+		\subsubsection{PageRank}
+	
+	\subsection{Generación de comunidades}
+	\subsection{Interpolación espacial}
+	
+	\subsection{Corrección de bordes}    
     
     %\newpage
     %================================================================================================================
