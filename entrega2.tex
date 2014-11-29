@@ -461,6 +461,11 @@ Aunque la investigación reporta que esto no ocurre muy a menudo, y que cuando s
 
 Para solucionar el problema planteado se cuenta el número de puntos en las comunidades en conflicto y se computa el algoritmo \textit{PageRank}, esto provoca que las coordenadas en disputa sean asignadas a su comunidad más cercana geográficamente. En la practica lo que se ocurre es un desplazamiento de los límites entre comunidades, de esta forma se obtiene una partición geográfica que abarca todo el espacio.
     
+	\subsubsection{Georeferenciación espacial}
+
+\todo{Falta completar.}
+En esta sección se debe explicar que es la georeferenciación, para que sirve, su definición formal y que es lo que se puede lograr con ella.
+    
 	\subsubsection{Visualización de información}    
     \todo{Falta documentar toda esta sección.}
 	En esta sección serán descritos algunos aspectos relevantes de la visualización de información con el fin de justificar teóricamente preguntas como: ¿que colores utilizar? ¿que tipo de visualización mostrar? ¿cuál es el objetivo de la visualización que estoy creando? entre otras. 
@@ -530,15 +535,15 @@ El procedimiento anterior ya se encuentra realizado para los datos comprendidos 
 %    tiempo\_subida & fecha y hora en que se realizó una validación en el sistema  \\ \hline
     id & identificador de la tarjeta que realizó la validación \\ \hline
 %    pago &  \\ \hline
-%    x\_subida &  \\ \hline
-%    y\_subida &  \\ \hline
+    x\_subida &  \\ \hline
+    y\_subida &  \\ \hline
 %    tipo\_transporte &  \\ \hline
 %    serviciosentidovariante &  \\ \hline
 %    tipo\_dia &  \\ \hline
     nviaje &  Indica el número de viaje asociado al id de la tarteja de pago\\ \hline
     netapa &  lugar que ocupa la etapa dentro de un viaje.\\ \hline
-%    x\_bajada &  \\ \hline
-%    y\_bajada &  \\ \hline
+    x\_bajada &  \\ \hline
+    y\_bajada &  \\ \hline
 %    tiempo\_bajada &  \\ \hline
     par\_subida & Indica el paradero en donde abordo el servicio. \\ \hline
     par\_bajada & Señala el paradero de donde descendió del servicio. \\ \hline
@@ -620,11 +625,14 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 	
 La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) dado que no se hacen supuestos adicionales a los propuestos.
 	
+\todo{explicar que se usará georeferenciación, que estándar, etc..}	
+	
     Este trabajo al igual que el artículo en el que está basado, utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público, con la salvedad de que aquí corresponden al sistema de transporte de santiago de Chile, con estos se construirá  la red espacial para la posterior construcción de las estructuras descritas (centros, centros de flujo y bordes).
 	
 	Como los datos de Santiago de Chile presentan las mismas características luego de aplicar el método de estimación de Munizaga y Palma (2012), se observa que estos son aptos para replicar el análisis de Singapur. Es importante decir que este procesamiento fue realizado con anterioridad a este trabajo y aquí se documenta con fines explicativos.
 		
-%	Hablar de que se ha mejorado el porcentaje de estimación exitosa.
+\todo{Hablar que es lo que se hará de la sección de la visualización.}
+
     \newpage
     %================================================================================================================
     \section{Estrategia de procesamiento}
