@@ -334,8 +334,10 @@
     Esta memoria se basa principalmente en la metodología propuesta por Cheng Zhong et al. (2014) \cite{Estructura_urbana}, la cual provee un método cuantitativo para la detección de \textbf{Centros de flujo}, \textbf{Centros} y \textbf{Bordes} pudiendo identificar estructuras urbanas a partir de datos pasivos de transporte público. Dentro de este mismo documento se establece una vinculación entre los centros de flujo, centros y bordes con fenómenos urbanos reales dado que utiliza un grafo generado a partir de datos obtenidos del comportamiento de la gente. Además permite aplicar nuevas técnicas para detección de bordes basadas en otras metodologías que puedan aparecer en el futuro, permitiendo la comparación entre ellas. Por lo tanto, la metodología allí expuesta es utilizada en esta memoria para la generación de las mismas estructuras pero para ser analizada con los datos locales de transporte público.
     
 	\subsubsection{Redes espaciales} 
-	\todo{Quizás detallar maś.}
+	
 	Una red espacial se entiende como un grafo cuyos vértices y arcos representan objetos geométricos del mundo real. Los nodos tienen una posición relativa a un sistema de referencia específico y los arcos expresan la forma física en que interactúan entre ellos, entendiéndose esto último como la forma en que se puede llegar físicamente de uno a otro.
+	
+\todo{Explicar que es una red compleja y como se diferencia de una simple.}	
 	
 	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
 	
@@ -535,15 +537,15 @@ El procedimiento anterior ya se encuentra realizado para los datos comprendidos 
 %    tiempo\_subida & fecha y hora en que se realizó una validación en el sistema  \\ \hline
     id & identificador de la tarjeta que realizó la validación \\ \hline
 %    pago &  \\ \hline
-    x\_subida &  \\ \hline
-    y\_subida &  \\ \hline
+%    x\_subida &  \\ \hline
+%    y\_subida &  \\ \hline
 %    tipo\_transporte &  \\ \hline
 %    serviciosentidovariante &  \\ \hline
 %    tipo\_dia &  \\ \hline
     nviaje &  Indica el número de viaje asociado al id de la tarteja de pago\\ \hline
     netapa &  lugar que ocupa la etapa dentro de un viaje.\\ \hline
-    x\_bajada &  \\ \hline
-    y\_bajada &  \\ \hline
+%    x\_bajada &  \\ \hline
+%    y\_bajada &  \\ \hline
 %    tiempo\_bajada &  \\ \hline
     par\_subida & Indica el paradero en donde abordo el servicio. \\ \hline
     par\_bajada & Señala el paradero de donde descendió del servicio. \\ \hline
@@ -582,15 +584,16 @@ El procedimiento anterior ya se encuentra realizado para los datos comprendidos 
 
 No se descarta que una vez realizada la etapa de visualización puedan requerirse más datos con respecto a cada etapa, como puede ser la fecha y hora, tipo de transporte, entre otros.
 
-Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla \textbf{redpadaras}(ver tabla \ref{tabla:paradero}) en conjunto con la tabla \textbf{estaciones\_metro} (ver tabla \ref{tabla:estacion_metro}) que contiene los datos de las estaciones de metro, que para efectos de este análisis son considerados paraderos adicionales.
-
+Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla \textbf{redpadaras}(ver tabla \ref{tabla:paradero}) en conjunto con la tabla \textbf{estaciones\_metro} (ver tabla \ref{tabla:estacion_metro}) que contiene los datos de las estaciones de metro, éstos serán tratados de manera indistinta ya que tanto los paraderos de bus como las estaciones de metro funcionan como puntos de origen o destino en una etapa.
 
 \begin{table}[H]
 \begin{center}
   \begin{tabular}{| l | p{7cm} |}
     \hline
     Nombre campo & Descripción \\ \hline \hline
-    cmp & desc. del campo \\ \hline
+    codigousuario & identificador único de paradero, ej:PJ156 \\ \hline
+    x & posición en eje horizontal dentro del sistema de coordenadas cartesiana utilizado para la georeferenciación \\ \hline
+    y & posición en eje vertical dentro del sistema de coordenadas cartesiana utilizado para la georeferenciación \\ \hline
   \end{tabular}
 \end{center}
 \caption{Atributos a utilizar de la tabla REDPARADAS}:
@@ -604,7 +607,9 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
   \begin{tabular}{| l | p{7cm} |}
     \hline
     Nombre campo & Descripción \\ \hline \hline
-    cmp & desc. del campo \\ \hline
+    codigosinlinea & Nombre de la estación de metro \\ \hline
+    x & posición en eje horizontal dentro del sistema de coordenadas cartesiana utilizado para la georeferenciación \\ \hline
+    y & posición en eje vertical dentro del sistema de coordenadas cartesiana utilizado para la georeferenciación \\ \hline
   \end{tabular}
 \end{center}
 \caption{Atributos a utilizar de la tabla ESTACION\_METRO}:
@@ -644,7 +649,7 @@ La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) 
 	La base de datos que contiene las etapas se encuentra en un Sistema Gestor de Base de Datos (\textit{SGBD}) \textbf{Postgres} versión 9.1 y para gestionar los datos se posee una interfaz gráfica (\textit{GUI}) llamada \textit{PgAdmin III} cuya versión es 1.18.1 con la cuál se manipulan los distintos requerimientos al SGBD. 
 	%Para el calculo de las 
 	
-	\subsection{Filtrar los datos}
+	\subsection{Filtrado de datos}
 	
 	En este paso se deben quitar aquellos datos que no cumplen con el requisito de tener un paradero de bajada asociado, para esto se extraen los datos que cumplen con la siguiente consulta en lenguaje \textit{SQL} (\textit{Structure Query Language})
 	
@@ -662,12 +667,12 @@ La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) 
 	
 	Los resultados de la consulta anterior son almacenados en una nueva tabla que contiene solo los campos a ser utilizados (ver figura \ref{fig:limpiar_datos}).
 	
+	\todo{Falta describir todo esto.}
 	\subsection{Cálculo de centralidades}	
-	
-	
-	\subsection{Cálculo de Bordes}
 		\subsubsection{Centralidad de intermediación}
 		\subsubsection{PageRank}
+	
+	\subsection{Cálculo de Bordes}
 	
 	\subsection{Generación de comunidades}
 	\subsection{Interpolación espacial}
@@ -678,6 +683,7 @@ La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) 
     %================================================================================================================
     %\section{Implementación}
     
+    %\subsubsection{Visualiazación}
 
     %\newpage
     %================================================================================================================
