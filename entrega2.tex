@@ -341,9 +341,10 @@ Esta memoria creará las estructuras espaciales mencionadas anteriormente a part
 	
 \todo{Explicar que es una red compleja y como se diferencia de una simple.}	
 	
-	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
+	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana (Barthélemy y Flammini 2008)\cite{anos_anteriores}, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
 	
-	En los últimos años, los estudios sobre estás redes comenzaron a incorporar medidas de peso que reflejan los datos de movimientos urbanos como flujos sobre la red pero concentrado en el sistema de tránsito, no sobre los espacios urbanos asociados a estos.
+	En los últimos años, los estudios sobre estás redes comenzaron a incorporar medidas de peso que reflejan los datos de movimientos urbanos como flujos sobre la red pero concentrado en el sistema de tránsito, no sobre los espacios urbanos asociados a estos (Soh
+et al. 2010).
 	
 	Además de los datos obtenidos a partir del transporte público han existido investigaciones basadas en otras fuentes de datos, como lo son los AVL basado en GPS (\textit{Global Positioning System}) o conjuntos de datos telefónicos. En particular, el artículo de Cheng Zhong et al. (2014)  utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público de singapur.
     
@@ -417,7 +418,7 @@ $	p_{ij}=w_{ij}/\sum\limits_k w_{ik}$ , y $\sum\limits_j p_{ij}= 1$
 %Dado que $r_j$ está definido en función de otros $r_k$ es necesario resolver un sistema matricial
 %\todo{Explicar más.}
 
-El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma valores entre $0$ y $1$, en el estudio de Chen Zhong et. al. (2014) fue fijado en $0.85$. Si $\rho=1$ entonces todos los nodos tienen una probabilidad positiva y luego, la matriz $\{p_{ij}\}$ tiene que estar fuertemente conectada.
+El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma valores entre $0$ y $1$, en el estudio de Chen Zhong et al. (2014) fue fijado en $0.85$. Si $\rho=1$ entonces todos los nodos tienen una probabilidad positiva y luego, la matriz $\{p_{ij}\}$ tiene que estar fuertemente conectada.
 
 	\paragraph{Estructura de comunidad}
 	
@@ -449,7 +450,7 @@ Con lo anterior ya hecho, lo que resta por hacer es transformar los conjuntos de
 	\textit{``Cada persona escoge el paradero de bus/metro más cercano a la posición en la que se encuentra"}
 \end{center} 
 
-Según lo anterior, Chen Zhong et. al. (2014) propone aplicar una interpolación a cada zona geográfica cercana a un paradero de bus/metro. La variante de interpolación escogida corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) lo que hace disminuir la influencia de un paradero de bus en función de la distancia. Estos pesos son definidos de la siguiente forma 
+Según lo anterior, Chen Zhong et al. (2014) propone aplicar una interpolación a cada zona geográfica cercana a un paradero de bus/metro. La variante de interpolación escogida corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) lo que hace disminuir la influencia de un paradero de bus en función de la distancia. Estos pesos son definidos de la siguiente forma 
 
 $$
 	W_i(x,y) = 1/d_{ij} (x,y)^\lambda
@@ -626,20 +627,29 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 	
 	Tanto las definiciones de propiedades globales como las formulas definidas aquí serán ocupadas tal cual aparecen de manera de más adelante poder comparar los resultados obtenidos con los mostrados en el artículo, que está basado en el sistema de transporte público de Singapur.
 
-	El \textit{factor de amortiguación} será ajustado al propuesto por Chen Zhong (2014)\cite{Estructura_urbana}, no es campo de esta memoria el considerar variaciones de este factor, pro lo tanto será fijado en $0.85$.
+	El \textit{factor de amortiguación} será ajustado al propuesto por Chen Zhong et al. (2014)\cite{Estructura_urbana}, no es campo de esta memoria el considerar variaciones de este factor, por lo tanto será fijado en $0.85$.
 
 	Se utilizará el framework \textit{map equation}	 para llevar a cabo la generación de comunidades dado que plantea el mejor desempeño según Lancichinetti y Fortunato (2009) \cite{Comparar_generador_comunidad}.
 	
-La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) dado que no se hacen supuestos adicionales a los propuestos.
+La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) con un $\lambda=2$ dado que no se hacen supuestos adicionales a los propuestos.
 	
 \todo{explicar que se usará georeferenciación, que estándar, etc..}	
 	
-    Este trabajo al igual que el artículo en el que está basado, utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público, con la salvedad de que aquí corresponden al sistema de transporte de santiago de Chile, con estos se construirá  la red espacial para la posterior construcción de las estructuras descritas (centros, centros de flujo y bordes).
+    Este trabajo al igual que el artículo en el que está basado, utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público, con la salvedad de que aquí corresponden al sistema de transporte de Santiago de Chile, con estos se construirá  la red espacial para la posterior construcción de las estructuras descritas (centros, centros de flujo y bordes).
 	
-	Como los datos de Santiago de Chile presentan las mismas características luego de aplicar el método de estimación de Munizaga y Palma (2012), se observa que estos son aptos para replicar el análisis de Singapur. Es importante decir que este procesamiento fue realizado con anterioridad a este trabajo y aquí se documenta con fines explicativos.
+	Como los datos de Santiago de Chile presentan las mismas características luego de aplicar el método de estimación de Munizaga y Palma (2012), se observa que estos son aptos para replicar el análisis hecho en Singapur. Es importante decir que este procesamiento fue realizado con anterioridad a este trabajo y aquí se documenta con fines explicativos.
 		
 \todo{Hablar que es lo que se hará de la sección de la visualización.}
 
+	El aporte de este trabajo a lo ya existente se resume en:
+	
+	\begin{itemize}
+	\item Validación del modelo propuesto por Cheng Zhong et al. (2014) \cite{Estructura_urbana} por medio de la aplicación de su metodología a otra fuente de datos real (sistema de transporte público de Santiago de Chile).
+	\item Diseño de una herramienta de visualización que permite observar los resultados obtenidos por la metodología de Cheng Zhong et al.
+	\item Aumentar la cantidad de información provista por los datos pasivos del transporte público de Santiago de Chile.
+	
+	\end{itemize}
+	
     \newpage
     %================================================================================================================
     \section{Estrategia de procesamiento}
@@ -680,6 +690,12 @@ La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) 
 	\subsection{Interpolación espacial}
 	
 	\subsection{Corrección de bordes}    
+    
+    \newpage
+    %================================================================================================================
+    \section{Trabajo realizado}
+    
+    Aquí debo poner los análisis que he hecho sobre los datos.
     
     %\newpage
     %================================================================================================================
