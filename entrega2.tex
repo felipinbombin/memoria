@@ -192,7 +192,7 @@
     \item Mejorar las condiciones de viaje de grupos vulnerables.
     \end{itemize}
 
-Esta memoria creará las estructuras espaciales mencionadas anteriormente a partir de los datos de transporte público de Santiago de Chile y diseñará una aplicación para que puedan ser visualizadas, de manera de comunicar la información existente en los millones de datos que se provistos y que las herramientas actuales de procesamiento no abarcan.
+Esta memoria creará las estructuras espaciales mencionadas anteriormente a partir de los datos de transporte público de Santiago de Chile y diseñará una aplicación para que puedan ser visualizadas, de manera de comunicar información existente en los millones de datos provistos y que las herramientas actuales de procesamiento no abarcan.
 
     % hablar de esto en la motivación
     %Para detectar estos elementos en la ciudad de Santiago haremos uso de los datos obtenidos de su  sistema de transporte público utilizando para ello el análisis de redes (grafos) y algoritmos de procesamiento de estructuras de grafos a gran escala como infomap, además de herramientas computacionales para diseñar una interfaz de visualización de los datos.
@@ -338,14 +338,18 @@ Esta memoria creará las estructuras espaciales mencionadas anteriormente a part
 	\subsubsection{Redes espaciales} 
 	
 	Una red espacial se entiende como un grafo cuyos vértices y arcos representan objetos geométricos del mundo real. Los nodos tienen una posición relativa a un sistema de referencia específico y los arcos expresan la forma física en que interactúan entre ellos, entendiéndose esto último como la forma en que se puede llegar físicamente de uno a otro.
+
+	Una red espacial compleja se entiende como aquella que cumple con redes(Doursat 2005) \cite{doursat}
+	
 	
 \todo{Explicar que es una red compleja y como se diferencia de una simple.}	
 	
-	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana (Cardillo et al. 2006)\cite{transito}, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
+	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana (Cardillo et al. 2006)\cite{cardillo}, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
 	
-	En los últimos años, los estudios sobre estás redes comenzaron a incorporar medidas de peso que reflejan los datos de movimientos urbanos como flujos sobre la red pero concentrado en el sistema de tránsito, no sobre los espacios urbanos asociados a estos (Soh et al. 2010) \cite{analisis_viejo}.
+	En los últimos años, los estudios sobre estás redes (Soh et al. 2010) \cite{soh} comenzaron a incorporar medidas de peso que reflejan los datos de movimientos urbanos como flujos sobre la red pero concentrado en el sistema de tránsito, no sobre los espacios urbanos asociados a estos .
 	
-	Además de los datos obtenidos a partir del transporte público han existido investigaciones basadas en otras fuentes de datos, como lo son los AVL basado en GPS (\textit{Global Positioning System}) o conjuntos de datos telefónicos. En particular, el artículo de Cheng Zhong et al. (2014)  utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público de singapur.
+	Además de los datos obtenidos a partir del transporte público han existido investigaciones basadas en otras fuentes de datos, como lo son los AVL basado en GPS (Rinzivillo
+et al. 2012)\cite{rinzivillo} o conjuntos de datos telefónicos (Ratti et al. 2010)\cite{ratti}. En particular, el artículo de Cheng Zhong et al. (2014)  utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público de Singapur.
     
     
     \subsubsection{Construcción y representación de la red} 
