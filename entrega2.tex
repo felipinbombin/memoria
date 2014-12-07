@@ -16,7 +16,7 @@
 \usepackage{float}      % permite dejar las imagenes es una posición fija   
 \usepackage[colorinlistoftodos]{todonotes} % permite agregar comentarios al documento.
 \usepackage{mathtools}  % agrega funcionalidades nuevas a las fórmulas matemáticas.
-
+\usepackage{url}
 
 %\usepackage{anysize}   % Permite emplear cualquier medida de márgenes.
 %\marginsize{3cm}{2cm}{3cm}{2cm} % Controla los márgenes {izquierda}{derecha}{arriba}{abajo}. 
@@ -337,13 +337,8 @@ Esta memoria creará las estructuras espaciales mencionadas anteriormente a part
     
 	\subsubsection{Redes espaciales} 
 	
-	Una red espacial se entiende como un grafo cuyos vértices y arcos representan objetos geométricos del mundo real. Los nodos tienen una posición relativa a un sistema de referencia específico y los arcos expresan la forma física en que interactúan entre ellos, entendiéndose esto último como la forma en que se puede llegar físicamente de uno a otro.
-
-	Una red espacial compleja se entiende como aquella que cumple con redes(Doursat 2005) \cite{doursat}
-	
-	
-\todo{Explicar que es una red compleja y como se diferencia de una simple.}	
-	
+	Una red espacial se entiende como un grafo cuyos vértices y arcos representan objetos geométricos del mundo real. Los nodos tienen una posición relativa a un sistema de referencia específico y los arcos expresan la forma física en que interactúan entre ellos, entendiéndose esto último como la forma en que se puede llegar físicamente de uno a otro. El termino ``complejo"  se anexa al término de red espacial  cuando el grafo de esta red se caracteriza por tener propiedades estructurales que se relacionan con la accesibilidad de un nodo y su aporte dentro de la red. Estas propiedades tienen la particularidad de estar presentes en muchos problemas reales (Doursat 2005) \cite{doursat}.
+		
 	Hace algunos años atrás los análisis espaciales urbanos se limitaban a utilizar el diseño de las calles en términos de su topología urbana (Cardillo et al. 2006)\cite{cardillo}, lo que tiene la limitante de no considerar la accesibilidad asociada a una calle como una característica dependiente de los movimientos humanos existentes. Además, este tipo de análisis tiende a ignorar los flujos urbanos y a justificar espacios y su forma en función de las propiedades de la red.
 	
 	En los últimos años, los estudios sobre estás redes (Soh et al. 2010) \cite{soh} comenzaron a incorporar medidas de peso que reflejan los datos de movimientos urbanos como flujos sobre la red pero concentrado en el sistema de tránsito, no sobre los espacios urbanos asociados a estos .
@@ -471,14 +466,36 @@ Para solucionar el problema planteado se cuenta el número de puntos en las comu
     
 	\subsubsection{Georeferenciación espacial}
 
+La georeferenciación espacial se refiere a un sistema de referencia que se utiliza para representar las ubicaciones de objetos o fenómenos  dentro de un marco geográfico común. Existen varios y cada uno queda definido por: punto de referencia, unidad de medición, entre otras \cite{argis}. 
+
+Existen dos tipos de sistemas de coordenadas que se utilizan ampliamente:
+
+\begin{description}
+	\item[latitud-longitud] son los denominados sistemas de coordenadas geográficas 
+	\item[proyectado] 
+\end{description}
+
+
+
+Los datos geoespaciales a diferencia de otros tipos de datos describen objetos o fenómenos con una ubicación específica en el mundo real. 
+
 \todo{Falta completar.}
 En esta sección se debe explicar que es la georeferenciación, para que sirve, su definición formal y que es lo que se puede lograr con ella.
     
 	\subsubsection{Visualización de información}    
     \todo{Falta documentar toda esta sección.}
-	En esta sección serán descritos algunos aspectos relevantes de la visualización de información con el fin de justificar teóricamente preguntas como: ¿que colores utilizar? ¿que tipo de visualización mostrar? ¿cuál es el objetivo de la visualización que estoy creando? entre otras. 
+	En esta sección serán descritos algunos aspectos relevantes de la visualización de información con el fin de justificar teóricamente preguntas como: ¿que es la visualización? ¿que colores utilizar? ¿que tipo de visualización mostrar? ¿cuál es el objetivo de la visualización que estoy creando? entre otras. 
 	
 	Toda la información necesaria será obtenida del libro \textit{Interactive Data Visualization: Foundations, Techniques, and Applications} \cite{libro_visualizacion}.
+
+	\paragraph{¿Que es la visualización?}
+	
+	La visualización se define como la \textit{comunicación de información usando representaciones geográficas}. El beneficio de utilizar imágenes está dado por la riqueza de información que puede contener y el tiempo que requiere para ser procesado en vez de información comparable a páginas con texto. 
+	Esto ocurre debido a que la interpretación de imágenes es realizada en paralelo dentro del sistema perceptual mientras que la lectura es un proceso secuencial. Otra de las ventajas que tiene es que es independiente del lenguaje, siendo más eficaz que un texto para un grupo de personas que hablan diferentes idiomas.
+    
+	\paragraph{Técnicas para datos geoespaciales}
+	
+	asdas
     
     \subsection{Análisis de datos}\label{sec:Analisis_datos}
 
@@ -644,7 +661,7 @@ La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) 
 		
 \todo{Hablar que es lo que se hará de la sección de la visualización.}
 
-	El aporte de este trabajo a lo ya existente se resume en:
+	A partir de todo lo expuesto, el aporte de este trabajo a lo ya existente se resume en:
 	
 	\begin{itemize}
 	\item Validación del modelo propuesto por Cheng Zhong et al. (2014) \cite{Estructura_urbana} por medio de la aplicación de su metodología a otra fuente de datos real (sistema de transporte público de Santiago de Chile).
@@ -696,9 +713,9 @@ La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) 
     
     \newpage
     %================================================================================================================
-    \section{Trabajo realizado}
+    %\section{Trabajo realizado}
     
-    Aquí debo poner los análisis que he hecho sobre los datos.
+    %Aquí debo poner los análisis que he hecho sobre los datos.
     
     %\newpage
     %================================================================================================================
