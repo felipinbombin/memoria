@@ -464,26 +464,24 @@ Aunque la investigación reporta que esto no ocurre muy a menudo, y que cuando s
 
 Para solucionar el problema planteado se cuenta el número de puntos en las comunidades en conflicto y se computa el algoritmo \textit{PageRank}, esto provoca que las coordenadas en disputa sean asignadas a su comunidad más cercana geográficamente. En la practica lo que se ocurre es un desplazamiento de los límites entre comunidades, de esta forma se obtiene una partición geográfica que abarca todo el espacio.
     
-	\subsubsection{Georeferenciación espacial}
+%	\subsubsection{Georeferenciación espacial}
 
-La georeferenciación espacial se refiere a un sistema de referencia que se utiliza para representar las ubicaciones de objetos o fenómenos  dentro de un marco geográfico común. Existen varios y cada uno queda definido por: punto de referencia, unidad de medición, entre otras \cite{argis}. 
+%La georeferenciación espacial se refiere a un sistema de referencia que se utiliza para representar las ubicaciones de objetos o fenómenos  dentro de un marco geográfico común. Existen varios y cada uno queda definido por: punto de referencia, unidad de medición, entre otras \cite{argis}. 
 
-Existen dos tipos de sistemas de coordenadas que se utilizan ampliamente:
+%Existen dos tipos de sistemas de coordenadas que se utilizan ampliamente:
 
-\begin{description}
-	\item[latitud-longitud] son los denominados sistemas de coordenadas geográficas 
-	\item[proyectado] 
-\end{description}
+%\begin{description}
+%	\item[latitud-longitud] son los denominados sistemas de coordenadas geográficas 
+%	\item[proyectado] 
+%\end{description}
 
+%Los datos geoespaciales a diferencia de otros tipos de datos describen objetos o fenómenos con una ubicación específica en el mundo real. 
 
-
-Los datos geoespaciales a diferencia de otros tipos de datos describen objetos o fenómenos con una ubicación específica en el mundo real. 
-
-\todo{Falta completar.}
-En esta sección se debe explicar que es la georeferenciación, para que sirve, su definición formal y que es lo que se puede lograr con ella.
+%\todo{Falta completar.}
+%En esta sección se debe explicar que es la georeferenciación, para que sirve, su definición formal y que es lo que se puede lograr con ella.
     
 	\subsubsection{Visualización de información}    
-    \todo{Falta documentar toda esta sección.}
+    
 	En esta sección serán descritos algunos aspectos relevantes de la visualización de información con el fin de justificar teóricamente preguntas como: ¿que es la visualización? ¿que colores utilizar? ¿que tipo de visualización mostrar? ¿cuál es el objetivo de la visualización que estoy creando? entre otras. 
 	
 	Toda la información necesaria será obtenida del libro \textit{Interactive Data Visualization: Foundations, Techniques, and Applications} \cite{libro_visualizacion}.
@@ -524,7 +522,7 @@ Se debe tener en claro que la visualización provee una representación de objet
 
 La visualización se relaciona mucho con la computación gráfica pero no son lo mismo. En un inicio, la visualización fue considerada un sub-campo dentro de la computación gráfica principalmente porque la visualización usa gráficos generados por computadoras mostrar información por medio de imágenes. Aquí las técnicas gráficas son usadas como medio de comunicación.
 
-Más allá de los gráficos utilizados, lo verdaderamente importante es el aspecto de toda visualización es su conexión con los datos. La computación gráfica se concentra principalmente en objetos gráficos y la organización de primitivas gráficas \todo{que significa primitivas gráficas.}; la visualización va un paso más allá dado que son basadas en los datos subyacentes. Según todo lo anterior, se puede pensar en la visualización como la aplicación de gráficos para mostrar datos que se logra por medio de un mapeo a primitivas gráficas que luego de renderizar se obtiene la visualización.
+Más allá de los gráficos utilizados, lo verdaderamente importante es el aspecto de toda visualización es su conexión con los datos. La computación gráfica se concentra principalmente en objetos gráficos y la organización de primitivas gráficas; la visualización va un paso más allá dado que son basadas en los datos subyacentes. Según todo lo anterior, se puede pensar en la visualización como la aplicación de gráficos para mostrar datos que se logra por medio de un mapeo a primitivas gráficas que luego de renderizar se obtiene la visualización.
 
 %render: cálculo que se hace para generar una imagen.
 
@@ -744,9 +742,13 @@ El procedimiento anterior ya se encuentra realizado para los datos comprendidos 
 
 No se descarta que una vez realizada la etapa de visualización puedan requerirse más datos con respecto a cada etapa, como puede ser la fecha y hora, tipo de transporte, entre otros.
 
-Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla \textbf{redpadaras}(ver tabla \ref{tabla:paradero}) en conjunto con la tabla \textbf{estaciones\_metro} (ver tabla \ref{tabla:estacion_metro}) que contiene los datos de las estaciones de metro, éstos serán tratados de manera indistinta ya que tanto los paraderos de bus como las estaciones de metro funcionan como puntos de origen o destino en una etapa.
+Además de la tabla de etapas es necesario conocer todos los paraderos disponibles con el fin de poder realizar la interpolación, por lo que también se utiliza la tabla REDPARADAS (ver tabla \ref{tabla:paradero}) en conjunto con la tabla ESTACIONES\_METRO (ver tabla \ref{tabla:estacion_metro}) que contiene los datos de las estaciones de metro, éstos serán tratados de manera indistinta ya que tanto los paraderos de bus como las estaciones de metro funcionan como puntos de origen o destino en una etapa.
 
-\begin{table}[H]
+La tabla REDPARADAS contiene 23 columnas con una serie de datos asociados a cada paradero existente en sistema público de transporte de Santiago de Chile. Muchas de éstas han sido agregadas para diversos análisis previos que no se relacionan con esta memoria. Para efectos de este trabajo esta tabla presenta 3 atributos importantes a destacar descritos en la tabla \ref{tabla:paradero}. 
+
+La tabla ESTACION\_METRO contiene 20 atributos, y al igual que la tabla PARADEROS, la mayoría de sus campos fueron agregados para la ejecución de análisis previos. Los atributos relevantes son descritos en la tabla \ref{tabla:estacion_metro}.
+
+\begin{table}[h]
 \begin{center}
   \begin{tabular}{| l | p{7cm} |}
     \hline
@@ -760,9 +762,7 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 \label{tabla:paradero}
 \end{table}
 
-\todo{explicar tabla paradero}
-
-\begin{table}[H]
+\begin{table}[h]
 \begin{center}
   \begin{tabular}{| l | p{7cm} |}
     \hline
@@ -776,7 +776,6 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 \label{tabla:estacion_metro}
 \end{table}
 
-\todo{explicar tabla est. metro}
 
     \subsection{Conclusiones}
     
