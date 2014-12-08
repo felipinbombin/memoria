@@ -16,7 +16,7 @@
 \usepackage{float}      % permite dejar las imagenes es una posición fija   
 \usepackage[colorinlistoftodos]{todonotes} % permite agregar comentarios al documento.
 \usepackage{mathtools}  % agrega funcionalidades nuevas a las fórmulas matemáticas.
-\usepackage{url}
+\usepackage[font=footnotesize,labelfont=bf]{caption} % permite cambiar el tamaño de los textos en las figuras. Puede ser scriptsize, footnotesize, small, normalsize, large, Large.
 
 %\usepackage{anysize}   % Permite emplear cualquier medida de márgenes.
 %\marginsize{3cm}{2cm}{3cm}{2cm} % Controla los márgenes {izquierda}{derecha}{arriba}{abajo}. 
@@ -347,7 +347,7 @@ Esta memoria creará las estructuras espaciales mencionadas anteriormente a part
 et al. 2012)\cite{rinzivillo} o conjuntos de datos telefónicos (Ratti et al. 2010)\cite{ratti}. En particular, el artículo de Cheng Zhong et al. (2014)  utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público de Singapur.
     
     
-    \subsubsection{Construcción y representación de la red} 
+    \subsubsection{Construcción y representación de la red}\label{sec:contr_y_rep_red} 
 	
 	Formalmente definimos un grafo dirigido con pesos como $G=(N,L,W)$ que representa todas las etapas de viajes realizadas. $N$ denota los paraderos existentes, a éste se asocia el área o sector donde está ubicado, el conjunto $L$ denota los traslados entre dos paraderos o áreas, por lo que $L$ corresponde a un conjunto de pares ordenados de $N$, y el conjunto $W$ denota el volumen (cantidad) de traslados entre dos paraderos. Según lo anterior, $N$ son los nodos del grafo, $L$ representa los arcos y $W$ denota los pesos de cada arco en $L$.
 	
@@ -496,22 +496,143 @@ En esta sección se debe explicar que es la georeferenciación, para que sirve, 
 	
 	La visualización no es efectiva \textit{per se} sino que depende de varios factores su impacto. En 1999 Linda Elting demostró por medio de un experimento que la visualización afecta el proceso de decisión y que está muy relacionada con las preferencias y nivel de entrenamiento de los usuarios involucrados.
     
+% sección 1.2.2 del libro
 	\paragraph{Visualización hoy en día}    
 	
-	La visualización a menudo ofrece distintos niveles de vistas de información, éstas pueden ser vistas \textbf{cualitativas} o \textbf{cuantitativas} dependiendo de que parte de la información existente es la relevante de ser mostrada. Un ejemplo de esto se observa en la figura \ref{fig:metro}, que corresponde a la red de metro subterráneo de la ciudad de Tokio, en el se produce una distorsión de los puntos en donde se interceptan varias líneas para facilitar su interpretación. 
+	La visualización a menudo ofrece distintos niveles de vistas de información, éstas pueden ser vistas \textbf{cualitativas} o \textbf{cuantitativas} dependiendo de que parte de la información existente es la relevante de ser mostrada, para lograr esto se lleva a cabo una distorsión de la imagen real o representación exacta. Un ejemplo de esto se observa en la figura \ref{fig:metro}, que corresponde a la red de metro subterráneo de la ciudad de Tokio, en el se produce una distorsión de los puntos en donde se interceptan varias líneas para facilitar su interpretación. 
 		
 % Imagen de metro
 \begin{figure}[h] %[h] para here [b] para bottom [t] para top
 \makebox[\textwidth]{\includegraphics[width=400pt]{./images/metro_tokyo.png}}
-\label{fig:metro}
 \caption{Mapa de la red de metro subterráneo de la ciudad de tokio. Representación cualitativa de las estaciones y las líneas que pasan por ella. (obtenida desde \textit{Wikimedia Commons})}
+\label{fig:metro}
 \end{figure}
 
-Las imagenes distorsionadas tienden a ser imprecisas y dependen  de quien las observa. La mayoria de los mapas bidimensionales exhibe algún grado de distorsión debido a la proyección que se debe hacer desde un volúmen a un plano (3D a 2D)
-    
-	\paragraph{Técnicas para datos geoespaciales}
+Las imágenes distorsionadas tienden a ser imprecisas y dependen  de quien las observa. Otro caso se observa en la mayoría de los mapas bidimensionales, donde estos exhiben algún grado de distorsión debido a la proyección que se debe hacer desde un volumen a un plano (3D a 2D). Sin embargo, áreas pequeñas sufren una distorsión mínima por lo que resultan ser una muy buena aproximación, permitiendo proveer información detallada sobre diversos puntos de interés. En la figura \ref{fig:google_map} se observa un mapa con una ruta dirigida entre dos puntos, indicando calles, sentido de estas, intersecciones, y alternativas de recorrido.
+
+% Imagen de metro
+\begin{figure}[h] %[h] para here [b] para bottom [t] para top
+\makebox[\textwidth]{\includegraphics[width=200pt]{./images/google_map.png}}
+\caption{Mapa que indica posibles rutas a seguir (caminando) desde beaucheff 850 a la estación de metro Los Heroes. (obtenida desde \textit{maps.google.cl})}
+\label{fig:google_map}
+\end{figure}
+
+Se debe tener en claro que la visualización provee una representación de objetos que podría incluir datos, algoritmos, resultados de cómputos, procesos y otros muchos componentes de una aplicación, que dependerán del objetivo de ésta. Estas visualizaciones proveen información a través del uso de gráficos generados por computadoras. También existen visualizaciones interactivas donde el usuario puede consultar en la visualización y en consecuencia, interactuar con la aplicación de visualización en lugar de usar un menú, pudiendo llegar incluso a tener aplicaciones que son totalmente dirigidas a través de su visualización.
+
+% sección 1.3 del libro | relación de visualización y otros campos
+% sección 1.3.1 diferencia entre visualización y computación gráfica
+
+La visualización se relaciona mucho con la computación gráfica pero no son lo mismo. En un inicio, la visualización fue considerada un sub-campo dentro de la computación gráfica principalmente porque la visualización usa gráficos generados por computadoras mostrar información por medio de imágenes. Aquí las técnicas gráficas son usadas como medio de comunicación.
+
+Más allá de los gráficos utilizados, lo verdaderamente importante es el aspecto de toda visualización es su conexión con los datos. La computación gráfica se concentra principalmente en objetos gráficos y la organización de primitivas gráficas \todo{que significa primitivas gráficas.}; la visualización va un paso más allá dado que son basadas en los datos subyacentes. Según todo lo anterior, se puede pensar en la visualización como la aplicación de gráficos para mostrar datos que se logra por medio de un mapeo a primitivas gráficas que luego de renderizar se obtiene la visualización.
+
+%render: cálculo que se hace para generar una imagen.
+
+La visualización no se relaciona solamente con la computación gráfica sino que abarca otras áreas como la psicología perceptual, interacción humano-computador, base de datos, estadística, y minería de datos, entre otras. Por lo que la computación gráfica puede ser usada para definir y generar una vista para comunicar la información, el origen de datos y la forma en que el usuario interactúa y percibe los datos son componentes igual de importantes al momento de presentar información. 
 	
-	asdas
+% visualización científica vs visualización de información.
+% sección 1.3.2 del libro
+Hoy en día existen dos corrientes de visualización que nacieron a principios del siglo XXI, producto de que la comunidad de visualización se diferenció entre visualización científica y visualización de información. Si bien ambos proveen representaciones de datos, la diferencia más características es que estos suelen ser a menudo diferentes. 
+
+% sección 1.4 El proceso de visualización
+\paragraph{El proceso de visualización}
+
+Los datos utilizados para una visualización pueden ser simples o complejos en su estructura, y quien observa podría tener distintos objetivos sobre esos datos (buscar algo interesante como anomalías, tendencias, confirmar una hipótesis, mostrar resultados de análisis a una audiencia, etc). Por esto, uno de los primeros pasos para llevar a cabo una visualización es realizar un mapeo desde los datos a la vista (ver figura \ref{fig:proc_visualizacion}), lo que se puede lograr de muchas maneras. La interfaz de usuario está compuesto de componentes que se asocian con la necesidad de ingresar, presentar, monitorear, analizar y computar datos. Pueden ser de muchas formas, incluso representaciones visuales de los datos para facilitar la selección requerida. Las visualizaciones pueden ofrecer mecanismos de traducción de datos para ofrecer vistas  y formatos más intuitivos para que los usuarios puedan llevar a cabo sus tareas. Lo anterior significa que los datos (o atributos de estos) son utilizados para definir objetos gráficos como puntos, líneas y formas; y sus atributos como tamaño, posición, orientación y color.
+
+% Imagen de proceso de visualización
+\begin{figure}[h] %[h] para here [b] para bottom [t] para top
+\makebox[\textwidth]{\includegraphics[width=300pt]{./images/proceso_visualizacion.png}}
+\caption{Proceso de visualización a muy alto nivel. }
+\label{fig:proc_visualizacion}
+\end{figure}
+
+% capitulo 5 y 6 habla de mapeos de datos.
+% capitulo 12. Estrategias para seleccionar mapeos eficientes.
+
+Otro componente importante dentro del proceso son los controles de interacción para las vistas y mapeos de variables (atributos o parámetros). Mientras que en un principio las visualizaciones fueron objetos estáticos, las visualizaciones modernas son procesos dinámicos donde el usuario controla virtualmente todas las etapas  del procedimiento, desde la selección y control a la definición de color y refinación de la vista. Es importante decir que no hay una fórmula que garantice la efectividad de una visualización. Diferentes usuarios, con diferentes formaciones, habilidades perceptuales y preferencias, tendrán difrentes opiniones sobre una visualización. La tarea que deban realizar los usuarios afectará también la utilidad de la visualización. Incluso cambiando los datos puede tener implicancias sobre el resultado de la visualización.
+
+La visualización es a menudo una parte de un proceso más grande como análisis de datos, descubrimiento de conocimiento o análisis visual.
+
+El proceso de comenzar con datos y generar una imagen es descrito como \textit{pipeline} - secuencia de etapas que puede ser estudiada independientemente en términos de algoritmos, estructura de datos y sistema de coordenadas. Esos procesos o pipelines son diferentes para computación gráfica, visualización y descubrimiento de conocimiento pero se parecen mucho. Estos son presentados en las siguientes 3 secciones.
+
+% sección 1.4.1 El canal de la computación gráfica
+
+% sección 1.4.2 El canal de la visualización
+
+\subparagraph{Pipeline de visualización}
+
+Las etapas son descritas en el mismo orden en que son ejecutadas durante el proceso (ver figura \ref{fig:pipeline_visualizacion}).
+
+\begin{description}
+	\item[Modelado de datos] \hfil \\
+Si están en un archivo o en una base de datos, tienen que estar  estructurados para facilitar la visualización. El nombre, tipo, rango y semántica de cada atributo o campo de un dato tiene que estar disponible en un formato que asegure rápido acceso y fácil modificación.
+	
+	\item[Selección de datos] \hfill \\
+Se relaciona con la identificación del subconjunto de datos que serán potencialmente visualizados. Esto puede ocurrir totalmente bajo el control del usuario o a través de un algoritmo.
+
+	\item[De los datos a mapeo visual] \hfill \\
+Este es lo más importante dentro del pipeline, la realización del mapeo de los valores de los datos a entidades gráficas o sus atributos. Esta etapa usualmente involucra un procesamiento previo de los datos a ser mapeados como escalamiento, desplazamiento, filtrado, interpolación, entre otros.
+
+	\item[Configuración de parámetros de la escena] \hfill \\
+Como en las gráficas tradicionales, el usuario tiene que especificar muchos atributos de la visualización que son relativamente independiente de los datos. Esto se refiere a configurar parámetros como los colores (para diferentes dominios, ciertos colores tienen significados claramente definidos), o especificación de luz si se tratase de una visualización 3D, etc.
+
+	\item[Renderizado o generación de la visualización] \hfill \\
+La proyección específica o el renderizado a ser utilizado para los objetos a visualizar depende del mapeo que se ha utilizado. En este aspecto, la mayoria de las visualizaciones solo requieren dibujar lineas y poligonos uniformemente pintados. Junto a mostrar los datos en si mismo, muchas también incluyen información suplementaria para facilitar la interpretación, como ejes, anotaciones, entre otros.
+
+\end{description}
+
+
+% Imagen de pipeline de visualizacion
+\begin{figure}[h] %[h] para here [b] para bottom [t] para top
+\makebox[\textwidth]{\includegraphics[width=350pt]{./images/pipeline_visualizacion.jpg}}
+\caption[Pipeline de visualización]{Ejemplo de pipeline de visualización. Muestra la idea esencial de un pipeline, que es transformar los datos en una representación interna dentro del computador para luego usar un paradigma visual para desplegarlo sobre una pantalla.}
+\label{fig:pipeline_visualizacion}
+\end{figure}
+
+
+% sección 1.4.3 El proceso de descubrir conocimiento
+
+% sección 1.4.4 El rol de la percepción
+
+\paragraph{El rol de la percepción}
+
+En todas las visualizaciones, un aspecto crítico relacionado al usuario son las habilidades y limitaciones de su sistema visual. Si el objetivo principal de la visualización es transmitir información por medio de imágenes es esencial considerar la percepción. Los usuarios interactuan con las visualizaciones según como ellos la ven y la interpretan. Entendiendo como vemos deberíamos ser capaces de construir mejores vistas, o al menos evitar producir las que no aportan valor. Algunas de las cosas relevantes que se deben tener en cuenta son: el 8\% de los hombres tiene algún problema con los colores, lo que quiere decir que una herramienta de visualización debería permitir cambiar los colores de los objetos que aparecen en la pantalla. Además los colores dependerán de la deficiencia del usuario y de la visualización que se está tratando transmitir.
+
+% ver capitulo 3: Percepción
+
+Como se discutió anteriormente, el sistema perceptual recibe datos y los procesa de varias formas. El primer proceso es \textit{procesamiento pre-atencional}, un rápido sistema de alto rendimiento que rápidamente identifica diferencias en, por ejemplo, colores y texturas. Además de este hay otras características que el sistema perceptual debe manejar, como la orientación de una línea, largo, ancho, tamaño de un objeto, curvatura, agrupamiento, y movimiento.
+
+Al entender la percepción visual tenemos ciertas pautas. Por ejemplo, en 1912 la \textit{Gestalt School of Psychology} comenzó a intentar definir un conjunto de leyes según las cuáles percibimos patrones. Estas leyes incluyen reglas de proximidad, similaridad, continuidad, simetría, primer plano, fondo, y tamaño.
+
+% sección 1.5 Convenciones de código
+% sección 1.6 el diagrama de dispersión
+% sección 1.7 el rol del usuario
+
+El usuario puede estar envuelto en la mayoría de las etapas del pipeline. Es útil categorizar la visualización basados en los propósitos que ésta tendrá. Según esto surgen las siguientes categorías:
+
+\begin{description}
+	\item[Exploración] \hfill \\
+El usuario posee un conjunto de atos y quiere examinarlos para averiguar su contenido y/o si una características particular (o conjunto de estas)  está presente o ausente.
+
+	\item[Confirmación] \hfill \\
+El usuario ha determinado o planteado una hipótesis relacionada con un característica de los datos y quiere usar la visualización para verificarla.
+
+	\item[Presentación] \hfill \\
+El usuario está intentando transmitir algún concepto o conjunto de hechos a una audiencia.
+\end{description}
+
+
+
+
+
+	%\paragraph{Origenes de datos}
+	%Capitulo 2	
+	%\paragraph{Percepción}
+	%Capitulo 3
+	%\paragraph{Interacción}
+	%Capitulo 10 y 11
+    
+	%\paragraph{Técnicas para datos geoespaciales}
     
     \subsection{Análisis de datos}\label{sec:Analisis_datos}
 
@@ -675,7 +796,12 @@ La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) 
 	
 	Como los datos de Santiago de Chile presentan las mismas características luego de aplicar el método de estimación de Munizaga y Palma (2012), se observa que estos son aptos para replicar el análisis hecho en Singapur. Es importante decir que este procesamiento fue realizado con anterioridad a este trabajo y aquí se documenta con fines explicativos.
 
-La efectividad de la visualización depende de las preferencias  y nivel de entrenamiento de los usuarios por lo que se debe considerar la elaboración del perfil de los usuarios que usarán la aplicación.
+La efectividad de la visualización depende de las preferencias  y nivel de entrenamiento de los usuarios por lo que se debe considerar la elaboración del perfil de los usuarios que usarán la aplicación. 
+
+Al momento de diseñar la visualización no es necesario considerar la distorsión producida en las imagenes bidimensionales presentes en un mapa producto de la proyección existente (3D a 2D) dado que el nivel de detalle que se requiere en las vistas se relaciona a nivel de ciudad, no de calle. 
+
+\todo{MIRARLO}
+La estrategia para el proceso de visualización queda establecida en la sección \ref{sec:contr_y_rep_red} ``Construcción y representación de la red'', por lo que no es necesario definir una.
 
 \todo{Hablar que es lo que se hará de la sección de la visualización.}
 
