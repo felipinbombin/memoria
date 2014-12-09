@@ -374,7 +374,7 @@ Las propiedades topológicas de un grafo pueden proveer importante información 
 		
 		\item La \textbf{ruta más corta} se refiere al camino mínmo posible de un área a otra.
 		
-		\item \textbf{``clustering centrality''}\todo{Buscar traducción a español} es un índice que mide cuán cohesionados o cercanos están los nodos a otro en términos de su accesibilidad para compartir vecinos.
+		\item \textbf{``clustering centrality''} es un índice que mide cuán cohesionados o cercanos están los nodos a otro en términos de su accesibilidad para compartir vecinos.
 
 % the clustering centrality is an index that measures how ‘close’/‘cohesive’ the areas are to one another in terms of their accessibility to shared neighbors
 		
@@ -505,7 +505,7 @@ Para solucionar el problema planteado se cuenta el número de puntos en las comu
 	La visualización a menudo ofrece distintos niveles de vistas de información. Dependiendo de que parte de la información existente es la relevante de ser mostrada tenemos
 	
 	\begin{description}		
-		\item[Visualización cualitatica] En esta se distorsiona la imagen con el objetivo de destacar alguna cualidad en particular. Un ejemplo de esto se observa en la figura \ref{fig:metro}, que corresponde a la red de metro subterráneo de la ciudad de Tokio, en el se produce una distorsión de los puntos en donde se interceptan varias líneas para facilitar su interpretación. 
+		\item[Visualización cualitativa] En esta se distorsiona la imagen con el objetivo de destacar alguna cualidad en particular. Un ejemplo de esto se observa en la figura \ref{fig:metro}, que corresponde a la red de metro subterráneo de la ciudad de Tokio, en el se produce una distorsión de los puntos en donde se interceptan varias líneas para facilitar su interpretación. 
 		
 % Imagen de metro
 \begin{figure}[h] %[h] para here [b] para bottom [t] para top
@@ -514,7 +514,7 @@ Para solucionar el problema planteado se cuenta el número de puntos en las comu
 \label{fig:metro}
 \end{figure}
 
-		\item[Visualización cuantitativa] Se refiere a visualizaciones donde se observan unidades medibles y comparables entre ellas. Si bien en los mapas bidimensionales se exhibe algún grado de distorsión debido a la proyección que se debe hacer desde un volumen a un plano (3D a 2D), áreas pequeñas sufren una distorsión mínima por lo que resultan ser una muy buena aproximación, permitiendo proveer información detallada sobre diversos puntos de interés. En la figura \ref{fig:google_map} se observa un mapa con una ruta dirigida entre dos puntos, indicando calles, sentido de estas, intersecciones, y alternativas de recorrido (medibles y comparables).
+		\item[Visualización cuantitativa] Se refiere a visualizaciones donde se observan unidades medibles y comparables entre ellas. Si bien en los mapas bidimensionales se exhibe algún grado de distorsión debido a la proyección que se debe hacer desde un volumen a un plano (3D a 2D), cuando se trata de áreas pequeñas este efecto no es percibido dado que la distorsión es mínima por lo que resulta ser una muy buena aproximación, permitiendo proveer información detallada sobre diversos puntos de interés. En la figura \ref{fig:google_map} se observa un mapa con una ruta dirigida entre dos puntos, indicando calles, sentido de estas, intersecciones, y alternativas de recorrido (medibles y comparables).
 		
 % Imagen de metro
 \begin{figure}[h] %[h] para here [b] para bottom [t] para top
@@ -560,18 +560,18 @@ Los datos utilizados para una visualización pueden ser simples o complejos en s
 % Imagen de proceso de visualización
 \begin{figure}[h] %[h] para here [b] para bottom [t] para top
 \makebox[\textwidth]{\includegraphics[width=300pt]{./images/proceso_visualizacion.png}}
-\caption{Proceso de visualización a muy alto nivel. }
+\caption{Proceso de visualización. }
 \label{fig:proc_visualizacion}
 \end{figure}
 
 En la figura \ref{fig:proc_visualizacion} se observa un proceso de visualización genérico que describe a grandes rasgos las etapas presentes. Según esto las etapas son:
 
 \begin{description}
-	\item[Transformación de datos] En esta etapa se realizan una o más operaciones que convierten los datos desde la fuente de datos en una representación simbólica en la computadora. 
+	\item[Transformación de datos] En esta etapa se realizan una o más operaciones\footnote{Todo lo relacionado con el pre-procesamiento de datos} (limpieza, correcciones, etc) que convierten los datos desde la fuente de datos en una representación simbólica en la computadora. 
 	
-	\item[Procesamiento de mapeo] Cada representación simbólica es asociada a un objeto gráfico cuyas características suelen representar atributos de cada elemento obtenido en el paso anterior. El conjunto de estos objetos producen una imagen en una computadora.
+	\item[Procesamiento de mapeo] Cada representación simbólica es asociada a un objeto gráfico cuyas características suelen representar atributos de cada elemento obtenido en el paso anterior. El conjunto de estos objetos producen una imagen en un computador.
 	
-	\item[transformación de vista] Cada imagen puede ser transformada según requerimientos que tenga el usuario o si hay un grado de interación, éste tiene la posibilidad de hacerlo en el momento que lo requiera.
+	\item[Transformación de vista] Cada imagen puede ser transformada según requerimientos que tenga el usuario o si hay un grado de interación, éste tiene la posibilidad de hacerlo en el momento que lo requiera.
 	
 \end{description}
 
@@ -625,15 +625,15 @@ La proyección específica o el renderizado a ser utilizado para los objetos a v
 
 % sección 1.4.4 El rol de la percepción
 
-\paragraph{El rol de la percepción}
+%\paragraph{El rol de la percepción}
 
-En todas las visualizaciones, un aspecto crítico relacionado al usuario son las habilidades y limitaciones de su sistema visual. Si el objetivo principal de la visualización es transmitir información por medio de imágenes es esencial considerar la percepción. Los usuarios interactuan con las visualizaciones según como ellos la ven y la interpretan. Entendiendo como vemos deberíamos ser capaces de construir mejores vistas, o al menos evitar producir las que no aportan valor. Algunas de las cosas relevantes que se deben tener en cuenta son: el 8\% de los hombres tiene algún problema con los colores, lo que quiere decir que una herramienta de visualización debería permitir cambiar los colores de los objetos que aparecen en la pantalla. Además los colores dependerán de la deficiencia del usuario y de la visualización que se está tratando transmitir.
+%En todas las visualizaciones, un aspecto crítico relacionado al usuario son las habilidades y limitaciones de su sistema visual. Si el objetivo principal de la visualización es transmitir información por medio de imágenes es esencial considerar la percepción. Los usuarios interactuan con las visualizaciones según como ellos la ven y la interpretan. Entendiendo como vemos deberíamos ser capaces de construir mejores vistas, o al menos evitar producir las que no aportan valor. Algunas de las cosas relevantes que se deben tener en cuenta son: el 8\% de los hombres tiene algún problema con los colores, lo que quiere decir que una herramienta de visualización debería permitir cambiar los colores de los objetos que aparecen en la pantalla. Además los colores dependerán de la deficiencia del usuario y de la visualización que se está tratando transmitir.
 
 % ver capitulo 3: Percepción
 
-El sistema perceptual recibe datos y los procesa de varias formas. El primer proceso es \textit{procesamiento pre-atencional}, un rápido sistema de alto rendimiento que rápidamente identifica diferencias en, por ejemplo, colores y texturas. Además de este hay otras características que el sistema perceptual debe manejar, como la orientación de una línea, largo, ancho, tamaño de un objeto, curvatura, agrupamiento, y movimiento.
+%El sistema perceptual recibe datos y los procesa de varias formas. El primer proceso es \textit{procesamiento pre-atencional}, un rápido sistema de alto rendimiento que rápidamente identifica diferencias en, por ejemplo, colores y texturas. Además de este hay otras características que el sistema perceptual debe manejar, como la orientación de una línea, largo, ancho, tamaño de un objeto, curvatura, agrupamiento, y movimiento.
 
-Al entender la percepción visual tenemos ciertas pautas. Por ejemplo, en 1912 la \textit{Gestalt School of Psychology} comenzó a intentar definir un conjunto de leyes según las cuáles percibimos patrones. Estas leyes incluyen reglas de proximidad, similaridad, continuidad, simetría, primer plano, fondo, y tamaño.
+%Al entender la percepción visual tenemos ciertas pautas. Por ejemplo, en 1912 la \textit{Gestalt School of Psychology} comenzó a intentar definir un conjunto de leyes según las cuáles percibimos patrones. Estas leyes incluyen reglas de proximidad, similaridad, continuidad, simetría, primer plano, fondo, y tamaño.
 
 % sección 1.5 Convenciones de código
 % sección 1.6 el diagrama de dispersión
@@ -835,19 +835,28 @@ La estrategia para el proceso de visualización queda establecida en la sección
 
 	Para la realización de las vistas se debe tener presente la percepción de los usuarios, la intención de ésto y como estos aspectos afecta cada visualización.
 	
+	En estos momentos existen dos vistas candidatas a ser desplegadas en la versión final. Estas son:
+	
+	\begin{itemize}
+		\item Visualización del mapa de la ciudad de Santiago de Chile  donde se muestra una partición de ésta por el procedimiento que genera las comunidades.
+		\item Visualización del mapa de la ciudad de Santiago de Chile  que indica aquellas áreas que son consideradas centros y centros de flujo.
+	\end{itemize}		
+	
 	A partir de todo lo expuesto, el aporte de este trabajo a lo ya existente se resume en:
 	
 	\begin{itemize}
 	\item Validación del modelo propuesto por Cheng Zhong et al. (2014) \cite{Estructura_urbana} por medio de la aplicación de su metodología a otra fuente de datos real (sistema de transporte público de Santiago de Chile).
 	\item Diseño de una herramienta de visualización que permite observar los resultados obtenidos por la metodología de Cheng Zhong et al.
-	\item Aumentar la cantidad de información provista por los datos pasivos del transporte público de Santiago de Chile.
+	\item Contribuir al análisis de la información provista por los datos pasivos del transporte público de Santiago de Chile con una herramienta que permite observar una perspectiva diferente a lo realizado previamente.
 	
 	\end{itemize}
 	
     \newpage
     %================================================================================================================
     \section{Estrategia de procesamiento}
-  
+
+    Como se explicó al final del capitulo 4, esta sección es abordada parcialmente dado que la investigación que se lleva a cabo es extensa. Se nombra lo realizado y al final se listan las tareas pendientes que serán desarrolladas durante el período previo al inico del siguiente semestre (2015-1) con el fin de tener holgura frente a posible eventualidades.
+    
 	En esta sección se describen las acciones a llevar a cabo en el procesamiento de los datos, esto consiste en describir la forma en la que se llevará a cabo el procedimiento para elaborar el grafo y calcular los distintos indicadores descritos en la sección \ref{sec:Analisis_bibliografia}. Para lo anterior primero se detallan las herramientas que se utilizarán.
 
 	\subsection{Herramientas a utilizar}
@@ -907,7 +916,7 @@ Al finalizar esta etapa se obtienen 3 tablas con los datos necesarios para lleva
 
 	\subsection{Construcción de la red}
 	
-Con los datos de la tabla ETAPA se construye una matriz origen destino donde cada celda $C_{ij}$ denota el volumen de etapas realizadas desde el área asociado al paradero $i$ al área asociada al paradero $j$. Lo anterior se realizará utilizando la $R$ con el paquete \textit{i-graph}. Mediante el siguiente script:
+Con los datos de la tabla ETAPA se construye una matriz origen destino donde cada celda $C_{ij}$ denota el volumen de etapas realizadas desde el área asociada al paradero $i$ al área asociada al paradero $j$. Lo anterior se realizará utilizando la herramienta $R$ con el paquete \textit{i-graph}.
 
 %\begin{figure}[h]
 %\begin{center}
@@ -919,6 +928,23 @@ Con los datos de la tabla ETAPA se construye una matriz origen destino donde cad
 %\label{fig:matriz_o_d}
 %\end{figure}	
 
+    \subsection{Trabajo pendiente}
+    
+    A continuacion se listan las tareas pendientes de esta sección:
+    
+    \begin{itemize}
+    	\item	Cálculo de centralidades.
+    		\begin{itemize}
+    			\item Centralidad de intermediación
+    			\item PageRank
+    		\end{itemize}
+    	\item Cálculo de bordes y generación de comunidades
+    	\item Realización de interpolación espacial
+    	\item Corrección de bordes
+    \end{itemize}
+    
+    Como se dijo anteriormente, serán realizadas durante el período previo al inicio del semestre 2015-1.
+    
 %	\subsection{Cálculo de centralidades}
 	
 %		\subsubsection{Centralidad de intermediación}
