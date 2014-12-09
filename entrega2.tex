@@ -746,7 +746,7 @@ Además de la tabla de etapas es necesario conocer todos los paraderos disponibl
 
 La tabla REDPARADAS contiene 23 columnas con una serie de datos asociados a cada paradero existente en sistema público de transporte de Santiago de Chile. Muchas de éstas han sido agregadas para diversos análisis previos que no se relacionan con esta memoria. Para efectos de este trabajo esta tabla presenta 3 atributos importantes a destacar descritos en la tabla \ref{tabla:paradero}. 
 
-La tabla ESTACION\_METRO contiene 20 atributos, y al igual que la tabla PARADEROS, la mayoría de sus campos fueron agregados para la ejecución de análisis previos. Los atributos relevantes son descritos en la tabla \ref{tabla:estacion_metro}.
+La tabla ESTACION\_METRO contiene 20 atributos, y al igual que la tabla REDPARADAS, la mayoría de sus campos fueron agregados para la ejecución de análisis previos. Los atributos relevantes son descritos en la tabla \ref{tabla:estacion_metro}.
 
 \begin{table}[h]
 \begin{center}
@@ -776,7 +776,6 @@ La tabla ESTACION\_METRO contiene 20 atributos, y al igual que la tabla PARADERO
 \label{tabla:estacion_metro}
 \end{table}
 
-
     \subsection{Conclusiones}
     
 	Es importante destacar que la particularidad del estudio radica en que el grafo formado para construir las estructuras espaciales no representa viajes sino actividades urbanas que realizan las personas, construyendo así una red social formada por actividades urbanas.
@@ -789,7 +788,7 @@ La tabla ESTACION\_METRO contiene 20 atributos, y al igual que la tabla PARADERO
 	
 La variante de interpolación escogida, al igual que en Chen Zhong et.al (2014) corresponde a la \textit{Inverse Distance Weighting}(\textit{IDW}) con un $\lambda=2$ dado que no se hacen supuestos adicionales a los propuestos.
 	
-\todo{explicar que se usará georeferenciación, que estándar, etc..}	
+%\todo{explicar que se usará georeferenciación, que estándar, etc..}	
 	
     Este trabajo al igual que el artículo en el que está basado, utiliza los datos generados a partir del uso de tarjetas inteligentes del transporte público, con la salvedad de que aquí corresponden al sistema de transporte de Santiago de Chile, con estos se construirá  la red espacial para la posterior construcción de las estructuras descritas (centros, centros de flujo y bordes).
 	
@@ -799,11 +798,10 @@ La efectividad de la visualización depende de las preferencias  y nivel de entr
 
 Al momento de diseñar la visualización no es necesario considerar la distorsión producida en las imagenes bidimensionales presentes en un mapa producto de la proyección existente (3D a 2D) dado que el nivel de detalle que se requiere en las vistas se relaciona a nivel de ciudad, no de calle. 
 
-\todo{MIRARLO}
 La estrategia para el proceso de visualización queda establecida en la sección \ref{sec:contr_y_rep_red} ``Construcción y representación de la red'', por lo que no es necesario definir una.
 
-\todo{Hablar que es lo que se hará de la sección de la visualización.}
-
+	Para la realización de las vistas se debe tener presente la percepción de los usuarios y como esto afecta cada tipo de visualización.
+	
 	A partir de todo lo expuesto, el aporte de este trabajo a lo ya existente se resume en:
 	
 	\begin{itemize}
@@ -817,12 +815,13 @@ La estrategia para el proceso de visualización queda establecida en la sección
     %================================================================================================================
     \section{Estrategia de procesamiento}
   
-	En esta sección se describen las acciones a llevar a cabo en el procesamiento de los datos, esto consiste en describir la forma en la que se llevará a cabo el procedimiento para elaborar el grafo y calcular los distintos indicadores descritos en la sección \ref{sec:Analisis_bibliografia}. Para lo anterior es necesario primero detallar las herramientas que se utilizarán para luego pasar a describir 
+	En esta sección se describen las acciones a llevar a cabo en el procesamiento de los datos, esto consiste en describir la forma en la que se llevará a cabo el procedimiento para elaborar el grafo y calcular los distintos indicadores descritos en la sección \ref{sec:Analisis_bibliografia}. Para lo anterior primero se detallan las herramientas que se utilizarán.
 
 	\subsection{Herramientas a utilizar}
 	
 	La base de datos que contiene las etapas se encuentra en un Sistema Gestor de Base de Datos (\textit{SGBD}) \textbf{Postgres} versión 9.1 y para gestionar los datos se posee una interfaz gráfica (\textit{GUI}) llamada \textit{PgAdmin III} cuya versión es 1.18.1 con la cuál se manipulan los distintos requerimientos al SGBD. 
-	%Para el calculo de las 
+	
+	El otro software a utilizar será \textit{mapEquation}\footnote{http://www.mapequation.org/code.html} para la construcción de los indicadores $C_{intermediacion}$ y $PageRank$. 
 	
 	\subsection{Filtrado de datos}
 	
@@ -837,11 +836,37 @@ La estrategia para el proceso de visualización queda establecida en la sección
 \end{lstlisting}
 \end{center}
 \caption{Consulta para quitar etapas sin paradero de bajada.}
-\label{fig:limpiar_datos}
+\label{fig:limpiar_datos_etapa}
 \end{figure}
 	
-	Los resultados de la consulta anterior son almacenados en una nueva tabla que contiene solo los campos a ser utilizados (ver figura \ref{fig:limpiar_datos}).
+	Los resultados de la consulta anterior son almacenados en una nueva tabla que contiene solo los campos a ser utilizados (ver figura \ref{fig:limpiar_datos_etapa}).
 	
+	Se realiza el mismo procedimiento para las tablas REDPARADAS y ESTACION\_METRO, es decir, manteniendo los campos relevantes y almacenandolos en una nueva tabla (ver figuras   \ref{fig:limpiar_datos_redparadas} y \ref{fig:limpiar_datos_estacion_metro}).
+
+\begin{figure}[h]
+\begin{center}
+\begin{lstlisting}[breaklines=true, language=SQL]
+	SELECT codigousuario, x, y  
+	FROM redparadas
+	WHERE x IS NOT NULL AND y IS NOT NULL;
+\end{lstlisting}
+\end{center}
+\caption{Consulta para quitar atributos innecesarios de la tabla REDPARADAS.}
+\label{fig:limpiar_datos_redparadas}
+\end{figure}	
+	
+\begin{figure}[h]
+\begin{center}
+\begin{lstlisting}[breaklines=true, language=SQL]
+	SELECT codigosinlinea, x, y  
+	FROM estacion_metro
+	WHERE x IS NOT NULL AND y IS NOT NULL;
+\end{lstlisting}
+\end{center}
+\caption{Consulta para quitar atributos innecesarios de la tabla ESTACION\_METRO.}
+\label{fig:limpiar_datos_estacion_metro}
+\end{figure}	
+
 	\todo{Falta describir todo esto.}
 	\subsection{Cálculo de centralidades}	
 		\subsubsection{Centralidad de intermediación}
