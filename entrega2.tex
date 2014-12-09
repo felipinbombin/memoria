@@ -852,9 +852,12 @@ La estrategia para el proceso de visualización queda establecida en la sección
 
 	\subsection{Herramientas a utilizar}
 	
-	La base de datos que contiene las etapas se encuentra en un Sistema Gestor de Base de Datos (\textit{SGBD}) \textbf{Postgres} versión 9.1 y para gestionar los datos se posee una interfaz gráfica (\textit{GUI}) llamada \textit{PgAdmin III} cuya versión es 1.18.1 con la cuál se manipulan los distintos requerimientos al SGBD. 
+	La base de datos que contiene las etapas, paraderos y estaciones de metro se encuentra en un Sistema Gestor de Base de Datos (\textit{SGBD}) \textbf{Postgres} versión 9.1 y para gestionar los datos se posee una interfaz gráfica (\textit{GUI}) llamada \textit{PgAdmin III} cuya versión es 1.18.1 con la cuál se manipulan los distintos requerimientos al SGBD. 
+	La construcción de comunidades será realizada mediante la herramienta \textit{mapEquation}\footnote{http://www.mapequation.org}.
 	
-	El otro software a utilizar será \textit{mapEquation}\footnote{http://www.mapequation.org/code.html} para la construcción de los indicadores $C_{intermediacion}$ y $PageRank$. 
+	Por último, se usará el paquete \textit{i-graph}\footnote{http://igraph.sourceforge.net/} de la plataforma R\footnote{http://www.r-project.org/} (lenguaje y entorno para realizar computación estádistica) para calcular los indicadores $C_{intermediacion}$ y $PageRank$, además de las propiedades globales del grafo.
+	 
+	Aquellas funcionalidades adionales que se requieran serán hechas con alguna de las herraminentas aquí nombradas o mediante scripts hechos en el lenguaje de programación C.
 	
 	\subsection{Filtrado de datos}
 	
@@ -888,7 +891,7 @@ La estrategia para el proceso de visualización queda establecida en la sección
 \label{fig:limpiar_datos_redparadas}
 \end{figure}	
 	
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{center}
 \begin{lstlisting}[breaklines=true, language=SQL]
 	SELECT codigosinlinea, x, y  
@@ -900,19 +903,37 @@ La estrategia para el proceso de visualización queda establecida en la sección
 \label{fig:limpiar_datos_estacion_metro}
 \end{figure}	
 
-	\todo{Falta describir todo esto.}
-	\subsection{Cálculo de centralidades}	
-		\subsubsection{Centralidad de intermediación}
-		\subsubsection{PageRank}
+Al finalizar esta etapa se obtienen 3 tablas con los datos necesarios para llevar a cabo el cálculo de las siguientes instrucciones.
+
+	\subsection{Construcción de la red}
 	
-	\subsection{Cálculo de Bordes y Generación de comunidades}
-	\subsection{Interpolación espacial}
+Con los datos de la tabla ETAPA se construye una matriz origen destino donde cada celda $C_{ij}$ denota el volumen de etapas realizadas desde el área asociado al paradero $i$ al área asociada al paradero $j$. Lo anterior se realizará utilizando la $R$ con el paquete \textit{i-graph}. Mediante el siguiente script:
+
+%\begin{figure}[h]
+%\begin{center}
+%\begin{lstlisting}[breaklines=true, language=R]
+%	asd
+%\end{lstlisting}
+%\end{center}
+%\caption{Código para construir matriz Origen-Destino}
+%\label{fig:matriz_o_d}
+%\end{figure}	
+
+%	\subsection{Cálculo de centralidades}
 	
-	\subsection{Corrección de bordes}  
+%		\subsubsection{Centralidad de intermediación}
+		
+%		\subsubsection{PageRank}
 	
-	Para la corrección de bordes se utilizará el algoritmo $PageRank$
+%	\subsection{Cálculo de Bordes y Generación de comunidades}
+%	La detección de los bordes será realizada usando la herramienta \textit{MapEquation}\footnote{www.mapequation.org}
+%	\subsection{Interpolación espacial}
+	
+%	\subsection{Corrección de bordes}  
+	
+%	Para la corrección de bordes se utilizará el algoritmo $PageRank$
     
-    \newpage
+    %\newpage
     %================================================================================================================
     %\section{Trabajo realizado}
     
