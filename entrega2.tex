@@ -490,28 +490,32 @@ Para solucionar el problema planteado se cuenta el número de puntos en las comu
 	
 	Toda la información necesaria fue obtenida del libro \textit{Interactive Data Visualization: Foundations, Techniques, and Applications} \cite{libro_visualizacion}.
 
-	\paragraph{¿Que es la visualización?}
+	\paragraph{¿Que es la visualización?} \hfill \\ % para que haga un salto de línea
 	
-	El concepto de visualización se define como la \textit{comunicación de información usando representaciones gráficas}. El beneficio de utilizar imágenes está dado por la riqueza de información que puede contener y el tiempo que requiere para ser procesado en vez de información en páginas con texto, esto ocurre debido a que la interpretación de imágenes es realizada en paralelo dentro del sistema perceptual mientras que la lectura es un proceso secuencial. Otra de las ventajas que tiene la visualización es su independencia del lenguaje, siendo más eficaz que un texto para un grupo de personas que hablan diferentes idiomas. 
+	El concepto de visualización se define como la \textit{comunicación de información usando representaciones gráficas}. El beneficio de utilizar imágenes está dado por la riqueza de información que puede contener y el tiempo que requiere para ser procesada en vez de información en páginas con texto, esto ocurre debido a que la interpretación de imágenes es realizada en \textbf{paralelo} dentro del sistema perceptual mientras que la lectura es un proceso \textbf{secuencial}. Otra de las ventajas que tiene la visualización es su independencia del lenguaje, siendo más eficaz que un texto para un grupo de personas que hablan diferentes idiomas. 
 	
 	La importancia de esta forma de comunicación radica en que los seres humanos son seres visuales que usan la visión como uno de los sentidos claves para entender la información, según esto es que se justifica el hecho de que sea ocupada en muchos lugares en la toma de decisiones, y dado el incremento de datos presentes hoy en día en cada área del conocimiento, es que hay una creciente necesidad por herramientas y técnicas que ayuden a convertirlos en información útil. 
 	
-	La visualización no es efectiva \textit{per se} sino que depende de varios factores su impacto. En 1999 Linda Elting demostró por medio de un experimento que la visualización afecta el proceso de decisión y que está muy relacionada con las preferencias y nivel de entrenamiento de los usuarios involucrados.
+	%La visualización no es efectiva \textit{per se} sino que depende de varios factores su impacto. En 1999 Linda Elting demostró por medio de un experimento que la visualización afecta el proceso de decisión y que está muy relacionada con las preferencias y nivel de entrenamiento de los usuarios involucrados.
     
 % sección 1.2.2 del libro
-	\paragraph{Visualización hoy en día}    
+	\newpage
+	\paragraph{Tipo de visualizaciones} \hfill \\
 	
-	La visualización a menudo ofrece distintos niveles de vistas de información, éstas pueden ser vistas \textbf{cualitativas} o \textbf{cuantitativas} dependiendo de que parte de la información existente es la relevante de ser mostrada, para lograr esto se lleva a cabo una distorsión de la imagen real o representación exacta. Un ejemplo de esto se observa en la figura \ref{fig:metro}, que corresponde a la red de metro subterráneo de la ciudad de Tokio, en el se produce una distorsión de los puntos en donde se interceptan varias líneas para facilitar su interpretación. 
+	La visualización a menudo ofrece distintos niveles de vistas de información. Dependiendo de que parte de la información existente es la relevante de ser mostrada tenemos
+	
+	\begin{description}		
+		\item[Visualización cualitatica] En esta se distorsiona la imagen con el objetivo de destacar alguna cualidad en particular. Un ejemplo de esto se observa en la figura \ref{fig:metro}, que corresponde a la red de metro subterráneo de la ciudad de Tokio, en el se produce una distorsión de los puntos en donde se interceptan varias líneas para facilitar su interpretación. 
 		
 % Imagen de metro
 \begin{figure}[h] %[h] para here [b] para bottom [t] para top
-\makebox[\textwidth]{\includegraphics[width=400pt]{./images/metro_tokyo.png}}
+\makebox[\textwidth]{\includegraphics[width=350pt]{./images/metro_tokyo.png}}
 \caption[Metro subterráneo de Tokio]{Metro subterráneo de Tokio. Representación cualitativa de las estaciones y las líneas que pasan por ella. (obtenida desde \textit{Wikimedia Commons})}
 \label{fig:metro}
 \end{figure}
 
-Las imágenes distorsionadas tienden a ser imprecisas y dependen  de quien las observa. Otro caso se observa en la mayoría de los mapas bidimensionales, donde estos exhiben algún grado de distorsión debido a la proyección que se debe hacer desde un volumen a un plano (3D a 2D). Sin embargo, áreas pequeñas sufren una distorsión mínima por lo que resultan ser una muy buena aproximación, permitiendo proveer información detallada sobre diversos puntos de interés. En la figura \ref{fig:google_map} se observa un mapa con una ruta dirigida entre dos puntos, indicando calles, sentido de estas, intersecciones, y alternativas de recorrido.
-
+		\item[Visualización cuantitativa] Se refiere a visualizaciones donde se observan unidades medibles y comparables entre ellas. Si bien en los mapas bidimensionales se exhibe algún grado de distorsión debido a la proyección que se debe hacer desde un volumen a un plano (3D a 2D), áreas pequeñas sufren una distorsión mínima por lo que resultan ser una muy buena aproximación, permitiendo proveer información detallada sobre diversos puntos de interés. En la figura \ref{fig:google_map} se observa un mapa con una ruta dirigida entre dos puntos, indicando calles, sentido de estas, intersecciones, y alternativas de recorrido (medibles y comparables).
+		
 % Imagen de metro
 \begin{figure}[h] %[h] para here [b] para bottom [t] para top
 \makebox[\textwidth]{\includegraphics[width=200pt]{./images/google_map.png}}
@@ -519,27 +523,39 @@ Las imágenes distorsionadas tienden a ser imprecisas y dependen  de quien las o
 \label{fig:google_map}
 \end{figure}
 
-Se debe tener en claro que la visualización provee una representación de objetos que podría incluir datos, algoritmos, resultados de cómputos, procesos y otros muchos componentes de una aplicación, que dependerán del objetivo de ésta. Estas visualizaciones proveen información a través del uso de gráficos generados por computadoras. También existen visualizaciones interactivas donde el usuario puede consultar en la visualización y en consecuencia, interactuar con la aplicación de visualización en lugar de usar un menú, pudiendo llegar incluso a tener aplicaciones que son totalmente dirigidas a través de su visualización.
+Lo anterior sugiere que las imágenes distorsionadas tienden a ser imprecisas y dependen de quien las observa. 
+
+\end{description}	 
+
+Otra manera de diferenciar la visualización es según el nivel de interacción que ésta presenta. Según esto tenemos
+
+\begin{description}
+	\item[Visualización estática] no permite interacción, muy parecido a una imagen.
+	\item[Visualización dinámica] permite interacción, aquí el usuario puede consultar en la visualización y en consecuencia, interactuar con la aplicación de visualización en lugar de usar un menú, pudiendo llegar incluso a tener aplicaciones que son totalmente dirigidas a través de su visualización.
+\end{description}
 
 % sección 1.3 del libro | relación de visualización y otros campos
 % sección 1.3.1 diferencia entre visualización y computación gráfica
 
-La visualización se relaciona mucho con la computación gráfica pero no son lo mismo. En un inicio, la visualización fue considerada un sub-campo dentro de la computación gráfica principalmente porque la visualización usa gráficos generados por computadoras mostrar información por medio de imágenes. Aquí las técnicas gráficas son usadas como medio de comunicación.
+%La visualización se relaciona mucho con la computación gráfica pero no son lo mismo. En un inicio, la visualización fue considerada un sub-campo dentro de la computación gráfica principalmente porque la visualización usa gráficos generados por computadoras mostrar información por medio de imágenes. Aquí las técnicas gráficas son usadas como medio de comunicación.
 
-Más allá de los gráficos utilizados, lo verdaderamente importante es el aspecto de toda visualización es su conexión con los datos. La computación gráfica se concentra principalmente en objetos gráficos y la organización de primitivas gráficas; la visualización va un paso más allá dado que son basadas en los datos subyacentes. Según todo lo anterior, se puede pensar en la visualización como la aplicación de gráficos para mostrar datos que se logra por medio de un mapeo a primitivas gráficas que luego de renderizar se obtiene la visualización.
+%Más allá de los gráficos utilizados, lo verdaderamente importante es el aspecto de toda visualización es su conexión con los datos. La computación gráfica se concentra principalmente en objetos gráficos y la organización de primitivas gráficas; la visualización va un paso más allá dado que son basadas en los datos subyacentes. Según todo lo anterior, se puede pensar en la visualización como la aplicación de gráficos para mostrar datos que se logra por medio de un mapeo a primitivas gráficas que luego de renderizar se obtiene la visualización.
 
 %render: cálculo que se hace para generar una imagen.
 
-La visualización no se relaciona solamente con la computación gráfica sino que abarca otras áreas como la psicología perceptual, interacción humano-computador, base de datos, estadística, y minería de datos, entre otras. Por lo que la computación gráfica puede ser usada para definir y generar una vista para comunicar la información, el origen de datos y la forma en que el usuario interactúa y percibe los datos son componentes igual de importantes al momento de presentar información. 
+La visualización enfatiza muchos aspectos de otras disciplinas, abarcando áreas como la computación gráfica, psicología perceptual, interacción humano-computador, base de datos, estadística, y minería de datos, entre otras. 
+%La computación gráfica puede ser usada para definir y generar una vista para comunicar la información, la interacción humano-computador establece una base para el proceso de intercambio de datos entre el usuario y el software. Por último la sicología perceptual ayuda a generar visualizaciones efectivas. 
 	
 % visualización científica vs visualización de información.
 % sección 1.3.2 del libro
-Hoy en día existen dos corrientes de visualización que nacieron a principios del siglo XXI, producto de que la comunidad de visualización se diferenció entre visualización científica y visualización de información. Si bien ambos proveen representaciones de datos, la diferencia más características es que estos suelen ser a menudo diferentes. 
+Hoy en día existen dos corrientes de visualización, una científica y otra de información. Ambas proveen representaciones de datos, pero la diferencia más característica es que estos datos suelen ser a menudo diferentes. 
 
 % sección 1.4 El proceso de visualización
-\paragraph{El proceso de visualización}
+\paragraph{El proceso de visualización} \hfill \\
 
-Los datos utilizados para una visualización pueden ser simples o complejos en su estructura, y quien observa podría tener distintos objetivos sobre esos datos (buscar algo interesante como anomalías, tendencias, confirmar una hipótesis, mostrar resultados de análisis a una audiencia, etc). Por esto, uno de los primeros pasos para llevar a cabo una visualización es realizar un mapeo desde los datos a la vista (ver figura \ref{fig:proc_visualizacion}), lo que se puede lograr de muchas maneras. La interfaz de usuario está compuesto de componentes que se asocian con la necesidad de ingresar, presentar, monitorear, analizar y computar datos. Pueden ser de muchas formas, incluso representaciones visuales de los datos para facilitar la selección requerida. Las visualizaciones pueden ofrecer mecanismos de traducción de datos para ofrecer vistas  y formatos más intuitivos para que los usuarios puedan llevar a cabo sus tareas. Lo anterior significa que los datos (o atributos de estos) son utilizados para definir objetos gráficos como puntos, líneas y formas; y sus atributos como tamaño, posición, orientación y color.
+Los datos utilizados para una visualización pueden ser simples o complejos en su estructura, y quien observa podría tener distintos objetivos sobre esos datos (buscar algo interesante como anomalías, tendencias, confirmar una hipótesis, mostrar resultados de análisis a una audiencia, etc). Por esto, uno de los primeros pasos para llevar a cabo una visualización es realizar un mapeo desde los datos a la vista (ver figura \ref{fig:proc_visualizacion}), y no hay una única forma de hacerlo. 
+
+%La interfaz de usuario está compuesta de componentes que se asocian con la necesidad de ingresar, presentar, monitorear, analizar y computar datos. Pueden ser de muchas formas, incluso representaciones visuales de los datos para facilitar la selección requerida. Las visualizaciones pueden ofrecer mecanismos de traducción de datos para ofrecer vistas  y formatos más intuitivos para que los usuarios puedan llevar a cabo sus tareas. Lo anterior significa que los datos (o atributos de estos) son utilizados para definir objetos gráficos como puntos, líneas y formas; y sus atributos como tamaño, posición, orientación y color.
 
 % Imagen de proceso de visualización
 \begin{figure}[h] %[h] para here [b] para bottom [t] para top
@@ -548,32 +564,45 @@ Los datos utilizados para una visualización pueden ser simples o complejos en s
 \label{fig:proc_visualizacion}
 \end{figure}
 
+En la figura \ref{fig:proc_visualizacion} se observa un proceso de visualización genérico que describe a grandes rasgos las etapas presentes. Según esto las etapas son:
+
+\begin{description}
+	\item[Transformación de datos] En esta etapa se realizan una o más operaciones que convierten los datos desde la fuente de datos en una representación simbólica en la computadora. 
+	
+	\item[Procesamiento de mapeo] Cada representación simbólica es asociada a un objeto gráfico cuyas características suelen representar atributos de cada elemento obtenido en el paso anterior. El conjunto de estos objetos producen una imagen en una computadora.
+	
+	\item[transformación de vista] Cada imagen puede ser transformada según requerimientos que tenga el usuario o si hay un grado de interación, éste tiene la posibilidad de hacerlo en el momento que lo requiera.
+	
+\end{description}
+
 % capitulo 5 y 6 habla de mapeos de datos.
 % capitulo 12. Estrategias para seleccionar mapeos eficientes.
 
-Otro componente importante dentro del proceso son los controles de interacción para las vistas y mapeos de variables (atributos o parámetros). Mientras que en un principio las visualizaciones fueron objetos estáticos, las visualizaciones modernas son procesos dinámicos donde el usuario controla virtualmente todas las etapas  del procedimiento, desde la selección y control a la definición de color y refinación de la vista. Es importante decir que no hay una fórmula que garantice la efectividad de una visualización. Diferentes usuarios, con diferentes formaciones, habilidades perceptuales y preferencias, tendrán difrentes opiniones sobre una visualización. La tarea que deban realizar los usuarios afectará también la utilidad de la visualización. Incluso cambiando los datos puede tener implicancias sobre el resultado de la visualización.
+%Otro componente importante dentro del proceso son los controles de interacción para las vistas y mapeos de variables (atributos o parámetros). Mientras que en un principio las visualizaciones fueron objetos estáticos, las visualizaciones modernas son procesos dinámicos donde el usuario controla virtualmente todas las etapas  del procedimiento, desde la selección y control a la definición de color y refinación de la vista. 
+Es importante decir que no hay una fórmula que garantice la efectividad de una visualización. Diferentes usuarios, con diferentes formaciones, habilidades perceptuales y preferencias, tendrán difrentes opiniones sobre una visualización. La tarea que deban realizar los usuarios afectará también la utilidad de la visualización.
 
 La visualización es a menudo una parte de un proceso más grande como análisis de datos, descubrimiento de conocimiento o análisis visual.
 
-El proceso de comenzar con datos y generar una imagen es descrito como \textit{pipeline} - secuencia de etapas que puede ser estudiada independientemente en términos de algoritmos, estructura de datos y sistema de coordenadas. Esos procesos o pipelines son diferentes para computación gráfica, visualización y descubrimiento de conocimiento pero se parecen mucho. Estos son presentados en las siguientes 3 secciones.
+El proceso de comenzar con datos y generar una imagen es descrito como \textit{pipeline}, que se define como una secuencia de etapas que puede ser estudiada independientemente en términos de algoritmos, estructura de datos y sistema de coordenadas. %Esos procesos o pipeline son diferentes para computación gráfica, visualización y descubrimiento de conocimiento pero se parecen mucho. 
+
+A continuación se muestra una descripción del pipeline de visualización. Las etapas son descritas en el mismo orden en que son ejecutadas durante el proceso (ver figura \ref{fig:pipeline_visualizacion}).
+.
 
 % sección 1.4.1 El canal de la computación gráfica
 
 % sección 1.4.2 El canal de la visualización
 
-\subparagraph{Pipeline de visualización}
-
-Las etapas son descritas en el mismo orden en que son ejecutadas durante el proceso (ver figura \ref{fig:pipeline_visualizacion}).
-
 \begin{description}
 	\item[Modelado de datos] \hfil \\
-Si están en un archivo o en una base de datos, tienen que estar  estructurados para facilitar la visualización. El nombre, tipo, rango y semántica de cada atributo o campo de un dato tiene que estar disponible en un formato que asegure rápido acceso y fácil modificación.
+Si están en un archivo o en una base de datos, tienen que estar  estructurados. Esta estructura se evalúa en base a dos conceptos, sintaxis, relacionada con el significado de su representación y semántica, visto como la relación existente entre registros. Además se realiza una limpieza de los datos, aquí se pueden utilizar varias estrategias (eliminar registros malos, valor sentinela, reeplzar por valor más cercano, etc) para luego identificar cada uno de los tipos de datos existentes (Ordinal,Nominal).
+
+%El nombre, tipo, rango y semántica de cada atributo o campo de un dato tiene que estar disponible en un formato que asegure rápido acceso y fácil modificación.
 	
 	\item[Selección de datos] \hfill \\
-Se relaciona con la identificación del subconjunto de datos que serán potencialmente visualizados. Esto puede ocurrir totalmente bajo el control del usuario o a través de un algoritmo.
+Se relaciona con la identificación del subconjunto de datos que serán potencialmente visualizados. Esto puede ocurrir totalmente bajo el control del usuario o a través de un algoritmo automatizado.
 
 	\item[De los datos a mapeo visual] \hfill \\
-Este es lo más importante dentro del pipeline, la realización del mapeo de los valores de los datos a entidades gráficas o sus atributos. Esta etapa usualmente involucra un procesamiento previo de los datos a ser mapeados como escalamiento, desplazamiento, filtrado, interpolación, entre otros.
+Este es lo más importante dentro del pipeline, la realización del mapeo de los valores de los datos a entidades gráficas con  sus respectivos atributos. Esta etapa usualmente involucra un procesamiento previo de los datos a ser mapeados como escalamiento, desplazamiento, filtrado, interpolación, entre otros.
 
 	\item[Configuración de parámetros de la escena] \hfill \\
 Como en las gráficas tradicionales, el usuario tiene que especificar muchos atributos de la visualización que son relativamente independiente de los datos. Esto se refiere a configurar parámetros como los colores (para diferentes dominios, ciertos colores tienen significados claramente definidos), o especificación de luz si se tratase de una visualización 3D, etc.
@@ -602,7 +631,7 @@ En todas las visualizaciones, un aspecto crítico relacionado al usuario son las
 
 % ver capitulo 3: Percepción
 
-Como se discutió anteriormente, el sistema perceptual recibe datos y los procesa de varias formas. El primer proceso es \textit{procesamiento pre-atencional}, un rápido sistema de alto rendimiento que rápidamente identifica diferencias en, por ejemplo, colores y texturas. Además de este hay otras características que el sistema perceptual debe manejar, como la orientación de una línea, largo, ancho, tamaño de un objeto, curvatura, agrupamiento, y movimiento.
+El sistema perceptual recibe datos y los procesa de varias formas. El primer proceso es \textit{procesamiento pre-atencional}, un rápido sistema de alto rendimiento que rápidamente identifica diferencias en, por ejemplo, colores y texturas. Además de este hay otras características que el sistema perceptual debe manejar, como la orientación de una línea, largo, ancho, tamaño de un objeto, curvatura, agrupamiento, y movimiento.
 
 Al entender la percepción visual tenemos ciertas pautas. Por ejemplo, en 1912 la \textit{Gestalt School of Psychology} comenzó a intentar definir un conjunto de leyes según las cuáles percibimos patrones. Estas leyes incluyen reglas de proximidad, similaridad, continuidad, simetría, primer plano, fondo, y tamaño.
 
@@ -610,7 +639,9 @@ Al entender la percepción visual tenemos ciertas pautas. Por ejemplo, en 1912 l
 % sección 1.6 el diagrama de dispersión
 % sección 1.7 el rol del usuario
 
-El usuario puede estar envuelto en la mayoría de las etapas del pipeline. Es útil categorizar la visualización basados en los propósitos que ésta tendrá. Según esto surgen las siguientes categorías:
+\paragraph{El rol del usuario} \hfill \\
+
+El usuario puede estar envuelto en la mayoría de las etapas del pipeline de visualización. Un aspecto importante desde este punto de vista es la intensión del usuario, según esto, es útil categorizar la visualización basados en los propósitos que ésta tendrá. Según esto surgen las siguientes categorías:
 
 \begin{description}
 	\item[Exploración] \hfill \\
@@ -624,9 +655,6 @@ El usuario está intentando transmitir algún concepto o conjunto de hechos a un
 \end{description}
 
 
-
-
-
 	%\paragraph{Origenes de datos}
 	%Capitulo 2	
 	%\paragraph{Percepción}
@@ -636,6 +664,7 @@ El usuario está intentando transmitir algún concepto o conjunto de hechos a un
     
 	%\paragraph{Técnicas para datos geoespaciales}
     
+    \newpage
     \subsection{Análisis de datos}\label{sec:Analisis_datos}
 
 	A continuación se detalla la forma en que funciona el sistema de transporte público que origina los datos, como se estima el proceso de bajada y por último los detalles de las tablas obtenidas posterior a la estimación. Tanto la metodología como los supuestos aquí explicados son expuestos y propuestos por Munizaga y Palma (2012) \cite{Procesamiento_datos}.
