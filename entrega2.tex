@@ -592,26 +592,6 @@ A continuación se muestra una descripción del pipeline de visualización. Las 
 
 % sección 1.4.2 El canal de la visualización
 
-\begin{description}
-	\item[Modelado de datos] \hfil \\
-Si están en un archivo o en una base de datos, tienen que estar  estructurados. Esta estructura se evalúa en base a dos conceptos, sintaxis, relacionada con el significado de su representación y semántica, visto como la relación existente entre registros. Además se realiza una limpieza de los datos, aquí se pueden utilizar varias estrategias (eliminar registros malos, valor sentinela, reeplzar por valor más cercano, etc) para luego identificar cada uno de los tipos de datos existentes (Ordinal,Nominal).
-
-%El nombre, tipo, rango y semántica de cada atributo o campo de un dato tiene que estar disponible en un formato que asegure rápido acceso y fácil modificación.
-	
-	\item[Selección de datos] \hfill \\
-Se relaciona con la identificación del subconjunto de datos que serán potencialmente visualizados. Esto puede ocurrir totalmente bajo el control del usuario o a través de un algoritmo automatizado.
-
-	\item[De los datos a mapeo visual] \hfill \\
-Este es lo más importante dentro del pipeline, la realización del mapeo de los valores de los datos a entidades gráficas con  sus respectivos atributos. Esta etapa usualmente involucra un procesamiento previo de los datos a ser mapeados como escalamiento, desplazamiento, filtrado, interpolación, entre otros.
-
-	\item[Configuración de parámetros de la escena] \hfill \\
-Como en las gráficas tradicionales, el usuario tiene que especificar muchos atributos de la visualización que son relativamente independiente de los datos. Esto se refiere a configurar parámetros como los colores (para diferentes dominios, ciertos colores tienen significados claramente definidos), o especificación de luz si se tratase de una visualización 3D, etc.
-
-	\item[Renderizado o generación de la visualización] \hfill \\
-La proyección específica o el renderizado a ser utilizado para los objetos a visualizar depende del mapeo que se ha utilizado. En este aspecto, la mayoria de las visualizaciones solo requieren dibujar lineas y poligonos uniformemente pintados. Junto a mostrar los datos en si mismo, muchas también incluyen información suplementaria para facilitar la interpretación, como ejes, anotaciones, entre otros.
-
-\end{description}
-
 
 % Imagen de pipeline de visualizacion
 \begin{figure}[h] %[h] para here [b] para bottom [t] para top
@@ -620,6 +600,26 @@ La proyección específica o el renderizado a ser utilizado para los objetos a v
 \label{fig:pipeline_visualizacion}
 \end{figure}
 
+
+\begin{description}
+	\item[Modelado de datos] \hfil \\
+Si están en un archivo o en una base de datos, tienen que estar  estructurados. Esta estructura se evalúa en base a dos conceptos, sintaxis, relacionada con el significado de su representación y semántica, visto como la relación existente entre registros. Además se realiza una limpieza de los datos, aquí se pueden utilizar varias estrategias (eliminar registros malos, valor sentinela, reeplzar por valor más cercano, etc) para luego identificar cada uno de los tipos de datos existentes (Ordinal,Nominal). Por último, si hay datos faltantes puede recurirse a la interpolación.
+
+%El nombre, tipo, rango y semántica de cada atributo o campo de un dato tiene que estar disponible en un formato que asegure rápido acceso y fácil modificación.
+	
+	\item[Selección de datos] \hfill \\
+Se relaciona con la identificación del subconjunto de datos que serán potencialmente visualizados. Esto puede ocurrir totalmente bajo el control del usuario o a través de un algoritmo automatizado.
+
+	\item[De los datos a mapeo visual] \hfill \\
+Este es lo más importante dentro del pipeline, la realización del mapeo de los valores de los datos a entidades gráficas con  sus respectivos atributos. Esta etapa usualmente involucra un procesamiento previo de los datos a ser mapeados como escalamiento, desplazamiento, filtrado, interpolación, entre otros. Esta etapa es muy dependiente de la librería subyacente en la visualización.
+
+	\item[Configuración de parámetros de la escena] \hfill \\
+Como en las gráficas tradicionales, el usuario tiene que especificar muchos atributos de la visualización que son relativamente independiente de los datos. Esto se refiere a configurar parámetros como los colores (para diferentes dominios, ciertos colores tienen significados claramente definidos), o especificación de luz si se tratase de una visualización 3D, etc.
+
+	\item[Renderizado o generación de la visualización] \hfill \\
+La proyección específica o el renderizado a ser utilizado para los objetos a visualizar depende del mapeo que se ha utilizado. En este aspecto, la mayoria de las visualizaciones solo requieren dibujar lineas y poligonos uniformemente pintados. Junto a mostrar los datos en si mismo, muchas también incluyen información suplementaria para facilitar la interpretación, como ejes, anotaciones, entre otros.
+
+\end{description}
 
 % sección 1.4.3 El proceso de descubrir conocimiento
 
@@ -645,10 +645,10 @@ El usuario puede estar envuelto en la mayoría de las etapas del pipeline de vis
 
 \begin{description}
 	\item[Exploración] \hfill \\
-El usuario posee un conjunto de atos y quiere examinarlos para averiguar su contenido y/o si una características particular (o conjunto de estas)  está presente o ausente.
+El usuario posee un conjunto de datos y quiere examinarlos para averiguar su contenido y/o si una característica particular (o conjunto de estas) está presente o ausente.
 
 	\item[Confirmación] \hfill \\
-El usuario ha determinado o planteado una hipótesis relacionada con un característica de los datos y quiere usar la visualización para verificarla.
+El usuario ha determinado o planteado una hipótesis relacionada con una característica de los datos y quiere usar la visualización para verificarla.
 
 	\item[Presentación] \hfill \\
 El usuario está intentando transmitir algún concepto o conjunto de hechos a una audiencia.
@@ -833,7 +833,7 @@ Al momento de diseñar la visualización no es necesario considerar la distorsi�
 
 La estrategia para el proceso de visualización queda establecida en la sección \ref{sec:contr_y_rep_red} ``Construcción y representación de la red'', por lo que no es necesario definir una.
 
-	Para la realización de las vistas se debe tener presente la percepción de los usuarios y como esto afecta cada tipo de visualización.
+	Para la realización de las vistas se debe tener presente la percepción de los usuarios, la intención de ésto y como estos aspectos afecta cada visualización.
 	
 	A partir de todo lo expuesto, el aporte de este trabajo a lo ya existente se resume en:
 	
