@@ -172,7 +172,7 @@
 
     Transantiago\footnote{fue implementado a partir del año 2007.} es el sistema de transporte público de Santiago de Chile que implementa las tecnologías nombradas anteriormente, por lo que hoy en día se sabe que se realizan aproximadamente 6.000.000 de validaciones durante un día laboral\footnote{Lunes, martes, miércoles, jueves o viernes.}, lo que genera una cifra cercana a los 35.000.000 de transacciones a la semana (incluyendo sábado y domingo) con aproximadamente 3.000.000 de tarjetas de pago. Por otro lado, hay 80.000.000 de emisiones proveniente de la tecnología AVL del sistema. Al procesar estos datos en conjunto es posible identificar el paradero de origen, recorrido utilizado para desplazarse y el paradero de destino, este último requiere un procesamiento adicional basado en una metodología desarrollada por Munizaga y Palma (2012) \cite{Procesamiento_datos} que logra una identificación en el 80\% de las validaciones.
 
-    La estructura espacial moderna de las ciudades ha sido formada, en gran medida, por avances en transporte y comunicaciones \cite{Forma_ciudad_moderna}. La forma en la cual se mueven los habitantes de una ciudad ha ido modificando la estructura de esta, motivados por la transferencia de recursos como materiales, dinero, personas e información. Considerando una persona como un transportador de recursos de un área urbana a otra es que se identifican las siguientes estructuras espaciales urbanas \cite{Estructura_urbana}:
+    La estructura espacial moderna de las ciudades ha sido formada, en gran medida, por avances en transporte y comunicaciones \cite{Forma_ciudad_moderna}. La forma en la cual se mueven los habitantes de una ciudad ha ido modificando la estructura de ésta, motivados por la transferencia de recursos como materiales, dinero, personas e información. Considerando una persona como un transportador de recursos de un área urbana a otra es que se identifican las siguientes estructuras espaciales urbanas \cite{Estructura_urbana}:
 
     \begin{itemize}
     \item Centros de flujo: Se refiere a las áreas que sirven para conectar otro par de áreas para transferencia de personas. Funcionan como puentes espaciales entre distintas áreas.
@@ -224,7 +224,7 @@ Esta memoria creará las estructuras espaciales mencionadas anteriormente a part
     \subsection{Objetivos específicos}
 
     \begin{enumerate}
-    \item Construir modelo de red para la ciudad de Santiago. %basado en los paraderos del transporte público.
+    \item Construir modelo de red para la ciudad de Santiago de Chile. %basado en los paraderos del transporte público.
     \item Identificar patrones de viaje, centros y centros de flujo.%puntos de alto flujo de pasada.
     \item Desarrollar una herramienta que permita visualizar las estructuras espaciales.
     \end{enumerate}
@@ -378,8 +378,8 @@ Las propiedades topológicas de un grafo pueden proveer importante información 
 
 % the clustering centrality is an index that measures how ‘close’/‘cohesive’ the areas are to one another in terms of their accessibility to shared neighbors
 		
-		\item \textbf{Centralidad de cercanía} es un índice que evalúa cuan rápido viaja la información en un grafo.
-
+		\item \textbf{Centralidad de cercanía} es un índice que evalúa cuan rápido viaja la información en un grafo. Se calcula para un nodo $i$ como $\frac{1}{lejania(i)}$, donde $lejania(i)=\frac{1}{|V|-1}\sum_{\forall j\not=i}\delta_{ij}$. Donde $\delta_{ij}$ es la distancia más corta de $i$ a $j$.
+		
 	\end{itemize}
 
 Estas propiedades permiten descubrir los niveles de actividad que mantiene cada área de una ciudad y su participación en los flujos que se realizan.
@@ -394,7 +394,7 @@ $$
 	C_{intermediacion}(k) = \sum_{ij} \frac{\delta_{ij} (k)}{\delta_{ij}}
 $$
 
-donde $\delta_{ij}(k)$ es el número de caminos más cortos entre $i$ y $j$ que pasan por $k$, mientras que $\delta_{ij}$ es el número total de caminos entre $i$ y $j$. 
+donde $\delta_{ij}(k)$ es el número de caminos más cortos entre $i$ y $j$ que pasan por $k$, mientras que $\delta_{ij}$ es el número total de caminos más cortos entre $i$ y $j$. Notar que $i$ y $j$ son distintos de $k$.
 %En ciertos casos esta medida se normaliza dividiéndola por $N$ (cantidad de nodos) lo cual ellos no realizaron, utilizando la forma tal cual aparece en la definición. 
 
 Por otro lado, \textit{PageRank} mide el rol de un nodo o área local en atraer flujos desde todos los nodos de la red. Esta medida puede ser vista como una representación genérica de las probabilidades de un peatón cualquiera de visitar un nodo cualquiera, en este sentido está relacionado con procesos de Markov de primer orden (Brin y Page 1998)\cite{markov}, que es la base de muchos procesos de interacción social, en este contexto  fue originalmente usado para extraer información acerca de las estructuras de los vínculos de Internet (Rosvall y Bergstrom 2008)\cite{Infomap}, muy similar al \textit{ranking de páginas de Google}. Según lo anterior de define la probabilidad $r_j$ de visitar el nodo $j$ como:
@@ -431,7 +431,7 @@ El parámetro $\rho$ es conocido como \textit{factor de amortiguación} y toma v
 	Para llevar a cabo lo anterior se utilizan flujos probabilisticos creados a partir de generaciones aleatoreas que simulan recorridos sobre el grafo y que asignan también probabilidades a cada nodo de ser visitado aleatoriamente (utilizando el algoritmo \textit{PageRank}), con el objetivo de modelar los comportamientos de flujo de un sistema real.
 	% falta hablar que tienen la mínima entropía. Se justifica con la cita.
 	
-	En resumen, el algoritmo divide los nodos del grafo en módulos que son altamente estructurados, lo que implica que la entropía del grafo particionado es mínima (Rosvall y Bergstrom, 2008)\cite{Infomap}. Esta entropía total del sistema está dividida en la entropía de moverse entre los módulos más en la entropía de moverse dentro de un módulo, las proporciones están relacionadas a la probabilidad de ocurrencia de cada uno. Por lo anterior, Rosvall y Bergstrom (2008) definen esta entropía como:
+	En resumen, el algoritmo divide los nodos del grafo en módulos que son altamente estructurados, lo que implica que la entropía del grafo particionado es mínima (Rosvall y Bergstrom, 2008)\cite{Infomap}. Esta entropía total del sistema está dividida en la entropía de moverse entre los módulos más la entropía de moverse dentro de un módulo, las proporciones están relacionadas a la probabilidad de ocurrencia de cada uno. Por lo anterior, Rosvall y Bergstrom (2008) definen esta entropía como:
 	$$
 	\begin{rcases}
 	Lg(M) &= H(P) + \sum\limits_{i=1}^m P_i H(p)_i \\
@@ -458,7 +458,7 @@ $$
 	W_i(x,y) = 1/d_{ij} (x,y)^\lambda
 $$
 
-Donde $W_i(x,y)$ es el peso de la ubicación del paradero $i$ en las coordenadas $(x,y)$ que son los puntos vecinos más cercanos a $j$ y $d_{ij} (x,y)$ es la distancia a la coordenada $(x,y)$ desde el paradero $i$ hacia el paradero vecino más cercano $j$.
+Donde $W_i(x,y)$ es el peso del paradero $i$ en las coordenadas $(x,y)$ que son los puntos vecinos más cercanos a $j$ y $d_{ij} (x,y)$ es la distancia a la coordenada $(x,y)$ desde el paradero $i$ hacia el paradero vecino más cercano $j$.
 
 Una observación que se desprende de la fórmula es que los pesos están normalizados tal que su suma sea 1, es decir, $\sum_{\forall x,y} W_i (x,y)=1$ y $\lambda$ es un parámetro arbitrario que en este caso es $2$, lo que implica que sigue la ley del inverso al cuadrado.
 
@@ -861,6 +861,7 @@ La estrategia para el proceso de visualización queda establecida en la sección
 
 	\subsection{Herramientas a utilizar}
 	
+	Todos los procesamientos son llevados a cabo en una Notebook con sistema operativo Debian GNU/Linux 7.8 con 3GB de memoria RAM, 40 GB de espacion en disco duro de 5400RPM y un procesador Intel Core i5 4200M de 2.5 GHz.
 	La base de datos que contiene las etapas, paraderos y estaciones de metro se encuentra en un Sistema Gestor de Base de Datos (\textit{SGBD}) \textbf{Postgres} versión 9.1 y para gestionar los datos se posee una interfaz gráfica (\textit{GUI}) llamada \textit{PgAdmin III} cuya versión es 1.18.1 con la cuál se manipulan los distintos requerimientos al SGBD. 
 	La construcción de comunidades será realizada mediante la herramienta \textit{mapEquation}\footnote{http://www.mapequation.org}.
 	
@@ -989,6 +990,90 @@ Con los datos de la tabla ETAPA se construye una matriz origen destino donde cad
     %================================================================================================================
 	\section{Anexos}
 	
-%			\subsubsection{Tabla de completa de Etapas}
+		\subsubsection{Instalación de Postgres}
+		
+	Para instalar postgres en Debian GNU/Linux se deben ejecutar la siguiente secuencia de comandos en la consola de comandos.
+	
+\begin{lstlisting}[breaklines=true, language=SQL, numbers=left, commentstyle=\color{green}, title=asd, caption=Instalacion de postgres, label=fig:instalar_postgres]
+# Instala el sistema gestor de base de datos Postgres, 
+# un programa para interactuar con las bases de datos 
+# (psql) y crea un usuario en el sistema de nombres 
+# postgres.
+apt-get install postgresql postgresql-client	
+
+# Se inicia sesion con el usuario postgres 
+su postgres
+psql
+
+# crear usuario y base de datos
+CREATE USER felipe WITH PASSWORD 'felipe';
+CREATE DATABASE memoria OWNER felipe;
+
+# crear tabla etapas
+CREATE TABLE etapas (
+    tiempo_subida timestamp without time zone,
+    id bigint,
+    pago smallint,
+    x_subida double precision,
+    y_subida double precision,
+    tipo_transporte character varying(20),
+    serviciosentidovariante character varying(500),
+    tipo_dia character varying(10),
+    nviaje integer,
+    netapa integer,
+    x_bajada double precision,
+    y_bajada double precision,
+    tiempo_bajada timestamp without time zone,
+    par_subida character varying(30),
+    par_bajada character varying(30),
+    comuna_subida character varying(20),
+    comuna_bajada character varying(20),
+    zona_subida character varying(10),
+    zona_bajada character varying(10),
+    distonroutesubidabajada integer,
+    disteuclidsubidabajada integer,
+    distonrouteparsubidaparbajada integer,
+    disteuclidparsubidaparbajada integer,
+    serv_un_zp2 character varying(500),
+    sitio2 character varying(50),
+    tiempo2 timestamp without time zone,
+    media_hora time without time zone,
+    tiempo_trasbordo double precision,
+    dist_trasbordo double precision,
+    tiempo_caminata double precision,
+    tiempo_espera double precision,
+    tiempo_etapa double precision,
+    tiempo_espera_estimado double precision,
+    adulto integer,
+    factor_exp_etapa double precision,
+    nbusesanteriores integer,
+    tiempo_busanterior timestamp without time zone,
+    busanterior1er integer,
+    busanterior2do integer,
+    busanterior3er integer,
+    tipocorte character varying(100),
+    proposito character varying(100)
+);
+
+ALTER TABLE public.etapas OWNER TO felipe;
+
+\end{lstlisting}
+
+
+		\subsubsection{Instalación de R}
+		
+	Para instalar R en Debian GNU/Linux se deben ejecutar la siguiente secuencia de comandos en la consola de comandos.
+	
+\begin{lstlisting}[breaklines=true, language=R, numbers=left, commentstyle=\color{green}, title=asd, caption=Instalacion de R, label=fig:instalar_R]
+# Instala los archivos base
+apt-get install r-base	
+
+# Se ingresa al entorno de R
+R
+
+# Se instala el paquete i-graph
+install.packages("igraph")
+
+\end{lstlisting}
 
     \end{document}
