@@ -10,7 +10,12 @@
 \usepackage{graphicx}   % permite insertar figuras
 \usepackage{fancyhdr}   % para encabezado y pie de pagina
 \usepackage{listings}   % para escribir código
-\lstset{}	% para configurar parámetros generales del código a mostrar en este documento
+\lstset{ % para configurar parámetros generales del código a mostrar en este documento
+	commentstyle=\color{green},
+	tabsize=4,
+	numbers=left,
+	literate={\ \ }{{\ }}1 % para fijar la tabulación
+}	
 
 %\usepackage{hyperref}   % crea links en el indice y notas al pie.
 \usepackage{float}      % permite dejar las imagenes es una posición fija   
@@ -946,6 +951,118 @@ Con los datos de la tabla ETAPA se construye una matriz origen destino donde cad
     
     Como se dijo anteriormente, serán realizadas durante el período previo al inicio del semestre 2015-1.
     
+	\subsection{Solo punteos}    
+    
+    Antes de hacer cualquier cosa con los datos debemos eliminar aquellos que no tienen paradero de subida ni de bajada.
+    
+\begin{lstlisting}[breaklines=true, 
+				   language=SQL, 
+				   caption=Generación de arcos,
+				   label=fig:generacion_arcos]	
+DELETE FROM etapas WHERE par_subida IS NULL OR par_bajada IS NULL;
+\end{lstlisting}
+    La eliminación demoró 879228.976 ms (14.65 m) y sequitaron 6.963.870 registros sin paradero de bajada y 5434 que no tienen paradero de subida.    
+    
+consulta para obtener los arcos con pesos 
+	
+\begin{lstlisting}[breaklines=true, 
+				   language=SQL, 
+				   caption=Generación de arcos,
+				   label=fig:generacion_arcos]		
+su postgres
+
+psql memoria
+	
+-- lo guardamos como un CSV
+copy (SELECT par_subida, par_bajada, COUNT(*) AS peso 
+	  FROM etapas AS prueba 
+	  GROUP BY par_subida, par_bajada) 
+To '/var/tmp/dia.csv' with CSV;
+
+
+-- V2 lo guardamos como un CSV. No funciona parece que hay codigos que no estan en la tabla de paraderos. Esta consulta no se ocupo (con acento en la o)
+copy (SELECT subida.nombre, bajada.nombre, arcos.peso
+	 FROM (SELECT par_subida, par_bajada, COUNT(*) AS peso 
+	  	   FROM etapas AS prueba 
+	  	   GROUP BY par_subida, par_bajada) AS arcos
+	  	   LEFT JOIN redparadas AS subida ON arcos.par_subida = subida.codigo 
+	  	   LEFT JOIN redparadas AS bajada ON arcos.par_subida = bajada.codigo) 
+To '/var/tmp/dia.csv' with CSV;
+\end{lstlisting}
+
+	La ejecución de esta consulta demoró 2187691.139 ms (36.46 m) y se generaron 644.761 filas, lo que indica la cantidad de arcos presentes. Esto es sobre todos los viajes existentes.
+	
+	Ahora se genera el mismo archivo pero con un rango horario de mañana (05:00-12:00) y otro rango horario de tarde  (16:00-21:00). Para lo anterior se generan dos indices para mejorar el rendimiento de la consulta.
+   
+    Antes de consultar se crea un índice sobre el campo tiempo\_subida para mejorar el rendimiento.
+
+\begin{lstlisting}[breaklines=true, 
+				   language=SQL, 
+				   caption=Creación de índice,
+				   label=fig:generacion_indice]	
+CREATE INDEX hora_subida ON etapas (extract(hour from tiempo_subida));
+\end{lstlisting}
+
+Su creación demoró 294591.532 ms (4.91 min)
+
+Luego se genera el archivo con datos de la mañana y tarde según los períodos definidos mas arriba.
+
+\begin{lstlisting}[breaklines=true, 
+				   language=SQL, 
+				   caption=Generación de arcos horario mañana,
+				   label=fig:generacion_arcos_manana]		
+su postgres
+
+psql memoria
+	
+// lo guardamos como un CSV
+copy (SELECT par_subida, par_bajada, COUNT(*) AS peso 
+	  FROM etapas AS prueba 
+	  WHERE extract(hour from tiempo_subida) BETWEEN 05 AND 12 
+	  GROUP BY par_subida, par_bajada) 
+To '/var/tmp/manana.csv' with CSV;
+\end{lstlisting}
+
+demoró 1221570.569 ms (20.34 min) y generó 457.015 arcos.
+
+\begin{lstlisting}[breaklines=true, 
+				   language=SQL, 
+				   caption=Generación de arcos horario tarde,
+				   label=fig:generacion_arcos_tarde]		
+su postgres
+
+psql memoria
+	
+// lo guardamos como un CSV
+copy (SELECT par_subida, par_bajada, COUNT(*) AS peso 
+	  FROM etapas AS prueba 
+	  WHERE extract(hour from tiempo_subida) BETWEEN 16 AND 21 
+	  GROUP BY par_subida, par_bajada) 
+To '/var/tmp/tarde.csv' with CSV;
+\end{lstlisting}
+
+demoró 953715.972 ms (15.9 min) y generó 438.672 arcos.
+
+    Formato de archivo
+    
+	Ahora debemos crear el archivo de nodos, para ellos ocuparemos el formato ... el programa XXXX convierte el CSV creado en un archivo con ese formato.
+	
+	Investigar-----    
+    
+    Ahora debemos intercambiar los nombres por números. Para lo anterior ocuparemos la tabla
+    
+    
+    correr infomap
+    
+    ./infomap --input-format='' -d -2
+    
+    opciones
+    -i<s>, --input-format=<s> : Specify input format ('pajek', 'link-list', '3gram' or 'multiplex') to override format possibly implied by file extension.
+    --map : Print the top two-level modular network in the .map format.
+    --clu : Print the top cluster indices for each node.
+    -2, --two-level : Optimize a two-level partition of the network.
+    -d, --directed : Assume directed links.
+    
 %	\subsection{Cálculo de centralidades}
 	
 %		\subsubsection{Centralidad de intermediación}
@@ -994,7 +1111,11 @@ Con los datos de la tabla ETAPA se construye una matriz origen destino donde cad
 		
 	Para instalar postgres en Debian GNU/Linux se deben ejecutar la siguiente secuencia de comandos en la consola de comandos.
 	
-\begin{lstlisting}[breaklines=true, language=SQL, numbers=left, commentstyle=\color{green}, title=asd, caption=Instalacion de postgres, label=fig:instalar_postgres]
+\begin{lstlisting}[breaklines=true, 
+				   language=SQL,  
+				   title=asd, 
+				   caption=Instalacion de postgres,
+				   label=fig:instalar_postgres]
 # Instala el sistema gestor de base de datos Postgres, 
 # un programa para interactuar con las bases de datos 
 # (psql) y crea un usuario en el sistema de nombres 
@@ -1009,7 +1130,13 @@ psql
 CREATE USER felipe WITH PASSWORD 'felipe';
 CREATE DATABASE memoria OWNER felipe;
 
-# crear tabla etapas
+# salir de la base de datos postgres
+\q
+
+# ingresar a la base de datos memoria
+psql memoria
+
+-- crear tabla etapas
 CREATE TABLE etapas (
     tiempo_subida timestamp without time zone,
     id bigint,
@@ -1057,14 +1184,97 @@ CREATE TABLE etapas (
 
 ALTER TABLE public.etapas OWNER TO felipe;
 
+-- crear tabla de paraderos (no incluye estaciones de metro)
+CREATE TABLE redparadas (
+    codigo character varying(20),
+    codigousuario character varying(20),
+    comuna character varying(100),
+    nombre character varying(500),
+    sentido character varying(500),
+    fila_superior character varying(500),
+    fila_inferior character varying(500) --,
+--    grupo_parada character varying(500),
+--    x integer,
+--    y integer,
+--    latitud double precision,
+--    longitud double precision,
+--    censal_1992 character varying(20),
+--    comunas character varying(20),
+--    diseno_563 character varying(20),
+--    diseno_777 character varying(20),
+--    eod_2001 character varying(20),
+--    eod_2006 character varying(20),
+--    estraus_264 character varying(20),
+--    estraus_404 character varying(20),
+--    estraus_410 character varying(20),
+--    estraus_618 character varying(20),
+--    zonas_6 character varying(20)
+);
+
+ALTER TABLE public.redparadas OWNER TO felipe;
+
 \end{lstlisting}
 
+		\subsubsection{Importación de los datos}
+
+Los datos fueron extraidos de la base de datos del departamento de Ingenieria Civil Transporte de la FCFM mediante el comando \textit{pg\_dump} de postgres y almacenados en un archivo de texto.
+
+\begin{lstlisting}[breaklines=true, 
+				   language=bash,  
+				   title=asd, 
+				   caption=Importacion de datos,
+				   label=fig:importar_datos]
+# Se cambia al usuario postgres
+su postgres
+
+# se cargan los datos con el cliente de postgres psql.
+psql -d memoria -a -f /ruta/a/archivo/con/datos
+
+# se ingresa a la instancia de la base de datos
+psql memoria
+
+-- se copian los datos desde el csv de paradas
+COPY redparadas 
+FROM '/ruta/a/archivo/archivo_paradas.backup' 
+WITH (DELIMITER ';', HEADER true, FORMAT CSV);
+\end{lstlisting}
+
+		\subsubsection{Instalación Infomap}
+
+Infomap es el framework que reliaza la tarea de detectar las comunidades. Para acceder a el se debe descargar el archivo .zip del siguiente link 
+
+https://bitbucket.org/mapequation/infomap/get/v0.17.1.zip
+
+luego ejecutamos la siguiente secuencia de comandos
+
+\begin{lstlisting}[breaklines=true, 
+				   language=sh,  
+				   title=asd, 
+				   caption=Instalación infomap,
+				   label=fig:instalacion_infomap]
+# nos posicionamos en la carpeta de descarga
+cd /ruta/del/archivo/descargado
+
+# descomprimir archivo
+unzip Infomap.zip
+
+# ingresar a la carpeta obtenida en la descompresion
+cd mapequation-infomap-e1a23ca54039
+
+# crear el ejecutable
+make
+
+\end{lstlisting}
 
 		\subsubsection{Instalación de R}
 		
 	Para instalar R en Debian GNU/Linux se deben ejecutar la siguiente secuencia de comandos en la consola de comandos.
 	
-\begin{lstlisting}[breaklines=true, language=R, numbers=left, commentstyle=\color{green}, title=asd, caption=Instalacion de R, label=fig:instalar_R]
+\begin{lstlisting}[breaklines=true, 
+				   language=R, 
+				   title=asd, 
+				   caption=Instalacion de R, 
+				   label=fig:instalar_R]
 # Instala los archivos base
 apt-get install r-base	
 
