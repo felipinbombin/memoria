@@ -68,7 +68,7 @@ $total_nodos = count($paraderos);
 // se construye archivo pajek
 fwrite($archivo_pajek, "*Vertices " . $total_nodos . PHP_EOL);
 fwrite($archivo_pajek, $vertices);
-fwrite($archivo_pajek, "*Edges " . $total_arcos . PHP_EOL);
+fwrite($archivo_pajek, "*Arcs " . $total_arcos . PHP_EOL);
 fwrite($archivo_pajek, $arcos);
 
 fclose($archivo_pajek);

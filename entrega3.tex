@@ -1045,14 +1045,14 @@ demoró 953715.972 ms (15.9 min) y generó 438.672 arcos.
 
     Formato de archivo
     
-	Ahora debemos crear el archivo de nodos, para ellos ocuparemos el formato ... el programa XXXX convierte el CSV creado en un archivo con ese formato.
+	Ahora debemos crear el archivo de nodos, para ellos ocuparemos el formato PAJEK y uno script (crear\_archivo\_pajek.php) en php convierten el CSV creado en un archivo con ese formato.
 	
 	Investigar-----    
     
-    Ahora debemos intercambiar los nombres por números. Para lo anterior ocuparemos la tabla
+    Ahora debemos intercambiar los nombres por números. Para lo anterior ocuparemos la tabla redparadas. Vamos a correr el script "cambiar\_nombre\_pajek.php".
     
-    
-    correr infomap
+        
+    correr infomap (por el momento estamos ocupando la app web)
     
     ./infomap --input-format='' -d -2
     
@@ -1062,6 +1062,10 @@ demoró 953715.972 ms (15.9 min) y generó 438.672 arcos.
     --clu : Print the top cluster indices for each node.
     -2, --two-level : Optimize a two-level partition of the network.
     -d, --directed : Assume directed links.
+    
+    el calculo de lo indicadores se hace con el programa Gephi. 
+    
+    Explicar como conseguirlos y exportar los datos en un csv.
     
 %	\subsection{Cálculo de centralidades}
 	
@@ -1109,31 +1113,46 @@ demoró 953715.972 ms (15.9 min) y generó 438.672 arcos.
 	
 		\subsubsection{Instalación de Postgres}
 		
-	Para instalar postgres en Debian GNU/Linux se deben ejecutar la siguiente secuencia de comandos en la consola de comandos.
+	Para instalar postgres en Debian GNU/Linux se deben ejecutar la siguiente secuencia de operaciones en la consola de comandos.
 	
 \begin{lstlisting}[breaklines=true, 
 				   language=SQL,  
 				   title=asd, 
 				   caption=Instalacion de postgres,
 				   label=fig:instalar_postgres]
+# El usuario con el que se ejecuta este codigo 
+# debe ser root.
+
 # Instala el sistema gestor de base de datos Postgres, 
 # un programa para interactuar con las bases de datos 
-# (psql) y crea un usuario en el sistema de nombres 
+# (psql) y crea un usuario en el sistema de nombre 
 # postgres.
 apt-get install postgresql postgresql-client	
 
+\end{lstlisting}
+
+		\subsubsection{Creación de base de datos}
+		
+	El código mostrado a continuación crea la estructura de la base de datos requerida para este trabajo.
+	
+\begin{lstlisting}[breaklines=true, 
+				   language=SQL,  
+				   title=asd, 
+				   caption=Instalacion de postgres,
+				   label=fig:instalar_postgres]
 # Se inicia sesion con el usuario postgres 
 su postgres
+# Se accede al programa para interactuar con la base de datos.
 psql
 
-# crear usuario y base de datos
+# Se crea usuario y base de datos
 CREATE USER felipe WITH PASSWORD 'felipe';
 CREATE DATABASE memoria OWNER felipe;
 
-# salir de la base de datos postgres
+# Se cierra psql
 \q
 
-# ingresar a la base de datos memoria
+# Se ingresa a la base de datos 'memoria'
 psql memoria
 
 -- crear tabla etapas
@@ -1213,22 +1232,35 @@ CREATE TABLE redparadas (
 
 ALTER TABLE public.redparadas OWNER TO felipe;
 
+-- crear tabla de viajes
+
+
+ALTER TABLE public.viajes OWNER TO felipe;
+
 \end{lstlisting}
 
 		\subsubsection{Importación de los datos}
 
-Los datos fueron extraidos de la base de datos del departamento de Ingenieria Civil Transporte de la FCFM mediante el comando \textit{pg\_dump} de postgres y almacenados en un archivo de texto.
+Los datos fueron extraidos de la base de datos del departamento de Ingenieria Civil Transporte de la FCFM mediante el comando \textit{pg\_dump} de postgres y almacenados en un archivo de texto plano. A continuación se nombran los archivos que contienten los datos:
+
+\begin{description}
+	\item[backup\_etapas (12.1 GB):] Contiene los datos de todas las etapas realizadas entre 14 y 20 de abril de 2013.
+	\item[backup\_viajes (16 GB):] Contiene los datos de todas los viajes realizados entre 14 y 20 de abril de 2013.
+	\item[backup\_redparadas (1.2 MB):] Contiene los datos de todos los paraderos presentes en Transantiago.
+\end{description}
 
 \begin{lstlisting}[breaklines=true, 
 				   language=bash,  
 				   title=asd, 
 				   caption=Importacion de datos,
 				   label=fig:importar_datos]
-# Se cambia al usuario postgres
+# Se inicia sesion con el usuario postgres 
 su postgres
 
-# se cargan los datos con el cliente de postgres psql.
-psql -d memoria -a -f /ruta/a/archivo/con/datos
+# Se cargan los datos en la base de datos
+psql -d memoria -a -f /ruta/backup_etapas
+psql -d memoria -a -f /ruta/backup_viajes
+psql -d memoria -a -f /ruta/backup_redparadas
 
 # se ingresa a la instancia de la base de datos
 psql memoria
