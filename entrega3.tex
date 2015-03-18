@@ -1550,4 +1550,24 @@ make
 
 \end{lstlisting}
 
-\end{document}
+		\subsubsection{Instalación de R}
+		
+	Para instalar R en Debian GNU/Linux se deben ejecutar la siguiente secuencia de comandos en la consola de comandos.
+	
+\begin{lstlisting}[breaklines=true, 
+				   language=R, 
+				   title=asd, 
+				   caption=Instalacion de R, 
+				   label=fig:instalar_R]
+# Instala los archivos base
+apt-get install r-base	
+
+# Se ingresa al entorno de R
+R
+
+# Se instala el paquete i-graph
+install.packages("igraph")
+
+\end{lstlisting}
+
+    \end{document}
