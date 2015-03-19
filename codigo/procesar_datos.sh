@@ -56,6 +56,12 @@ if [ "$GENERAR_CSV" = true ]; then
 ####################################################################################
 echo "Generando archivos CSV..."
 
+# IMPORTANTE: para que el archivo pueda ser guardado en el path señalado el usuario postgres
+#             debe tener permisos sobre ese directorio por lo que nos aseguramos de darselo
+#             cada vez que ejecutamos ésta instrucción.
+chown -R cephei:postgres $RUTA_DATOS
+chmod 775 -R $RUTA_DATOS
+
 # define los tramos horarios que se van a procesar 
 # Estos deben tener la siguiente sintaxis XX-YY [XX-YY ...]
 # donde XX e YY son números enteros de dos dígitos en el rango [00-23]
@@ -65,13 +71,12 @@ TRAMOS=(05-11)
 for TRAMO in ${TRAMOS[@]}; do
   CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
   CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_exp_etapa) AS peso 
-  FROM etapa_util
-  WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION 
-  GROUP BY par_subida, par_bajada) 
-  To '$RUTA_CSV/$TRAMO.csv' with CSV;"
+                  FROM etapa_util 
+                  WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION 
+                  GROUP BY par_subida, par_bajada) 
+                  To '$RUTA_CSV/$TRAMO.csv' with CSV;"
 
-  echo "$CONSULTA"
-  sudo -u postgres -i psql -d memoria -c $CONSULTA
+  sudo -u postgres -i psql -d memoria -c "$CONSULTA"
 done
 
 echo "Archivos csv generados exitosamente"
@@ -81,12 +86,12 @@ if [ "$GENERAR_PAJEK" = true ]; then
 ####################################################################################
 echo "Generando archivos pajek a partir de csv's generados..."
 
-for archivo_csv in $RUTA_CSV/*.csv; do
-  echo "Procesando $csv"
+for ARCHIVO_CSV in $RUTA_CSV/*.csv; do
+  echo "Procesando $ARCHIVO_CSV"
   # se quita la extensión y ruta 
-  nombre_pajek=$(echo "$csv" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
+  nombre_pajek=$(echo "$ARCHIVO_CSV" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
 
-  php crear_archivo_pajek.php $archivo_csv $RUTA_PAJEK $nombre_pajek
+  php crear_archivo_pajek.php $ARCHIVO_CSV $RUTA_PAJEK/ $nombre_pajek
 done
 
 echo "Archivos pajek generados exitosamente."
