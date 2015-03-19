@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# se detiene si ocurre un error
+set -o errexit 
+
 ####################################################################################
 # Variables que definen lo que se debe hacer
 
