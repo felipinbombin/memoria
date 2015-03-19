@@ -1,14 +1,15 @@
 <?php
 
-$RUTA_PAJEK   = '/tmp/'; 
-$NOMBRE_PAJEK = 'pajek.net';
-
-if ($argc !== 2) {
+if ($argc !== 4) {
   echo "Error: Debe ingresar la ruta (absoluta o relativa) del archivo CSV.".PHP_EOL;
   exit(1);
 }
 
-$ruta_csv    = $argv[1];
+$ruta_csv     = $argv[1]; // ruta del csv requerido para crear el archivo pajek.
+$ruta_pajek   = $argv[2]; // ruta donde se almacenará el archivo de salida.
+$nombre_pajek = $argv[3]; // nombre que tendrá el archivo de salida.
+
+$nombre_pajek = $nombre_pajek.'.net'; // se agrega extensión
 
 // indica si el archivo existe y si es posible leerlo
 if (!is_readable($ruta_csv)) {
@@ -17,10 +18,10 @@ if (!is_readable($ruta_csv)) {
 }
 
 $archivo_csv   = fopen($ruta_csv, 'r');
-$archivo_pajek = fopen($RUTA_PAJEK . $NOMBRE_PAJEK, 'w');
+$archivo_pajek = fopen($ruta_pajek . $nombre_pajek, 'w');
 
 if ($archivo_pajek === false) {
-  echo "No se pudo crear archivo $NOMBRE_PAJEK".PHP.EOL;
+  echo "No se pudo crear archivo $nombre_pajek".PHP.EOL;
   exit(1);
 }
 

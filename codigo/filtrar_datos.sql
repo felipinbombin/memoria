@@ -1,4 +1,6 @@
-
+-- Se eliminan todos los datos que esten presentes en las tablas etapa_util y viaje_util
+DELETE FROM etapa_util;
+DELETE FROM viaje_util;
 
 -- Se quitan etapas sin paradero de subida o bajada y se guardan
 -- en tabla etapa_util

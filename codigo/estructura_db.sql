@@ -229,3 +229,5 @@ CREATE TABLE pajek_por_hora (
   hora character varying(5) -- se indica la hora de subida 1,2,...,23 o un rango 1-2, 21-00, ...
 );
 
+CREATE INDEX hora_subida ON etapas (extract(hour from tiempo_subida));
+
