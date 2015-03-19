@@ -5,10 +5,9 @@ if ($argc !== 3) {
   exit(1);
 }
 
-$RUTA_PAJEK   = '/tmp/'; 
-$ruta_pajek_con_datos  = $argv[1];
-$ruta_nombre_paraderos = $argv[2];
-$nombre_pajek          = $argv[3];
+$ruta_pajek            = $argv[1]; // ruta al archivo a ser leído (incluye el nombre de éste).
+$ruta_nombre_paraderos = $argv[2]; // archivo csv con dos columnas "código_paradero nombre"
+$nombre_pajek          = $argv[3]; // nombre del archivo de salida
 
 // indica si el archivo existe y si es posible leerlo
 if (!is_readable($ruta_nombre_paraderos)) {
@@ -25,7 +24,7 @@ if (!is_readable($ruta_pajek_con_datos)) {
 $contenido_pajek_con_datos = file_get_contents($ruta_pajek_con_datos, FILE_USE_INCLUDE_PATH);
 
 $archivo_nombre_paraderos = fopen($ruta_nombre_paraderos, 'r');
-$archivo_pajek = fopen($RUTA_PAJEK . $nombre_pajek, 'w');
+$archivo_pajek = fopen($ruta_pajek, 'w');
 
 if ($archivo_nombre_paraderos === false) {
   echo "No se pudo crear archivo $archivo_nombre_paraderos".PHP.EOL;
@@ -33,7 +32,7 @@ if ($archivo_nombre_paraderos === false) {
 }
 
 if ($archivo_pajek === false) {
-  echo "No se pudo crear archivo $RUTA_PAJEK/$nombre_pajek".PHP.EOL;
+  echo "No se pudo crear archivo $ruta_pajek/$nombre_pajek".PHP.EOL;
   exit(1);
 }
 

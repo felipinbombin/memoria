@@ -4,14 +4,14 @@
 # Variables que definen lo que se debe hacer
 
 # ¿Crear base de datos y cargar datos?
-CREAR_BD_Y_CARGAR_DATOS=false
+CREAR_BD_Y_CARGAR_DATOS=true
 # ¿Filtrar los datos? (esto llena elimina los registros existentes en las tablas etapa_util y viaje_util 
 # y luego las llena nuevamente a partir de las tablas etapas y viajes. 
-FILTRAR_DATOS=false
+FILTRAR_DATOS=true
 # crea los archivos csv usados para generar los archivos pajek
-GENERAR_CSV=true
+GENERAR_CSV=false
 # crea los archivos pajek a partir de los archivos csv
-GENERAR_PAJEK=true
+GENERAR_PAJEK=false
 
 ####################################################################################
 # Ruta de los directorios usados por el script
@@ -22,6 +22,10 @@ RUTA_DATOS=$RUTA_MEMORIA/datos
 RUTA_CSV=$RUTA_DATOS/CSV
 RUTA_PAJEK=$RUTA_DATOS/PAJEK
 ####################################################################################
+
+
+# Activar medición de tiempo para la ejecución de las consultas en postgres
+sudo -u postgres -i psql -c "\\timing on"
 
 if [ "$CREAR_BD_Y_CARGAR_DATOS" = true ]; then
   ####################################################################################
@@ -67,6 +71,10 @@ chmod 775 -R $RUTA_DATOS
 # donde XX e YY son números enteros de dos dígitos en el rango [00-23]
 # y pueden ser iguales. Para concatenar varios tramos se usa el espacio. Ej: XX-YY ZZ-TT
 TRAMOS=(05-11)
+
+# para filtrar por hora usar        : extract(hour from tiempo_subida)
+# para filtrar por fecha y hora usar: (date_trunc('hour', tiempo_subida))
+# para diltrar por fecha usar       : (date_trunc('day', tiempo_subida))
 
 for TRAMO in ${TRAMOS[@]}; do
   CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')

@@ -195,7 +195,9 @@ CREATE TABLE etapa_util (
   tiempo_subida timestamp without time zone,
   par_subida character varying(30),
   par_bajada character varying(30),
-  factor_exp_etapa double precision
+  factor_exp_etapa double precision,
+  nombre_par_subida character varying(500),
+  nombre_par_bajada character varying(500)
 );
 
 ALTER TABLE public.etapa_util OWNER TO felipe;
@@ -214,20 +216,41 @@ CREATE TABLE viaje_util (
   paraderobajada_3era character varying(50),
   paraderosubida_4ta character varying(50),
   paraderobajada_4ta character varying(50),
-  factorexpansion double precision
+  factorexpansion double precision,
+  nombre_paraderosubida_1era character varying(500),
+  nombre_paraderobajada_1era character varying(500),
+  nombre_paraderosubida_2da character varying(500),
+  nombre_paraderobajada_2da character varying(500),
+  nombre_paraderosubida_3era character varying(500),
+  nombre_paraderobajada_3era character varying(500),
+  nombre_paraderosubida_3ta character varying(500),
+  nombre_paraderobajada_4ta character varying(500)
 );
 
 ALTER TABLE public.viaje_util OWNER TO felipe;
 
--- crear tabla pajek_por_hora
-CREATE TABLE pajek_por_hora (
-  id bigint,
-  nviaje integer,
-  netapa integer,
-  par_subida character varying(30),
-  par_bajada character varying(30),
-  hora character varying(5) -- se indica la hora de subida 1,2,...,23 o un rango 1-2, 21-00, ...
+-- crear tabla de parada_util
+CREATE TABLE parada_util (
+  codigo character varying(20),
+  nombre character varying(500),
+  latitud double precision,
+  longitud double precision
 );
 
-CREATE INDEX hora_subida ON etapas (extract(hour from tiempo_subida));
+-- crear tabla pajek_por_hora
+-- CREATE TABLE pajek_por_hora (
+--  id bigint,
+--  nviaje integer,
+--  netapa integer,
+--  par_subida character varying(30),
+--  par_bajada character varying(30),
+--  hora character varying(5) -- se indica la hora de subida 1,2,...,23 o un rango 1-2, 21-00, ...
+--);
+
+-- indice para filtrar por hora
+CREATE INDEX hora_subida ON etapa_util (extract(hour from tiempo_subida));
+-- indice para filtrar por día y hora 
+CREATE INDEX fecha_hora_subida ON etapa_util (date_trunc('hour', tiempo_subida));
+-- indice para filtrar por día
+CREATE INDEX fecha_subida ON etapa_util (date_trunc('day', tiempo_subida));
 
