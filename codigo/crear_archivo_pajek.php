@@ -1,15 +1,14 @@
 <?php
+// crea un archivo de texto con formato pajek.
 
-if ($argc !== 4) {
-  echo "Error: Debe ingresar la ruta (absoluta o relativa) del archivo CSV.".PHP_EOL;
+if ($argc !== 3) {
+  echo "Error: Debe ingresar la ruta (absoluta o relativa) del archivo CSV y la ruta de salida.".PHP_EOL;
   exit(1);
 }
 
 $ruta_csv     = $argv[1]; // ruta del csv requerido para crear el archivo pajek.
 $ruta_pajek   = $argv[2]; // ruta donde se almacenará el archivo de salida.
-$nombre_pajek = $argv[3]; // nombre que tendrá el archivo de salida.
-
-$nombre_pajek = $nombre_pajek.'.net'; // se agrega extensión
+$nombre_pajek = array_shift(explode('.', array_pop(explode('/', $ruta_csv)))).'.net';
 
 // indica si el archivo existe y si es posible leerlo
 if (!is_readable($ruta_csv)) {

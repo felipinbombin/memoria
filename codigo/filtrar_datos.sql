@@ -4,6 +4,7 @@
 DELETE FROM etapa_util;
 DELETE FROM viaje_util;
 DELETE FROM parada_util;
+DELETE FROM estaciones_metro;
 
 -- Se quitan etapas sin paradero de subida o bajada y se guardan
 -- en tabla etapa_util
@@ -71,42 +72,49 @@ WHERE netapa=2 AND netapassinbajada = 0 AND
 
 -- Se cambian algunos codigos para que coincidan con el de red paradas
 UPDATE estaciones_metro SET codigotrx = upper(codigotrx);
-UPDATE estaciones_metro SET codigotrx = 'FRANCISCO BILBAO' WHERE codigotrx = 'BILBAO';
-UPDATE estaciones_metro SET codigotrx = 'LAS PARCELAS' WHERE codigotrx = 'LAS PARCELAS - L5';
-UPDATE estaciones_metro SET codigotrx = 'BLANQUEADO' WHERE codigotrx = 'BLANQUEADO - L5';
-UPDATE estaciones_metro SET codigotrx = 'LOS HEROES L1' WHERE codigotrx = 'LOS HEROES';
-UPDATE estaciones_metro SET codigotrx = 'GRECIA' WHERE codigotrx = 'ROTONDA GRECIA';
-UPDATE estaciones_metro SET codigotrx = 'CAMINO AGRICOLA' WHERE codigotrx = 'AGRICOLA';
+UPDATE estaciones_metro SET codigotrx = 'BAQUEDANO' WHERE codigotrx = 'BAQUEDANO L1';
 UPDATE estaciones_metro SET codigotrx = 'BARRANCAS' WHERE codigotrx = 'BARRANCAS - L5';
-UPDATE estaciones_metro SET codigotrx = 'SAN PABLO L1' WHERE codigotrx = 'SAN PABLO';
-UPDATE estaciones_metro SET codigotrx = 'SAN PABLO L5' WHERE codigotrx = 'SAN PABLO - L5';
 UPDATE estaciones_metro SET codigotrx = 'BELLAVISTA DE LA FLORIDA' WHERE codigotrx = 'LA FLORIDA';
-UPDATE estaciones_metro SET codigotrx = 'HERNANDO DE MAGALLANES' WHERE codigotrx = 'HERNANDO DE MAGALLANES - L1';
-UPDATE estaciones_metro SET codigotrx = 'TOBALABA L1' WHERE codigotrx = 'TOBALABA_L1';
-UPDATE estaciones_metro SET codigotrx = 'TOBALABA L4' WHERE codigotrx = 'TOBALABA_L4';
+UPDATE estaciones_metro SET codigotrx = 'BLANQUEADO' WHERE codigotrx = 'BLANQUEADO - L5';
+UPDATE estaciones_metro SET codigotrx = 'CAMINO AGRICOLA' WHERE codigotrx = 'AGRICOLA';
+UPDATE estaciones_metro SET codigotrx = 'CARLOS VALDOVINOS' WHERE codigotrx = 'CARLOS VALDOVINO';
+UPDATE estaciones_metro SET codigotrx = 'CIUDAD DEL NINO' WHERE codigotrx = 'CIUDAD DEL NI?O';
+UPDATE estaciones_metro SET codigotrx = 'CRISTOBAL COLON' WHERE codigotrx = 'COLON';
+UPDATE estaciones_metro SET codigotrx = 'CUMMING' WHERE codigotrx = 'RICARDO CUMMING';
 UPDATE estaciones_metro SET codigotrx = 'DEL SOL' WHERE codigotrx = 'DEL SOL - L5';
-UPDATE estaciones_metro SET codigotrx = 'MANQUEHUE' WHERE codigotrx = 'MANQUEHUE - L1';
-UPDATE estaciones_metro SET codigotrx = 'UNION LATINO AMERICANA' WHERE codigotrx = 'LATINO AMERICANA';
+UPDATE estaciones_metro SET codigotrx = 'EM LA CISTERNA' WHERE codigotrx = 'LA CISTERNA L4A';
+UPDATE estaciones_metro SET codigotrx = 'FRANCISCO BILBAO' WHERE codigotrx = 'BILBAO';
+UPDATE estaciones_metro SET codigotrx = 'GRECIA' WHERE codigotrx = 'ROTONDA GRECIA';
+UPDATE estaciones_metro SET codigotrx = 'GRUTA DE LOURDES' WHERE codigotrx = 'GRUTA DE LOURDES - L5';
+UPDATE estaciones_metro SET codigotrx = 'HERNANDO DE MAGALLANES' WHERE codigotrx = 'HERNANDO DE MAGALLANES - L1';
+UPDATE estaciones_metro SET codigotrx = 'LAGUNA SUR' WHERE codigotrx = 'LAGUNA SUR - L5';
+UPDATE estaciones_metro SET codigotrx = 'LAS PARCELAS' WHERE codigotrx = 'LAS PARCELAS - L5';
+UPDATE estaciones_metro SET codigotrx = 'LA CISTERNA' WHERE codigotrx = 'LA CISTERNA L2';
+--UPDATE estaciones_metro SET codigotrx = 'LOS HEROES' WHERE codigotrx = 'LOS HEROES L1';
 UPDATE estaciones_metro SET codigotrx = 'LOS DOMINICOS' WHERE codigotrx = 'LOS DOMINICOS - L1';
-UPDATE estaciones_metro SET codigotrx = 'VICUNA MACKENNA' WHERE codigotrx = 'VICU?A MACKENA';
+UPDATE estaciones_metro SET codigotrx = 'LO PRADO' WHERE codigotrx = 'LO PRADO - L5';
+UPDATE estaciones_metro SET codigotrx = 'MANQUEHUE' WHERE codigotrx = 'MANQUEHUE - L1';
 UPDATE estaciones_metro SET codigotrx = 'MIRADOR' WHERE codigotrx = 'MIRADOR AZUL';
 UPDATE estaciones_metro SET codigotrx = 'MONTE TABOR' WHERE codigotrx = 'MONTE TABOR - L5';
-UPDATE estaciones_metro SET codigotrx = 'CRISTOBAL COLON' WHERE codigotrx = 'COLON';
+UPDATE estaciones_metro SET codigotrx = 'NUBLE' WHERE codigotrx = '?UBLE';
 UPDATE estaciones_metro SET codigotrx = 'QUILIN' WHERE codigotrx = 'ROTONDA QUILIN';
 UPDATE estaciones_metro SET codigotrx = 'PEDRERO' WHERE codigotrx = 'PEDREROS';
-UPDATE estaciones_metro SET codigotrx = 'CIUDAD DEL NINO' WHERE codigotrx = 'CIUDAD DEL NI?O';
-UPDATE estaciones_metro SET codigotrx = 'CUMMING' WHERE codigotrx = 'RICARDO CUMMING';
 UPDATE estaciones_metro SET codigotrx = 'PLAZA EGANA' WHERE codigotrx = 'PLAZA EGA?A';
-UPDATE estaciones_metro SET codigotrx = 'LAGUNA SUR' WHERE codigotrx = 'LAGUNA SUR - L5';
-UPDATE estaciones_metro SET codigotrx = 'LO PRADO' WHERE codigotrx = 'LO PRADO - L5';
-UPDATE estaciones_metro SET codigotrx = 'LAS PARCELAS' WHERE codigotrx = 'LAS PARCELAS - L5';
-UPDATE estaciones_metro SET codigotrx = 'NUBLE' WHERE codigotrx = '?UBLE';
 UPDATE estaciones_metro SET codigotrx = 'PLAZA MAIPU' WHERE codigotrx = 'PLAZA MAIPU - L5';
 UPDATE estaciones_metro SET codigotrx = 'PUDAHUEL' WHERE codigotrx = 'PUDAHUEL - L5';
-UPDATE estaciones_metro SET codigotrx = 'GRUTA DE LOURDES' WHERE codigotrx = 'GRUTA DE LOURDES - L5';
+UPDATE estaciones_metro SET codigotrx = 'SANTA ANA' WHERE codigotrx = 'SANTA ANA L2';
 UPDATE estaciones_metro SET codigotrx = 'SANTIAGO BUERAS' WHERE codigotrx = 'SANTIAGO BUERAS - L5';
-UPDATE estaciones_metro SET codigotrx = 'CARLOS VALDOVINOS' WHERE codigotrx = 'CARLOS VALDOVINO';
 UPDATE estaciones_metro SET codigotrx = 'SAN JOSE DE LA ESTRELLA' WHERE codigotrx = 'SAN JOSE DE LA ESTRELLA - L4';
+UPDATE estaciones_metro SET codigotrx = 'SAN PABLO' WHERE codigotrx = 'SAN PABLO';
+-- UPDATE estaciones_metro SET codigotrx = 'SAN PABLO' WHERE codigotrx = 'SAN PABLO - L5';
+UPDATE estaciones_metro SET codigotrx = 'TOBALABA' WHERE codigotrx = 'TOBALABA_L1';
+UPDATE estaciones_metro SET codigotrx = 'UNION LATINO AMERICANA' WHERE codigotrx = 'LATINO AMERICANA';
+UPDATE estaciones_metro SET codigotrx = 'VICUNA MACKENNA' WHERE codigotrx = 'VICU?A MACKENA';
+
+-- UPDATE estaciones_metro SET codigotrx = 'TOBALABA L4' WHERE codigotrx = 'TOBALABA_L4';
+-- UPDATE estaciones_metro SET codigotrx = '' WHERE codigotrx = '';
+-- UPDATE estaciones_metro SET codigotrx = '' WHERE codigotrx = '';
+-- UPDATE estaciones_metro SET codigotrx = '' WHERE codigotrx = '';
 
 -- Se actualizan las estaciones de metro en las tablas etapa_util y viaje_util debido
 -- a que una estación puede aparecer con varios nombres 

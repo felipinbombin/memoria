@@ -253,6 +253,8 @@ CREATE TABLE parada_util (
   latitud double precision,
   longitud double precision
 );
+-- indice único 
+CREATE UNIQUE INDEX codigo_unico ON parada_util (codigo);
 
 -- indice para filtrar por hora
 CREATE INDEX hora_subida ON etapa_util (extract(hour from tiempo_subida));
