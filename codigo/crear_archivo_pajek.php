@@ -37,7 +37,7 @@ $vertices = '';
 // se lee linea por linea
 while (($linea = fgets($archivo_csv)) !== false) {
 
-  $elementos = array_map("trim", split(",", $linea));
+  $elementos = array_map("trim", split(";", $linea));
 
   // si no está en el arreglo => se agrega y se obtiene el indice
   if (($indice_par_subida = array_search($elementos[0], $paraderos)) === false) {

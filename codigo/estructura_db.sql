@@ -1,3 +1,4 @@
+\timing on
 
 -- crear tabla etapas
 CREATE TABLE etapas (
@@ -187,6 +188,32 @@ CREATE TABLE redparadas (
 
 ALTER TABLE public.redparadas OWNER TO felipe;
 
+-- crear tabla de estaciones de metro
+CREATE TABLE estaciones_metro (
+  codigotrx character varying(100),
+  latitud double precision,
+  longitud double precision,
+  x integer,
+  y integer,
+  linea character varying(100),
+  codigoestandar character varying(100),
+  tipo character varying(100),
+  codigosinlinea character varying(100),
+  censal_1992 character varying(20),
+  comunas character varying(20),
+  diseno_563 character varying(20),
+  diseno_777 character varying(20),
+  eod_2001 character varying(20),
+  eod_2006 character varying(20),
+  estraus_264 character varying(20),
+  estraus_404 character varying(20),
+  estraus_410 character varying(20),
+  estraus_618 character varying(20),
+  zonas_6 character varying(20)
+);
+
+ALTER TABLE public.estaciones_metro OWNER TO felipe;
+
 -- crear tabla etapa_util
 CREATE TABLE etapa_util (
   id bigint,
@@ -195,9 +222,7 @@ CREATE TABLE etapa_util (
   tiempo_subida timestamp without time zone,
   par_subida character varying(30),
   par_bajada character varying(30),
-  factor_exp_etapa double precision,
-  nombre_par_subida character varying(500),
-  nombre_par_bajada character varying(500)
+  factor_exp_etapa double precision
 );
 
 ALTER TABLE public.etapa_util OWNER TO felipe;
@@ -217,35 +242,17 @@ CREATE TABLE viaje_util (
   paraderosubida_4ta character varying(50),
   paraderobajada_4ta character varying(50),
   factorexpansion double precision,
-  nombre_paraderosubida_1era character varying(500),
-  nombre_paraderobajada_1era character varying(500),
-  nombre_paraderosubida_2da character varying(500),
-  nombre_paraderobajada_2da character varying(500),
-  nombre_paraderosubida_3era character varying(500),
-  nombre_paraderobajada_3era character varying(500),
-  nombre_paraderosubida_3ta character varying(500),
-  nombre_paraderobajada_4ta character varying(500)
 );
 
 ALTER TABLE public.viaje_util OWNER TO felipe;
 
 -- crear tabla de parada_util
 CREATE TABLE parada_util (
-  codigo character varying(20),
+  codigo character varying(30),
   nombre character varying(500),
   latitud double precision,
   longitud double precision
 );
-
--- crear tabla pajek_por_hora
--- CREATE TABLE pajek_por_hora (
---  id bigint,
---  nviaje integer,
---  netapa integer,
---  par_subida character varying(30),
---  par_bajada character varying(30),
---  hora character varying(5) -- se indica la hora de subida 1,2,...,23 o un rango 1-2, 21-00, ...
---);
 
 -- indice para filtrar por hora
 CREATE INDEX hora_subida ON etapa_util (extract(hour from tiempo_subida));

@@ -1,3 +1,4 @@
+\timing on
 
 -- se elimina la base de datos existente.
 DROP DATABASE IF EXISTS memoria;
