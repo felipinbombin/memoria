@@ -253,6 +253,9 @@ CREATE TABLE parada_util (
   latitud double precision,
   longitud double precision
 );
+
+ALTER TABLE public.parada_util OWNER TO felipe;
+
 -- indice único 
 CREATE UNIQUE INDEX codigo_unico ON parada_util (codigo);
 
