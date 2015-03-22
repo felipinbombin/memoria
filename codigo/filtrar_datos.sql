@@ -4,7 +4,6 @@
 DELETE FROM etapa_util;
 DELETE FROM viaje_util;
 DELETE FROM parada_util;
-DELETE FROM estaciones_metro;
 
 -- Se quitan etapas sin paradero de subida o bajada y se guardan
 -- en tabla etapa_util
