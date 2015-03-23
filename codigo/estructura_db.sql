@@ -222,7 +222,7 @@ CREATE TABLE etapa_util (
   tiempo_subida timestamp without time zone,
   par_subida character varying(30),
   par_bajada character varying(30),
-  factor_exp_etapa double precision
+  factor_expansion double precision
 );
 
 ALTER TABLE public.etapa_util OWNER TO felipe;
@@ -232,16 +232,16 @@ CREATE TABLE viaje_util (
   id character varying(20),
   nviaje integer,
   netapa integer,
-  paraderosubida_1era character varying(50),
-  paraderobajada_1era character varying(50),
-  tiemposubida_1era timestamp without time zone,
-  paraderosubida_2da character varying(50),
-  paraderobajada_2da character varying(50),
-  paraderosubida_3era character varying(50),
-  paraderobajada_3era character varying(50),
-  paraderosubida_4ta character varying(50),
-  paraderobajada_4ta character varying(50),
-  factorexpansion double precision,
+  par_subida_1 character varying(50),
+  par_bajada_1 character varying(50),
+  tiempo_subida_1 timestamp without time zone,
+  par_subida_2 character varying(50),
+  par_bajada_2 character varying(50),
+  par_subida_3 character varying(50),
+  par_bajada_3 character varying(50),
+  par_subida_4 character varying(50),
+  par_bajada_4 character varying(50),
+  factor_expansion double precision
 );
 
 ALTER TABLE public.viaje_util OWNER TO felipe;
