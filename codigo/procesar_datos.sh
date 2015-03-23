@@ -19,7 +19,9 @@ GENERAR_VIAJE_CON_ETAPAS_CSV=false
 # crea los archivos pajek a partir de los archivos csv
 GENERAR_PAJEK=false
 # genera las comunidades en dos niveles, por medio del framework infomap
-GENERAR_COMUNIDADES=true
+GENERAR_COMUNIDADES=false
+# concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en el cartodb
+CONCATENAR_HORAS=true
 
 ####################################################################################
 # Ruta de los directorios usados por el script
@@ -470,6 +472,14 @@ if [ "$GENERAR_COMUNIDADES" = true ]; then
     php tree2csv.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $RUTA_DATOS_INFOMAP/$NOMBRE_INFOMAP.tree $RUTA_DATOS_CARTODB $FECHA
   done 
 fi
+
+if [ "$CONCATENAR_HORAS" = true ]; then
+  ####################################################################################
+  cat $RUTA_DATOS_CARTODB/*domingo*.csv >> $RUTA_DATOS_CARTODB/domingo.csv
+  cat $RUTA_DATOS_CARTODB/*sabado*.csv >> $RUTA_DATOS_CARTODB/sabado.csv
+  cat $RUTA_DATOS_CARTODB/*lunes_a_jueves*.csv >> $RUTA_DATOS_CARTODB/lunes_a_jueves.csv
+  cat $RUTA_DATOS_CARTODB/*semana*.csv >> $RUTA_DATOS_CARTODB/semana.csv
+fi 
 
 # cambiamos el dueño de los archivos para poder verlos en el entorno de escritorio
 chown -R cephei $RUTA_MEMORIA

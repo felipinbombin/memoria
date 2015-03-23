@@ -47,7 +47,7 @@ if ($archivo_tree === false) {
 // se quita la primera linea y se agrega encabezado de csv
 $lineas = explode("\n", $contenido_tree);
 $lineas = array_slice($lineas, 1);
-$lineas = array_merge(array("1er_nivel 2do_nivel PageRank Nombre Codigo latitud longitud fecha id_pajek"), $lineas);
+$lineas = array_merge(array("1er_nivel 2do_nivel PageRank Nombre latitud longitud fecha id_pajek"), $lineas);
 $contenido_tree = implode("\n", $lineas);
 
 // se reemplaza el : por un espacio para que el archivo cumpla con el estandar csv
