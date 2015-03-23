@@ -1,3 +1,6 @@
+# se omiten todos los datos de creados
+datos/
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

@@ -1,5 +1,5 @@
 <?php
-// crea un archivo de texto con formato pajek a partir de un archivo csv de la tabla etapa_util.
+// crea un archivo de texto con formato pajek a partir de un archivo csv de la tabla viaje_util.
 
 if ($argc !== 3) {
   echo "Error: Debe ingresar la ruta (absoluta o relativa) del archivo CSV y la ruta de salida.".PHP_EOL;

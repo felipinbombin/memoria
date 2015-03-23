@@ -1,5 +1,5 @@
 <?php
-// crea un archivo de texto con formato pajek.
+// crea un archivo de texto con formato pajek a partir de un csv.
 
 if ($argc !== 3) {
   echo "Error: Debe ingresar la ruta (absoluta o relativa) del archivo CSV y la ruta de salida.".PHP_EOL;
@@ -43,7 +43,7 @@ while (($linea = fgets($archivo_csv)) !== false) {
     $paraderos[] = $elementos[0];
     $indice_par_subida = count($paraderos);
     
-    $vertices .= $indice_par_subida . ' "' . $elementos[0] . '"' . PHP_EOL;
+    $vertices .= $indice_par_subida . ' "' . $elementos[0] . '"'. PHP_EOL;
   } else {
     $indice_par_subida++;
   }
@@ -52,7 +52,7 @@ while (($linea = fgets($archivo_csv)) !== false) {
     $paraderos[] = $elementos[1];
     $indice_par_bajada = count($paraderos);
     
-    $vertices .= $indice_par_bajada . ' "' . $elementos[1] . '"' .  PHP_EOL;
+    $vertices .= $indice_par_bajada . ' "' . $elementos[1] . '"'. PHP_EOL;
   } else {
     $indice_par_bajada++;
   }
