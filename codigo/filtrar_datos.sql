@@ -117,39 +117,55 @@ INSERT INTO estaciones_metro VALUES ('BAQUEDANO', -33.437185999999997, -70.63516
 -- Se actualizan las estaciones de metro en las tablas etapa_util y viaje_util debido
 -- a que una estación puede aparecer con varios nombres 
 
---UPDATE etapa_util SET 
---  par_subida = estaciones_metro1.codigosinlinea,
---  par_bajada = estaciones_metro2.codigosinlinea 
---FROM estaciones_metro AS estaciones_metro1, 
---     estaciones_metro AS estaciones_metro2 
---WHERE etapa_util.par_subida = estaciones_metro1.codigotrx AND 
---      etapa_util.par_bajada = estaciones_metro2.codigotrx;
+UPDATE etapa_util SET 
+  par_subida = estaciones_metro.codigosinlinea 
+FROM estaciones_metro  
+WHERE etapa_util.par_subida = estaciones_metro.codigotrx;
 
---UPDATE viaje_util SET
---  par_subida_1 = estaciones_metro1.codigosinlinea, 
---  par_bajada_1 = estaciones_metro2.codigosinlinea,
---  par_subida_2 = estaciones_metro3.codigosinlinea, 
---  par_bajada_2 = estaciones_metro4.codigosinlinea,
---  par_subida_3 = estaciones_metro5.codigosinlinea, 
---  par_bajada_3 = estaciones_metro6.codigosinlinea,
---  par_subida_4 = estaciones_metro7.codigosinlinea, 
---  par_bajada_4 = estaciones_metro8.codigosinlinea 
---FROM estaciones_metro AS estaciones_metro1, 
---     estaciones_metro AS estaciones_metro2,
---     estaciones_metro AS estaciones_metro3,
---     estaciones_metro AS estaciones_metro4,
---     estaciones_metro AS estaciones_metro5,
---     estaciones_metro AS estaciones_metro6,
---     estaciones_metro AS estaciones_metro7,
---     estaciones_metro AS estaciones_metro8 
---WHERE viaje_util.par_subida_1 = estaciones_metro1.codigotrx AND 
---      viaje_util.par_bajada_1 = estaciones_metro2.codigotrx AND 
---      viaje_util.par_subida_2 = estaciones_metro3.codigotrx AND 
---      viaje_util.par_bajada_2 = estaciones_metro4.codigotrx AND 
---      viaje_util.par_subida_3 = estaciones_metro5.codigotrx AND 
---      viaje_util.par_bajada_3 = estaciones_metro6.codigotrx AND 
---      viaje_util.par_subida_4 = estaciones_metro7.codigotrx AND 
---      viaje_util.par_bajada_4 = estaciones_metro8.codigotrx;
+UPDATE etapa_util SET 
+  par_bajada = estaciones_metro2.codigosinlinea 
+FROM estaciones_metro 
+WHERE etapa_util.par_subida = estaciones_metro.codigotrx;
+
+UPDATE viaje_util SET
+  par_subida_1 = estaciones_metro.codigosinlinea, 
+FROM estaciones_metro 
+WHERE viaje_util.par_subida_1 = estaciones_metro.codigotrx;
+
+UPDATE viaje_util SET
+  par_subida_2 = estaciones_metro.codigosinlinea, 
+FROM estaciones_metro 
+WHERE viaje_util.par_subida_2 = estaciones_metro.codigotrx;
+
+UPDATE viaje_util SET
+  par_subida_3 = estaciones_metro.codigosinlinea, 
+FROM estaciones_metro 
+WHERE viaje_util.par_subida_3 = estaciones_metro.codigotrx;
+
+UPDATE viaje_util SET
+  par_subida_4 = estaciones_metro.codigosinlinea, 
+FROM estaciones_metro 
+WHERE viaje_util.par_subida_4 = estaciones_metro.codigotrx;
+
+UPDATE viaje_util SET
+  par_bajada_1 = estaciones_metro.codigosinlinea, 
+FROM estaciones_metro 
+WHERE viaje_util.par_bajada_1 = estaciones_metro.codigotrx;
+
+UPDATE viaje_util SET
+  par_bajada_2 = estaciones_metro.codigosinlinea, 
+FROM estaciones_metro 
+WHERE viaje_util.par_bajada_2 = estaciones_metro.codigotrx;
+
+UPDATE viaje_util SET
+  par_bajada_3 = estaciones_metro.codigosinlinea, 
+FROM estaciones_metro 
+WHERE viaje_util.par_bajada_3 = estaciones_metro.codigotrx;
+
+UPDATE viaje_util SET
+  par_bajada_4 = estaciones_metro.codigosinlinea, 
+FROM estaciones_metro 
+WHERE viaje_util.par_bajada_4 = estaciones_metro.codigotrx;
 
 -- se obtienen los campos requeridos para los paraderos
 INSERT INTO parada_util
