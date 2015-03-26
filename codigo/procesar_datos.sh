@@ -106,7 +106,7 @@ if [ "$GENERAR_ETAPA_CSV" = true ]; then
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso, '2013-04-17T$HORA:00:00Z' AS fecha
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso 
                     FROM etapa_util 
                     WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida)) BETWEEN '2013-04-14' AND '2013-04-17' 
@@ -120,7 +120,7 @@ if [ "$GENERAR_ETAPA_CSV" = true ]; then
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso, '2013-04-18T$HORA:00:00Z' AS fecha
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso 
                     FROM etapa_util 
                     WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida)) = '2013-04-18' 
@@ -134,7 +134,7 @@ if [ "$GENERAR_ETAPA_CSV" = true ]; then
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso, '2013-04-19T$HORA:00:00Z' AS fecha
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso 
                     FROM etapa_util 
                     WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida)) = '2013-04-19' 
@@ -148,7 +148,7 @@ if [ "$GENERAR_ETAPA_CSV" = true ]; then
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso, '2013-04-20T$HORA:00:00Z' AS fecha 
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso 
                     FROM etapa_util 
                     WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida)) = '2013-04-20' 
@@ -168,7 +168,7 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                           par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, SUM(factor_expansion) AS peso, 'SEMANA' AS fecha
+                           par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, SUM(factor_expansion) AS peso 
                     FROM viaje_util 
                     WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION 
                     GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
@@ -184,7 +184,7 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
     CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                            par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
-                           SUM(factor_expansion) AS peso, '2013-04-17T$HORA:00:00Z' AS fecha
+                           SUM(factor_expansion) AS peso 
                     FROM viaje_util 
                     WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-14' AND '2013-04-17' 
@@ -201,7 +201,7 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
     CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                            par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
-                           SUM(factor_expansion) AS peso, '2013-04-18T$HORA:00:00Z' AS fecha
+                           SUM(factor_expansion) AS peso 
                     FROM viaje_util 
                     WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida_1)) = '2013-04-18' 
@@ -218,7 +218,7 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
     CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                            par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
-                           SUM(factor_expansion) AS peso, '2013-04-19T$HORA:00:00Z' AS fecha
+                           SUM(factor_expansion) AS peso 
                     FROM viaje_util 
                     WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida_1)) = '2013-04-19' 
@@ -235,7 +235,7 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
     CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                            par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
-                           SUM(factor_expansion) AS peso, '2013-04-20T$HORA:00:00Z' AS fecha 
+                           SUM(factor_expansion) AS peso 
                     FROM viaje_util 
                     WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida_1)) = '2013-04-20' 
@@ -255,7 +255,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
   # CALCULO POR HORA DE LA SEMANA COMPLETA
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso), 'SEMANA' AS fecha
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) 
                     FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso
                           FROM viaje_util 
                           WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION 
@@ -285,7 +285,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso, '2013-04-17T$HORA:00:00Z' AS fecha
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso 
                     FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso 
                           FROM viaje_util 
                           WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
@@ -319,7 +319,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso, '2013-04-18T$HORA:00:00Z' AS fecha
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso 
                     FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso 
                           FROM viaje_util 
                           WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
@@ -353,7 +353,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso, '2013-04-19T$HORA:00:00Z' AS fecha
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso  
                     FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso 
                           FROM viaje_util 
                           WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
@@ -387,7 +387,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso, '2013-04-20T$HORA:00:00Z' AS fecha
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso 
                     FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso 
                           FROM viaje_util 
                           WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
@@ -437,8 +437,8 @@ fi
 
 if [ "$GENERAR_CSV_PARADAS" = true ]; then
 
-  # Genera un csv con los datos de la tabla parada_util. Es usado al final del proceso para actualizar
-  # los códigos de paraderos e insertar su respectiva posición geográfica.
+  # Genera un csv con los datos de la tabla parada_util. Es usado al final del proceso para reemplazar
+  # los códigos de paraderos e insertar su respectiva posición geográfica, nombre, etc...
   NOMBRE_PARADAS_CSV="PARADAS.csv"
   PARADAS_CSV="copy (SELECT * FROM parada_util) To '$RUTA_DATOS/$NOMBRE_PARADAS_CSV' WITH DELIMITER ';' CSV;"
   rm -f $RUTA_DATOS/$NOMBRE_PARADAS_CSV
@@ -457,6 +457,7 @@ if [ "$GENERAR_COMUNIDADES" = true ]; then
 
     # creamos la hora para que sea agregada al CSV para cartoDB
     HORA=$(echo "$NOMBRE_INFOMAP" | cut -d '-' -f 1)
+    # La fecha no se ocupa por el momento.
     if [[ "$NOMBRE_INFOMAP" == "*semana*" ]]; then
       FECHA="SEMANA"
       CARPETA="semana_etapa"
@@ -478,7 +479,7 @@ if [ "$GENERAR_COMUNIDADES" = true ]; then
     # --two-level Optimiza una partición de dos niveles de la red
     # -d          Asume que los arcos tienen dirección
     $RUTA_INFOMAP/Infomap -i 'pajek' --two-level -d "$ARCHIVO_NET" "$RUTA_DATOS_INFOMAP"
-    php tree2csv.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $RUTA_DATOS_INFOMAP/$NOMBRE_INFOMAP.tree $RUTA_DATOS_CARTODB/$CARPETA $FECHA
+    php tree2csv.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $RUTA_DATOS_INFOMAP/$NOMBRE_INFOMAP.tree $RUTA_DATOS_CARTODB/$CARPETA $HORA
   done 
 fi
 
@@ -490,6 +491,12 @@ if [ "$CONCATENAR_HORAS" = true ]; then
   ARCHIVOS=("lunes_a_jueves" "viernes" "sabado" "domingo")
 
   for ARCHIVO in ${ARCHIVOS[@]}; do
+
+    # los archivos con ese tramo horario no me interesa concatenarlos
+    if [[ $ARCHIVO == *06-09* ]] || [[ $ARCHIVO == *18-21* ]] ; then
+      continue
+    fi
+
     echo "Procesando datos $ARCHIVO ..."
     cat $RUTA_DATOS_CARTODB/${ARCHIVO}_etapa/*.csv >> $RUTA_DATOS_CARTODB/$ARCHIVO.csv
     # se eliminan los encabezados del archivo(uno por archivo concatenado)
