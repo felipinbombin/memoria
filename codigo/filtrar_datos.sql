@@ -125,45 +125,45 @@ WHERE etapa_util.par_subida = estaciones_metro.codigotrx;
 UPDATE etapa_util SET 
   par_bajada = estaciones_metro2.codigosinlinea 
 FROM estaciones_metro 
-WHERE etapa_util.par_subida = estaciones_metro.codigotrx;
+WHERE etapa_util.par_bajada = estaciones_metro.codigotrx;
 
 UPDATE viaje_util SET
-  par_subida_1 = estaciones_metro.codigosinlinea, 
+  par_subida_1 = estaciones_metro.codigosinlinea 
 FROM estaciones_metro 
 WHERE viaje_util.par_subida_1 = estaciones_metro.codigotrx;
 
 UPDATE viaje_util SET
-  par_subida_2 = estaciones_metro.codigosinlinea, 
+  par_subida_2 = estaciones_metro.codigosinlinea  
 FROM estaciones_metro 
 WHERE viaje_util.par_subida_2 = estaciones_metro.codigotrx;
 
 UPDATE viaje_util SET
-  par_subida_3 = estaciones_metro.codigosinlinea, 
+  par_subida_3 = estaciones_metro.codigosinlinea  
 FROM estaciones_metro 
 WHERE viaje_util.par_subida_3 = estaciones_metro.codigotrx;
 
 UPDATE viaje_util SET
-  par_subida_4 = estaciones_metro.codigosinlinea, 
+  par_subida_4 = estaciones_metro.codigosinlinea  
 FROM estaciones_metro 
 WHERE viaje_util.par_subida_4 = estaciones_metro.codigotrx;
 
 UPDATE viaje_util SET
-  par_bajada_1 = estaciones_metro.codigosinlinea, 
+  par_bajada_1 = estaciones_metro.codigosinlinea  
 FROM estaciones_metro 
 WHERE viaje_util.par_bajada_1 = estaciones_metro.codigotrx;
 
 UPDATE viaje_util SET
-  par_bajada_2 = estaciones_metro.codigosinlinea, 
+  par_bajada_2 = estaciones_metro.codigosinlinea  
 FROM estaciones_metro 
 WHERE viaje_util.par_bajada_2 = estaciones_metro.codigotrx;
 
 UPDATE viaje_util SET
-  par_bajada_3 = estaciones_metro.codigosinlinea, 
+  par_bajada_3 = estaciones_metro.codigosinlinea  
 FROM estaciones_metro 
 WHERE viaje_util.par_bajada_3 = estaciones_metro.codigotrx;
 
 UPDATE viaje_util SET
-  par_bajada_4 = estaciones_metro.codigosinlinea, 
+  par_bajada_4 = estaciones_metro.codigosinlinea  
 FROM estaciones_metro 
 WHERE viaje_util.par_bajada_4 = estaciones_metro.codigotrx;
 
