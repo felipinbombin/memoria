@@ -9,10 +9,11 @@ set -o errexit
 
 # Crea la base de datos y cargar los datos base.
 GENERAR_BD_Y_CARGAR_DATOS=false
-# ¿Filtrar los datos? (esto llena elimina los registros existentes en las tablas etapa_util y viaje_util 
-# y luego las llena nuevamente a partir de las tablas etapas y viajes. 
+# Elimina los registros existentes en las tablas etapa_util, viaje_util, parada_util
+# y luego las llena nuevamente a partir de las tablas etapas, viajes, redparadas y estaciones_metro
+# (esta última primero se modifica para que haga el match con los datos en las tablas etapa_util y viaje_util). 
 FILTRAR_DATOS=false
-# crea los archivos csv usados para generar los archivos pajek
+# crea los archivos csv usados para generar los archivos pajek y para el cálculo de la centralidad de intermediación.
 GENERAR_ETAPA_CSV=false
 GENERAR_VIAJE_CSV=false
 GENERAR_VIAJE_CON_ETAPAS_CSV=false
@@ -24,6 +25,8 @@ GENERAR_CSV_PARADAS=false
 GENERAR_COMUNIDADES=false
 # concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en el cartodb
 CONCATENAR_HORAS=true
+# genera el indicador de centralidad de intermediación ocupando los archivos *viajes_con_etapsa.csv
+GENERAR_CENTRALIDAD_DE_INTERMEDIACION=false
 
 ####################################################################################
 # Ruta de los directorios usados por el script
@@ -507,6 +510,10 @@ if [ "$CONCATENAR_HORAS" = true ]; then
   
   rm -f tmp
 fi 
+
+if [ "$GENERAR_CENTRALIDAD_DE_INTERMEDIACION" = true ]; then
+
+fi
 
 # cambiamos el dueño de los archivos para poder verlos en el entorno de escritorio
 chown -R cephei $RUTA_MEMORIA

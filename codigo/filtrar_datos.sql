@@ -1,6 +1,6 @@
 \timing on
 
--- Se eliminan todos los datos que esten presentes en las tablas etapa_util y viaje_util
+-- Se eliminan todos los datos que estén presentes.
 DELETE FROM etapa_util;
 DELETE FROM viaje_util;
 DELETE FROM parada_util;
@@ -17,9 +17,6 @@ WHERE par_subida IS NOT NULL AND
 
 -- Se quitan viajes con falta de información
 -- y se guardan en tabla viaje_util.
--- Restricciones:
---    Identificar los viajes con N etapas (netapa=N)
---    Deben estar identificadas todas las bajadas. (netapassinbajada = 0)
 
 -- Viajes con 4 etapas
 INSERT INTO viaje_util
@@ -69,7 +66,7 @@ FROM viajes
 WHERE netapa=1 AND netapassinbajada = 0 AND 
       paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL;
 
--- Se cambian algunos codigos para que coincidan con el de red paradas
+-- Se cambian algunos codigos para que coincidan con los registros en las tablas etapa_util y viaje_util
 UPDATE estaciones_metro SET codigotrx = upper(codigotrx);
 UPDATE estaciones_metro SET codigotrx = 'BARRANCAS' WHERE codigotrx = 'BARRANCAS - L5';
 UPDATE estaciones_metro SET codigotrx = 'BELLAVISTA DE LA FLORIDA' WHERE codigotrx = 'LA FLORIDA';
@@ -112,11 +109,8 @@ INSERT INTO estaciones_metro VALUES ('SANTA ANA', -33.4383079999999993, -70.6601
 INSERT INTO estaciones_metro VALUES ('LOS HEROES L1', -33.446474000000002, -70.660499999999999, 345660, 6297982, 'L1', 'LOS HEROES L1', 'TRASBORDO', 'LOS HEROES', 'SANTIAGO', 'SANTIAGO', 249, 282, NULL, NULL, 180, 249, 256, 341, 1);
 INSERT INTO estaciones_metro VALUES ('BAQUEDANO', -33.437185999999997, -70.6351669999999956, 347999, 6299049, 'L1', 'BAQUEDANO L1', 'TRASBORDO', 'BAQUEDANO', 'PROVIDENCIA', 'PROVIDENCIA', 89, 306, 'PROVIDENCIA', 'PROVIDENCIA', 217, 224, 231, 501, 1);
 
--- UPDATE estaciones_metro SET codigotrx = '' WHERE codigotrx = '';
-
 -- Se actualizan las estaciones de metro en las tablas etapa_util y viaje_util debido
--- a que una estación puede aparecer con varios nombres 
-
+-- a que una estación puede aparecer con varios nombres. 
 UPDATE etapa_util SET 
   par_subida = estaciones_metro.codigosinlinea 
 FROM estaciones_metro  
@@ -176,7 +170,7 @@ WHERE codigo   IS NOT NULL AND
       latitud  IS NOT NULL AND
       longitud IS NOT NULL;
 
--- se agregan los datos de metro dentro de la tabla parada_util
+-- se agregan los datos de metro requerido para las estaciones de metro.
 INSERT INTO parada_util
 SELECT codigotrx, codigosinlinea, latitud, longitud 
 FROM estaciones_metro 
