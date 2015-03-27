@@ -123,7 +123,7 @@ FROM estaciones_metro
 WHERE etapa_util.par_subida = estaciones_metro.codigotrx;
 
 UPDATE etapa_util SET 
-  par_bajada = estaciones_metro2.codigosinlinea 
+  par_bajada = estaciones_metro.codigosinlinea 
 FROM estaciones_metro 
 WHERE etapa_util.par_bajada = estaciones_metro.codigotrx;
 
