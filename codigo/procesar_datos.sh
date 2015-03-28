@@ -5,7 +5,7 @@ set -o errexit
 
 ####################################################################################
 # Variables que definen las distintas tareas que se pueden llevar a cabo. Entiendanse 
-# como módulos
+# como procedimientos 
 
 # Crea la base de datos y cargar los datos base.
 GENERAR_BD_Y_CARGAR_DATOS=false
@@ -79,32 +79,31 @@ fi
 chown -R cephei:postgres $RUTA_DATOS
 chmod 775 -R $RUTA_DATOS
 
-  # Define los tramos horarios que se van a procesar y generar los csv 
-  # Estos deben tener la siguiente sintaxis XX-YY [XX-YY ...]
-  # donde XX e YY son números enteros de dos dígitos en el rango [00-23]
-  # y pueden ser iguales. Para concatenar varios tramos se usa el espacio. Ej: XX-YY ZZ-TT
-  TRAMOS=(01-01 02-02 03-03 04-04 05-05 06-06 07-07 08-08 09-09 10-10 11-11 12-12 13-13 14-14 15-15 16-16 17-17 18-18 19-19 20-20 21-21 22-22 23-23 00-00 06-09 18-21)
+# Define los tramos horarios que se van a procesar y generar los csv 
+# Estos deben tener la siguiente sintaxis XX-YY [XX-YY ...]
+# donde XX e YY son números enteros de dos dígitos en el rango [00-23]
+# y pueden ser iguales. Para concatenar varios tramos se usa el espacio. Ej: XX-YY ZZ-TT
+TRAMOS=(01-01 02-02 03-03 04-04 05-05 06-06 07-07 08-08 09-09 10-10 11-11 12-12 13-13 14-14 15-15 16-16 17-17 18-18 19-19 20-20 21-21 22-22 23-23 00-00 06-09 18-21)
 
-  # para filtrar por hora usar        : extract(hour from tiempo_subida)
-  # para filtrar por fecha y hora usar: (date_trunc('hour', tiempo_subida))
-  # para diltrar por fecha usar       : (date_trunc('day', tiempo_subida))
+# para filtrar por hora usar        : extract(hour from tiempo_subida)
+# para filtrar por fecha y hora usar: (date_trunc('hour', tiempo_subida))
+ # para diltrar por fecha usar       : (date_trunc('day', tiempo_subida))
 
 if [ "$GENERAR_ETAPA_CSV" = true ]; then
   ####################################################################################
   rm -f $RUTA_DATOS_CSV/*etapa.csv
 
-  # CALCULO POR HORA DE LA SEMANA COMPLETA
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso, 'SEMANA' AS fecha
-                    FROM etapa_util 
-                    WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION 
-                    GROUP BY par_subida, par_bajada) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_semana_etapa.csv' WITH DELIMITER ';' CSV;"
+  # Estos datos se ocupan para generar las comunidaddes por lo que se ocupan los datos
+  # de toda la semana.
+  CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso 
+                  FROM etapa_util 
+                  GROUP BY par_subida, par_bajada) 
+                  To '$RUTA_DATOS_CSV/semana_etapa.csv' WITH DELIMITER ';' CSV;"
 
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
+  sudo -u postgres -i psql -d memoria -c "$CONSULTA"
 
+# inicio comentario
+: <<'END'
   # Hora para el tramo lunes-jueves (14-04-2013 al 17-04-2013)
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
@@ -160,12 +159,13 @@ if [ "$GENERAR_ETAPA_CSV" = true ]; then
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
-
+END 
+# fin comentario
 fi
 
-if [ "$GENERAR_VIAJE_CSV" = true ]; then
+if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
   ####################################################################################
-  rm -f $RUTA_DATOS_CSV/*viaje.csv
+  rm -f $RUTA_DATOS_CSV/*viaje_con_etapas.csv
 
   # CALCULO POR HORA DE LA SEMANA COMPLETA
   for TRAMO in ${TRAMOS[@]}; do
@@ -193,7 +193,7 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
                           (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-14' AND '2013-04-17' 
                     GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                              par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_lunes_a_jueves_viaje.csv' WITH DELIMITER ';' CSV;"
+                    To '$RUTA_DATOS_CSV/${TRAMO}_lunes_a_jueves_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
@@ -210,7 +210,7 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
                           (date_trunc('day', tiempo_subida_1)) = '2013-04-18' 
                     GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                              par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_viernes_viaje.csv' WITH DELIMITER ';' CSV;"
+                    To '$RUTA_DATOS_CSV/${TRAMO}_viernes_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
@@ -227,7 +227,7 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
                           (date_trunc('day', tiempo_subida_1)) = '2013-04-19' 
                     GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                              par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_sabado_viaje.csv' WITH DELIMITER ';' CSV;"
+                    To '$RUTA_DATOS_CSV/${TRAMO}_sabado_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
@@ -244,16 +244,16 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
                           (date_trunc('day', tiempo_subida_1)) = '2013-04-20' 
                     GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                              par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_domingo_viaje.csv' WITH DELIMITER ';' CSV;"
+                    To '$RUTA_DATOS_CSV/${TRAMO}_domingo_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
 
 fi
 
-if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
+if [ "$GENERAR_VIAJE_CSV" = true ]; then
   ####################################################################################
-  rm -f $RUTA_DATOS_CSV/*viaje_con_etapas.csv
+  rm -f $RUTA_DATOS_CSV/*viaje.csv
 
   # CALCULO POR HORA DE LA SEMANA COMPLETA
   for TRAMO in ${TRAMOS[@]}; do
@@ -313,7 +313,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
                                 (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-14' AND '2013-04-17'  
                           GROUP BY par_subida_1, par_bajada_4) AS viaje 
                     GROUP BY par_subida, par_bajada, fecha) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_lunes_a_jueves_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
+                    To '$RUTA_DATOS_CSV/${TRAMO}_lunes_a_jueves_viaje.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
@@ -347,7 +347,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
                                 (date_trunc('day', tiempo_subida_1)) = '2013-04-18'  
                           GROUP BY par_subida_1, par_bajada_4) AS viaje 
                     GROUP BY par_subida, par_bajada, fecha) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_viernes_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
+                    To '$RUTA_DATOS_CSV/${TRAMO}_viernes_viaje.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
@@ -381,7 +381,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
                                 (date_trunc('day', tiempo_subida_1)) = '2013-04-19'  
                           GROUP BY par_subida_1, par_bajada_4) AS viaje 
                     GROUP BY par_subida, par_bajada, fecha) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_sabado_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
+                    To '$RUTA_DATOS_CSV/${TRAMO}_sabado_viaje.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
@@ -415,7 +415,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
                                 (date_trunc('day', tiempo_subida_1)) = '2013-04-20'  
                           GROUP BY par_subida_1, par_bajada_4) AS viaje 
                     GROUP BY par_subida, par_bajada, fecha) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_domingo_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
+                    To '$RUTA_DATOS_CSV/${TRAMO}_domingo_viaje.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
@@ -426,7 +426,7 @@ if [ "$GENERAR_PAJEK" = true ]; then
   ####################################################################################
   rm -f $RUTA_DATOS_PAJEK/*.net
 
-  for ARCHIVO_CSV in $RUTA_DATOS_CSV/*etapa.csv; do
+  for ARCHIVO_CSV in $RUTA_DATOS_CSV/(*etapa|*viaje).csv; do
     echo "Procesando $ARCHIVO_CSV"
     php etapa2pajek.php $ARCHIVO_CSV $RUTA_DATOS_PAJEK/  
   done
