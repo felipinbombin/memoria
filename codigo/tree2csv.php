@@ -1,7 +1,7 @@
 <?php
 // convierte un archivo .tree a un csv para ser mostrado en cartodb.
 
-if ($argc !== 5) {
+if ($argc < 3) {
   echo "USO: php tree2csv.php <ruta archivo nombre paraderos> <ruta archivo tree> <ruta archivo salida> <hora datos>".PHP_EOL;
   exit(1);
 }
@@ -14,8 +14,8 @@ $ruta_infomap_tree     = $argv[2];
 $nombre_tree           = array_shift(explode('.', array_pop(explode('/', $ruta_infomap_tree)))).'.csv'; 
 // ruta donde se almacena el archivo de salida
 $ruta_salida           = $argv[3]; 
-// hora de los datos
-$hora                  = $argv[4];
+// hora de los datos (opcional)
+$hora                  = (isset($argv[4])?$argv[4]:'');
 
 // indica si el archivo existe y si es posible leerlo
 if (!is_readable($ruta_nombre_paraderos)) {
@@ -47,7 +47,7 @@ if ($archivo_tree === false) {
 // se quita la primera linea y se agrega encabezado de csv
 $lineas = explode("\n", $contenido_tree);
 $lineas = array_slice($lineas, 1);
-$lineas = array_merge(array("1er_nivel 2do_nivel PageRank Nombre latitud longitud hora id_pajek"), $lineas);
+$lineas = array_merge(array("1er_nivel 2do_nivel PageRank Nombre latitud longitud".($hora==''?'':' hora')), $lineas);
 $contenido_tree = implode("\n", $lineas);
 
 // se reemplaza el : por un espacio para que el archivo cumpla con el estandar csv
@@ -56,7 +56,10 @@ $contenido_tree = str_replace(':', ' ', $contenido_tree);
 // se lee linea por linea
 while (($linea = fgets($archivo_nombre_paraderos)) !== false) {
   $elementos = array_map("trim", split(";", $linea));
-  $contenido_tree = str_replace('"'.$elementos[0].'"', '"'.$elementos[1].'" '.$elementos[2].' '.$elementos[3].' '.$hora, $contenido_tree);
+  $patron = '/"'.$elementos[0].'" [0-9]*/i';
+  $nuevo_texto = '"'.$elementos[1].'" '.$elementos[2].' '.$elementos[3].' '.$hora;
+
+  $contenido_tree = preg_replace($patron, $nuevo_texto, $contenido_tree);
 }
 
 fclose($archivo_nombre_paraderos);
