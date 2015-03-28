@@ -172,10 +172,9 @@ WHERE codigo   IS NOT NULL AND
 
 -- se agregan los datos de metro requerido para las estaciones de metro.
 INSERT INTO parada_util
-SELECT codigotrx, codigosinlinea, latitud, longitud 
+SELECT DISTINCT codigosinlinea, codigosinlinea, latitud, longitud 
 FROM estaciones_metro 
-WHERE codigotrx      IS NOT NULL AND 
-      codigosinlinea IS NOT NULL AND 
+WHERE codigosinlinea IS NOT NULL AND 
       latitud        IS NOT NULL AND 
       longitud       IS NOT NULL;
       
