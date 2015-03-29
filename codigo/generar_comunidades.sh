@@ -125,7 +125,7 @@ if [ "$GENERAR_PAJEK" = true ]; then
 
   for ARCHIVO_CSV in $RUTA_DATOS_CSV/*.csv; do
     echo "Procesando $ARCHIVO_CSV"
-    php $RUTA_CODIGO/etapa2pajek.php $ARCHIVO_CSV $RUTA_DATOS_PAJEK/  
+    php $RUTA_CODIGO/arcos2pajek.php $ARCHIVO_CSV $RUTA_DATOS_PAJEK/  
   done
 fi
 
