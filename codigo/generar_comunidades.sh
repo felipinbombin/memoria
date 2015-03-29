@@ -149,10 +149,11 @@ if [ "$GENERAR_COMUNIDADES" = true ]; then
 
     #NOMBRE_INFOMAP=$(echo "$ARCHIVO_NET" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
 
-    # -i 'pajek'  Indica el formato de archivo de entrada
-    # --two-level Optimiza una partición de dos niveles de la red
-    # -d          Asume que los arcos tienen dirección
-    $RUTA_INFOMAP/Infomap -i 'pajek' --two-level -d "$ARCHIVO_NET" "$RUTA_DATOS_INFOMAP"
+    # -i 'pajek'   Indica el formato de archivo de entrada
+    # --two-level  Optimiza una partición de dos niveles de la red
+    # -d           Asume que los arcos tienen dirección
+    # --zero-based Considera que la enumeración de los indices comienza desde cero.
+    $RUTA_INFOMAP/Infomap -i 'pajek' --zero-based --two-level -d "$ARCHIVO_NET" "$RUTA_DATOS_INFOMAP"
   done 
 fi
 
