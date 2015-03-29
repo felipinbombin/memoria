@@ -31,7 +31,7 @@ WHERE netapa=4 AND netapassinbajada = 0 AND
       paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL AND  
       paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL AND 
       paraderosubida_3era IS NOT NULL AND paraderobajada_3era IS NOT NULL AND 
-      paraderosubida_4ta  IS NOT NULL AND paraderobajada_4ta  IS NOT NULL;
+      paraderosubida_4ta  IS NOT NULL AND paraderobajada_4ta  IS NOT NULL AND factorexpansion IS NOT NULL;
 
 -- Viajes con 3 etapas
 INSERT INTO viaje_util
@@ -39,32 +39,38 @@ SELECT id, nviaje, netapa,
        paraderosubida_1era, paraderobajada_1era,tiemposubida_1era, 
        paraderosubida_2da,  paraderobajada_2da, 
        paraderosubida_3era, paraderobajada_3era, 
+       NULL, NULL, 
        factorexpansion
 FROM viajes
 WHERE netapa=3 AND netapassinbajada = 0 AND 
       paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL AND  
       paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL AND 
-      paraderosubida_3era IS NOT NULL AND paraderobajada_3era IS NOT NULL;
+      paraderosubida_3era IS NOT NULL AND paraderobajada_3era IS NOT NULL AND factorexpansion IS NOT NULL;
 
 -- Viajes con 2 etapas
 INSERT INTO viaje_util
 SELECT id, nviaje, netapa, 
        paraderosubida_1era, paraderobajada_1era, tiemposubida_1era,  
        paraderosubida_2da,  paraderobajada_2da, 
+       NULL, NULL, 
+       NULL, NULL, 
        factorexpansion
 FROM viajes
 WHERE netapa=2 AND netapassinbajada = 0 AND 
       paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL AND  
-      paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL;
+      paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL AND factorexpansion IS NOT NULL;
 
 -- Viajes con 1 etapa
 INSERT INTO viaje_util
 SELECT id, nviaje, netapa, 
        paraderosubida_1era, paraderobajada_1era, tiemposubida_1era,  
+       NULL, NULL, 
+       NULL, NULL, 
+       NULL, NULL, 
        factorexpansion
 FROM viajes
 WHERE netapa=1 AND netapassinbajada = 0 AND 
-      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL;
+      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL AND factorexpansion IS NOT NULL;
 
 -- Se cambian algunos codigos para que coincidan con los registros en las tablas etapa_util y viaje_util
 UPDATE estaciones_metro SET codigotrx = upper(codigotrx);
