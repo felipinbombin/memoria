@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define true 1
+#define true  1
 #define false 0
 
 int main(int argc, char *argv[])
@@ -38,26 +38,29 @@ int main(int argc, char *argv[])
     if (n_linea == 0) 
     {
       sscanf (linea, "%*[^0-9]%d", &n_nodos);
-      printf("nodos: %d\n", n_nodos);
-    // llegamos al encabezado de los arcos
+      //printf("nodos: %d\n", n_nodos);
     } 
+    // llegamos al encabezado de los arcos
     else if (n_linea == 1 + n_nodos) 
     {
       sscanf (linea, "%*[^0-9]%d", &n_arcos);
       fila_es_nodo = false;
-      printf("arcos: %d\n", n_arcos);
+      //printf("arcos: %d\n", n_arcos);
     } 
+    // fila con datos
     else 
     {
+      // es un nodo
       if (fila_es_nodo) 
       {
         sscanf (linea, "%d ", &nodo);
-        printf("nodo: %d\n", nodo);
+        //printf("nodo: %d\n", nodo);
       } 
+      // es un arco
       else 
       {
         sscanf (linea, "%d %d %f", &nodo1, &nodo2, &peso);
-        printf("arco (%d,%d)=%f\n", nodo1, nodo2, peso);
+        //printf("arco (%d,%d)=%f\n", nodo1, nodo2, peso);
       }
     }
 
