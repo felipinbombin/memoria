@@ -243,7 +243,7 @@ fi
 
 if [ "$CALCULAR_PAGERANK" = true ]; then
   ####################################################################################
-  rm -f $RUTA_DATOS_PAGERANK/*.csv
+  rm -f $RUTA_DATOS_IGRAPH/*.csv
 
   # IMPORTANTE: si no encuentra lib en share files al compilar hacer lo siguiente
   # Hay que agregar la línea 'include /usr/local/lib' en el archivo '/etc/ld.so.conf'
@@ -259,35 +259,25 @@ if [ "$CALCULAR_PAGERANK" = true ]; then
 
     NOMBRE_CSV=$(echo "$ARCHIVO_PAJEK" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
 
-<<'comentario1'
-    # creamos la hora para que sea agregada al CSV para cartoDB
-    HORA=$(echo "$NOMBRE_CSV" | cut -d '-' -f 1)
-    # La fecha no se ocupa por el momento.
-    if [[ "$NOMBRE_CSV" == "*semana*" ]]; then
-      FECHA="SEMANA"
-      CARPETA="semana_etapa"
-    elif [[ $NOMBRE_CSV== *lunes_a_jueves* ]]; then
-      FECHA="2013-04-17T$HORA:00:00Z"
-      CARPETA="lunes_a_jueves_etapa"
-    elif [[ "$NOMBRE_CSV" == *viernes* ]]; then
-      FECHA="2013-04-18T$HORA:00:00Z"
-      CARPETA="viernes_etapa"
-    elif [[ "$NOMBRE_CSV" == *sabado* ]]; then
-      FECHA="2013-04-19T$HORA:00:00Z"
-      CARPETA="sabado_etapa"
-    elif [[ $NOMBRE_CSV == *domingo* ]]; then
-      FECHA="2013-04-20T$HORA:00:00Z"
-      CARPETA="domingo_etapa"
-    fi
-comentario1
-    
     # Ejecutar código
-    $RUTA_CODIGO/$NOMBRE_EJECUTABLE $ARCHIVO_PAJEK
+    $RUTA_CODIGO/$NOMBRE_EJECUTABLE $ARCHIVO_PAJEK > $RUTA_DATOS_IGRAPH/$NOMBRE_CSV.csv
 
     break
   done 
+
   # se elimina ejecutable
   rm -f $RUTA_CODIGO/$NOMBRE_EJECUTABLE
+fi
+
+if [ "$GENERAR_CARTODB" = true ]; then
+  ####################################################################################
+  rm -f -R $RUTA_DATOS_CARTODB/*.csv
+
+  for ARCHIVO_CSV in $RUTA_DATOS_IGRAPH/*.csv; do
+    echo "Procesando $ARCHIVO_CSV"
+
+    php $RUTA_CODIGO/pagerank2csv.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CARTODB/ 
+  done
 fi
 
 if [ "$CONCATENAR_HORAS" = true ]; then
@@ -314,17 +304,6 @@ if [ "$CONCATENAR_HORAS" = true ]; then
   
   rm -f $RUTA_DATOS_CARTODB/tmp
 fi 
-
-if [ "$GENERAR_CARTODB" = true ]; then
-  ####################################################################################
-  rm -f -R $RUTA_DATOS_CARTODB/*.csv
-
-  for ARCHIVO_TREE in $RUTA_DATOS_INFOMAP/*.tree; do
-    echo "Procesando $ARCHIVO_TREE"
-
-    php $RUTA_CODIGO/tree2csv.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_TREE $RUTA_DATOS_CARTODB/ 
-  done
-fi
 
 # cambiamos el dueño de los archivos para poder verlos en el entorno de escritorio
 chown -R cephei $RUTA_DATOS
