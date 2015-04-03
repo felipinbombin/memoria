@@ -42,7 +42,7 @@ while (($linea = fgets($archivo_csv)) !== false) {
   if (($indice_par_subida = array_search($elementos[0], $paraderos)) === false) {
     $paraderos[] = $elementos[0];
     // se resta uno porque los índices comienzan desde cero
-    $indice_par_subida = count($paraderos)-1;
+    $indice_par_subida = count($paraderos);
     
     $vertices .= $indice_par_subida . ' "' . $elementos[0] . '"'. PHP_EOL;
   } else {
@@ -52,7 +52,7 @@ while (($linea = fgets($archivo_csv)) !== false) {
   if (($indice_par_bajada = array_search($elementos[1], $paraderos)) === false) {
     $paraderos[] = $elementos[1];
     // se resta uno porque los índices comienzan desde cero
-    $indice_par_bajada = count($paraderos)-1;
+    $indice_par_bajada = count($paraderos);
     
     $vertices .= $indice_par_bajada . ' "' . $elementos[1] . '"'. PHP_EOL;
   } else {
