@@ -12,7 +12,7 @@ GENERAR_ETAPA_CSV=false
 # crea los archivos pajek a partir de los archivos csv
 GENERAR_PAJEK=false
 # crea el csv de paradas con toda su información (nombre, longitud, latitud, ...)
-GENERAR_CSV_PARADAS=true
+GENERAR_CSV_PARADAS=false
 # genera las comunidades en dos niveles, por medio del framework infomap
 GENERAR_COMUNIDADES=false
 # genera un csv a partir del archivo de comunidades para poder ser mostrado en la herramienta cartodb.com 
@@ -129,12 +129,13 @@ if [ "$GENERAR_PAJEK" = true ]; then
   done
 fi
 
+NOMBRE_PARADAS_CSV="PARADAS.csv"
+
 if [ "$GENERAR_CSV_PARADAS" = true ]; then
   ####################################################################################
 
   # Genera un csv con los datos de la tabla parada_util. Es usado al final del proceso para reemplazar
   # los códigos de paraderos e insertar su respectiva posición geográfica, nombre, etc...
-  NOMBRE_PARADAS_CSV="PARADAS.csv"
   PARADAS_CSV="copy (SELECT * FROM parada_util) To '$RUTA_DATOS/$NOMBRE_PARADAS_CSV' WITH DELIMITER ';' CSV;"
   rm -f $RUTA_DATOS/$NOMBRE_PARADAS_CSV
   sudo -u postgres -i psql -d memoria -c "$PARADAS_CSV"
