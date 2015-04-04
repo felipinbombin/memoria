@@ -19,7 +19,7 @@ CALCULAR_PAGERANK=true
 # concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en cartodb.com
 CONCATENAR_HORAS=false
 # genera un csv a partir del archivo de generado por igraph para poder ser mostrado en la herramienta cartodb.com 
-GENERAR_CARTODB=false
+GENERAR_CARTODB=true
 
 ####################################################################################
 # Ruta de los directorios usados por el script
@@ -221,11 +221,12 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
 
 fi
 
+NOMBRE_PARADAS_CSV="PARADAS.csv"
+
 if [ "$GENERAR_CSV_PARADAS" = true ]; then
 
   # Genera un csv con los datos de la tabla parada_util. Es usado al final del proceso para reemplazar
   # los códigos de paraderos e insertar su respectiva posición geográfica, nombre, etc...
-  NOMBRE_PARADAS_CSV="PARADAS.csv"
   PARADAS_CSV="copy (SELECT * FROM parada_util) To '$RUTA_DATOS/$NOMBRE_PARADAS_CSV' WITH DELIMITER ';' CSV;"
   rm -f $RUTA_DATOS/$NOMBRE_PARADAS_CSV
   sudo -u postgres -i psql -d memoria -c "$PARADAS_CSV"
@@ -269,17 +270,6 @@ if [ "$CALCULAR_PAGERANK" = true ]; then
   rm -f $RUTA_CODIGO/$NOMBRE_EJECUTABLE
 fi
 
-if [ "$GENERAR_CARTODB" = true ]; then
-  ####################################################################################
-  rm -f -R $RUTA_DATOS_CARTODB/*.csv
-
-  for ARCHIVO_CSV in $RUTA_DATOS_IGRAPH/*.csv; do
-    echo "Procesando $ARCHIVO_CSV"
-
-    php $RUTA_CODIGO/pagerank2csv.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CARTODB/ 
-  done
-fi
-
 if [ "$CONCATENAR_HORAS" = true ]; then
   ####################################################################################
   rm -f $RUTA_DATOS_CARTODB/*.csv
@@ -304,6 +294,17 @@ if [ "$CONCATENAR_HORAS" = true ]; then
   
   rm -f $RUTA_DATOS_CARTODB/tmp
 fi 
+
+if [ "$GENERAR_CARTODB" = true ]; then
+  ####################################################################################
+  rm -f -R $RUTA_DATOS_CARTODB/*.csv
+
+  for ARCHIVO_CSV in $RUTA_DATOS_IGRAPH/*.csv; do
+    echo "Procesando $ARCHIVO_CSV"
+
+    php $RUTA_CODIGO/pagerank2cartodb.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CARTODB/ 
+  done
+fi
 
 # cambiamos el dueño de los archivos para poder verlos en el entorno de escritorio
 chown -R cephei $RUTA_DATOS

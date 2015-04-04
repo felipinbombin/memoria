@@ -9,9 +9,9 @@ if ($argc < 3) {
 // archivo csv con columnas codigo, nombre, longitud, latitud
 $ruta_nombre_paraderos = $argv[1]; 
 // ruta al archivo a ser leído.
-$ruta_infomap_tree     = $argv[2]; 
+$ruta_csv_igraph       = $argv[2]; 
 // nombre del archivo de salida
-$nombre_tree           = array_shift(explode('.', array_pop(explode('/', $ruta_infomap_tree)))).'.csv'; 
+$nombre_csv            = array_shift(explode('.', array_pop(explode('/', $ruta_csv_igraph)))).'.csv'; 
 // ruta donde se almacena el archivo de salida
 $ruta_salida           = $argv[3]; 
 // hora de los datos (opcional)
@@ -24,46 +24,44 @@ if (!is_readable($ruta_nombre_paraderos)) {
 }
 
 // indica si el archivo existe y si es posible leerlo
-if (!is_readable($ruta_infomap_tree)) {
-  echo "El archivo '$ruta_infomap_tree' no existe o no se puede leer".PHP_EOL;
+if (!is_readable($ruta_csv_igraph)) {
+  echo "El archivo '$ruta_csv_igraph' no existe o no se puede leer".PHP_EOL;
   exit(1);
 }
 
-$contenido_tree = file_get_contents($ruta_infomap_tree, FILE_USE_INCLUDE_PATH);
+$contenido_csv = file_get_contents($ruta_csv_igraph, FILE_USE_INCLUDE_PATH);
 
 $archivo_nombre_paraderos = fopen($ruta_nombre_paraderos, 'r');
-$archivo_tree = fopen($ruta_salida.'/'.$nombre_tree, 'w');
+$archivo_csv = fopen($ruta_salida.'/'.$nombre_csv, 'w');
 
 if ($archivo_nombre_paraderos === false) {
   echo "No se pudo abrir archivo $archivo_nombre_paraderos".PHP_EOL;
   exit(1);
 }
 
-if ($archivo_tree === false) {
-  echo "No se pudo crear archivo $ruta_salida/$nombre_tree.csv".PHP_EOL;
+if ($archivo_csv === false) {
+  echo "No se pudo crear archivo $ruta_salida/$nombre_csv.csv".PHP_EOL;
   exit(1);
 }
 
 // se quita la primera linea y se agrega encabezado de csv
-$lineas = explode("\n", $contenido_tree);
+$lineas = explode("\n", $contenido_csv);
 $lineas = array_slice($lineas, 1);
-$lineas = array_merge(array("Nombre latitud longitud ".($hora==''?'':'hora ')."pagerank"), $lineas);
-$contenido_tree = implode("\n", $lineas);
-
-// se reemplaza el : por un espacio para que el archivo cumpla con el estandar csv
-$contenido_tree = str_replace(':', ' ', $contenido_tree);
+$lineas = array_merge(array("Nombre latitud longitud".($hora==''?'':' hora')." pagerank"), $lineas);
+$contenido_csv = implode("\n", $lineas);
 
 // se lee linea por linea
 while (($linea = fgets($archivo_nombre_paraderos)) !== false) {
   $elementos = array_map("trim", split(";", $linea));
-  $patron = '/"'.$elementos[0].'" [0-9]*/i';
-  $nuevo_texto = '"'.$elementos[1].'" '.$elementos[2].' '.$elementos[3].' '.$hora;
+  
+  $patron = '/"'.$elementos[0].'"/i';
+  $nuevo_texto = '"'.$elementos[1].'" '.$elementos[2].' '.$elementos[3].($hora==''?'':' '.$hora);
 
-  $contenido_tree = preg_replace($patron, $nuevo_texto, $contenido_tree);
+  $contenido_csv = preg_replace($patron, $nuevo_texto, $contenido_csv);
 }
 
 fclose($archivo_nombre_paraderos);
 
-fwrite($archivo_tree, $contenido_tree);
-fclose($archivo_tree);
+fwrite($archivo_csv, $contenido_csv);
+fclose($archivo_csv);
 ?>
