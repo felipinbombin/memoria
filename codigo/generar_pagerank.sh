@@ -15,11 +15,11 @@ GENERAR_PAJEK=false
 # crea el csv de paradas con toda su información (nombre, longitud, latitud, ...)
 GENERAR_CSV_PARADAS=false
 # calcula el pagerank para cada nodo del grafo por medio de la libraria igraph
-CALCULAR_PAGERANK=true
+CALCULAR_PAGERANK=false
+# genera un csv a partir del archivo de generado por igraph para poder ser mostrado en la herramienta cartodb.com 
+GENERAR_CARTODB=false
 # concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en cartodb.com
 CONCATENAR_HORAS=false
-# genera un csv a partir del archivo de generado por igraph para poder ser mostrado en la herramienta cartodb.com 
-GENERAR_CARTODB=true
 
 ####################################################################################
 # Ruta de los directorios usados por el script
@@ -224,7 +224,8 @@ fi
 NOMBRE_PARADAS_CSV="PARADAS.csv"
 
 if [ "$GENERAR_CSV_PARADAS" = true ]; then
-
+  
+  echo "GENERANDO CSV PARADA"
   # Genera un csv con los datos de la tabla parada_util. Es usado al final del proceso para reemplazar
   # los códigos de paraderos e insertar su respectiva posición geográfica, nombre, etc...
   PARADAS_CSV="copy (SELECT * FROM parada_util) To '$RUTA_DATOS/$NOMBRE_PARADAS_CSV' WITH DELIMITER ';' CSV;"
@@ -237,7 +238,7 @@ if [ "$GENERAR_PAJEK" = true ]; then
   rm -f $RUTA_DATOS_PAJEK/*.net
 
   for ARCHIVO_CSV in $RUTA_DATOS_CSV/*.csv; do
-    echo "Procesando $ARCHIVO_CSV"
+    echo "GENERANDO PAJEK: Procesando $ARCHIVO_CSV"
     php $RUTA_CODIGO/arcos2pajek.php $ARCHIVO_CSV $RUTA_DATOS_PAJEK/  
   done
 fi
@@ -256,55 +257,58 @@ if [ "$CALCULAR_PAGERANK" = true ]; then
   gcc $RUTA_CODIGO/calcular_pagerank.c -I$RUTA_IGRAPH_H -L$RUTA_IGRAPH_LIB -ligraph -o $NOMBRE_EJECUTABLE
 
   for ARCHIVO_PAJEK in $RUTA_DATOS_PAJEK/*.net; do
-    echo "Procesando $ARCHIVO_PAJEK"
+    echo "CALCULAR PAGERANK: Procesando $ARCHIVO_PAJEK"
 
     NOMBRE_CSV=$(echo "$ARCHIVO_PAJEK" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
 
     # Ejecutar código
     $RUTA_CODIGO/$NOMBRE_EJECUTABLE $ARCHIVO_PAJEK > $RUTA_DATOS_IGRAPH/$NOMBRE_CSV.csv
 
-    break
   done 
 
   # se elimina ejecutable
   rm -f $RUTA_CODIGO/$NOMBRE_EJECUTABLE
 fi
 
+if [ "$GENERAR_CARTODB" = true ]; then
+  ####################################################################################
+  rm -f -R $RUTA_DATOS_CARTODB/*.csv
+
+  for ARCHIVO_CSV in $RUTA_DATOS_IGRAPH/*.csv; do
+    echo "GENERANDO CARTODB: Procesando $ARCHIVO_CSV"
+    HORA=$(echo "$ARCHIVO_CSV" | cut -d '-' -f 1 | rev | cut -d '/' -f 1 | rev)
+    php $RUTA_CODIGO/pagerank2cartodb.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CARTODB/ $HORA
+  done
+fi
+
 if [ "$CONCATENAR_HORAS" = true ]; then
   ####################################################################################
-  rm -f $RUTA_DATOS_CARTODB/*.csv
 
-  ENCABEZADO="1er_nivel 2do_nivel PageRank Nombre latitud longitud fecha"
+  ENCABEZADO="Nombre latitud longitud fecha pagerank"
   ARCHIVOS=("lunes_a_jueves" "viernes" "sabado" "domingo" "semana")
 
   for ARCHIVO in ${ARCHIVOS[@]}; do
 
-    # los archivos con ese tramo horario no me interesa concatenarlos
-    if [[ $ARCHIVO == *06-09* ]] || [[ $ARCHIVO == *18-21* ]] ; then
-      continue
-    fi
+    rm -f $RUTA_DATOS_CARTODB/$ARCHIVO.csv
 
-    echo "Procesando datos $ARCHIVO ..."
-    cat $RUTA_DATOS_CARTODB/${ARCHIVO}_etapa/*.csv >> $RUTA_DATOS_CARTODB/$ARCHIVO.csv
+    echo "CONCATENANDO HORAS: Procesando $ARCHIVO"
+
+    for ARCHIVO_CSV in $RUTA_DATOS_CARTODB/*$ARCHIVO*.csv; do
+      # los archivos con ese tramo horario no me interesa concatenarlos
+      if [[ $ARCHIVO_CSV == *06-09* ]] || [[ $ARCHIVO_CSV == *18-21* ]] ; then
+        continue
+      fi 
+      cat $ARCHIVO_CSV >> $RUTA_DATOS_CARTODB/$ARCHIVO.csv
+    done 
+
     # se eliminan los encabezados del archivo(uno por archivo concatenado)
-    sed -i '/^1er_nivel/d' $RUTA_DATOS_CARTODB/$ARCHIVO.csv
+    sed -i '/^Nombre latitud/d' $RUTA_DATOS_CARTODB/$ARCHIVO.csv
     # se agrega encabezado
     echo "$ENCABEZADO" | cat - $RUTA_DATOS_CARTODB/$ARCHIVO.csv > $RUTA_DATOS_CARTODB/tmp && mv $RUTA_DATOS_CARTODB/tmp $RUTA_DATOS_CARTODB/$ARCHIVO.csv
   done
   
   rm -f $RUTA_DATOS_CARTODB/tmp
 fi 
-
-if [ "$GENERAR_CARTODB" = true ]; then
-  ####################################################################################
-  rm -f -R $RUTA_DATOS_CARTODB/*.csv
-
-  for ARCHIVO_CSV in $RUTA_DATOS_IGRAPH/*.csv; do
-    echo "Procesando $ARCHIVO_CSV"
-
-    php $RUTA_CODIGO/pagerank2cartodb.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CARTODB/ 
-  done
-fi
 
 # cambiamos el dueño de los archivos para poder verlos en el entorno de escritorio
 chown -R cephei $RUTA_DATOS
