@@ -32,7 +32,7 @@ if (!is_readable($ruta_csv_igraph)) {
 $contenido_csv = file_get_contents($ruta_csv_igraph, FILE_USE_INCLUDE_PATH);
 
 $archivo_nombre_paraderos = fopen($ruta_nombre_paraderos, 'r');
-$archivo_csv = fopen($ruta_salida.'/'.$nombre_csv, 'w');
+$archivo_csv = fopen($ruta_salida . $nombre_csv, 'w');
 
 if ($archivo_nombre_paraderos === false) {
   echo "No se pudo abrir archivo $archivo_nombre_paraderos".PHP_EOL;
