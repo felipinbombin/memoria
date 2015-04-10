@@ -9,7 +9,7 @@ if ($argc !== 4) {
 $paradas_csv      = $argv[1]; // ruta del csv de paradas.
 $viajes_csv       = $argv[2]; // ruta del csv de los viajes.
 $ruta_salida      = $argv[3]; // ruta donde irá el archivo de salida.
-$nombre_viajes_csv = array_shift(explode('.', array_pop(explode('/', $viajes_csv)))).'.net';
+$nombre_viajes_csv = array_shift(explode('.', array_pop(explode('/', $viajes_csv)))).'.csv';
 
 // indica si el archivo existe y si es posible leerlo
 if (!is_readable($paradas_csv)) {
