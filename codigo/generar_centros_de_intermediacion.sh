@@ -12,7 +12,7 @@ GENERAR_VIAJE_CON_ETAPAS_CSV=false
 # crea el csv de paradas con toda su información (nombre, longitud, latitud, ...)
 GENERAR_CSV_PARADAS=false
 # calcula la centralidad de intermediación  para cada nodo del grafo
-CALCULAR_CENTRALIDAD_DE_INTERMEDIACION=false
+CALCULAR_CENTRALIDAD_DE_INTERMEDIACION=true
 # genera un csv a partir del archivo de generado por el calculo de la centralidad para poder ser mostrado en la herramienta cartodb.com 
 GENERAR_CARTODB=true
 # concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en cartodb.com
@@ -154,10 +154,8 @@ if [ "$CALCULAR_CENTRALIDAD_DE_INTERMEDIACION" = true ]; then
 
     NOMBRE_CSV=$(echo "$ARCHIVO_CSV" | rev | cut -d '/' -f 1 | rev)
     
-    php calcular_centralidad_de_intermediacion.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CENTRALIDAD/
-
+    php calcular_centralidad_de_intermediacion.php $ARCHIVO_CSV $RUTA_DATOS_CENTRALIDAD/
   done 
-
 fi
 
 if [ "$GENERAR_CARTODB" = true ]; then
