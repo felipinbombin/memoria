@@ -23,7 +23,7 @@ GENERAR_POLIGONOS=false
 ####################################################################################
 # Ruta de los directorios usados por el script
 RUTA_MEMORIA=/home/cephei/Desktop/memoria
-RUTA_CODIGO=$RUTA_MEMORIA/codigo
+RUTA_CODIGO=$RUTA_MEMORIA/codigo/comunidad
 RUTA_DATOS=$RUTA_MEMORIA/datos/comunidades
 RUTA_DATOS_CSV=$RUTA_DATOS/csv
 RUTA_DATOS_PAJEK=$RUTA_DATOS/pajek
