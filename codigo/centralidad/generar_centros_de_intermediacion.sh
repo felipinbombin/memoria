@@ -21,7 +21,7 @@ CONCATENAR_HORAS=true
 ####################################################################################
 # Ruta de los directorios usados por el script
 RUTA_MEMORIA=/home/cephei/Desktop/memoria
-RUTA_CODIGO=$RUTA_MEMORIA/codigo
+RUTA_CODIGO=$RUTA_MEMORIA/codigo/centralidad
 RUTA_DATOS=$RUTA_MEMORIA/datos/centralidad_de_intermediacion
 RUTA_DATOS_CSV=$RUTA_DATOS/csv
 RUTA_DATOS_CENTRALIDAD=$RUTA_DATOS/CdI
