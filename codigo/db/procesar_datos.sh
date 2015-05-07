@@ -18,7 +18,7 @@ FILTRAR_DATOS=false
 # Ruta de los directorios usados por el script
 RUTA_BACKUP=/home/cephei/Desktop/backup
 RUTA_MEMORIA=/home/cephei/Desktop/memoria
-RUTA_CODIGO=$RUTA_MEMORIA/codigo
+RUTA_CODIGO=$RUTA_MEMORIA/codigo/db
 ####################################################################################
 
 if [ "$GENERAR_BD_Y_CARGAR_DATOS" = true ]; then
