@@ -24,7 +24,7 @@ CONCATENAR_HORAS=false
 ####################################################################################
 # Ruta de los directorios usados por el script
 RUTA_MEMORIA=/home/cephei/Desktop/memoria
-RUTA_CODIGO=$RUTA_MEMORIA/codigo
+RUTA_CODIGO=$RUTA_MEMORIA/codigo/pagerank
 RUTA_DATOS=$RUTA_MEMORIA/datos/pagerank
 RUTA_DATOS_CSV=$RUTA_DATOS/csv
 RUTA_DATOS_PAJEK=$RUTA_DATOS/pajek
