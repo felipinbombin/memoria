@@ -16,7 +16,7 @@ CALCULAR_CENTRALIDAD_DE_INTERMEDIACION=false
 # genera un csv a partir del archivo de generado por el calculo de la centralidad para poder ser mostrado en la herramienta cartodb.com 
 GENERAR_CARTODB=false
 # concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en cartodb.com
-CONCATENAR_HORAS=true
+CONCATENAR_HORAS=false
 
 ####################################################################################
 # Ruta de los directorios usados por el script

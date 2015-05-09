@@ -26,9 +26,12 @@ if ($archivo_salida === false) {
 // Matriz origen-destino con todos los viajes por cada origen-destino
 $orig_dest = Array();
 
-// cargar matriz origen-destino
+// cargar matriz origen-destino. Cada elemento ij contiene un arreglo con todos los viajes realizados
+// con la respectiva cantidad de gente que lo hizo (factor de expansión)
 while (($linea = fgets($archivo_viajes)) !== false) {
+  // se quitan etapas no ocupadas en el viaje (puede tener 1, 2, 3 o 4).
   $linea = preg_replace('/;;+/i', ';', $linea); 
+  // el viaje se divide entre todos sus paraderos de subida y bajada formando un arreglo.
   $viaje = explode(';', $linea);
 
   $orig_dest[$viaje[0]][$viaje[count($viaje)-2]][] = $viaje;
@@ -48,8 +51,16 @@ foreach($orig_dest as $origen_id => $destinos) {
     $num_viajes = count($viajes);
 
     foreach($viajes as $viaje) {
+
+      $volumen = 1;//$viaje[count($viaje)-1];
+
+      // Recorremos cada paradero intermedio entre el origen y destino
       for($i=1;$i<(count($viaje)-2);$i++) {
-        $resultado[$viaje[$i]][$par_ij] = isset($resultado[$viaje[$i]][$par_ij])?floatval($resultado[$viaje[$i]][$par_ij]+$viaje[count($viaje)-1]/$num_viajes):floatval($viaje[count($viaje)-1]/$num_viajes);
+        if (isset($resultado[$viaje[$i]][$par_ij])) {
+          $resultado[$viaje[$i]][$par_ij] = floatval($resultado[$viaje[$i]][$par_ij] + $volumen/$num_viajes);
+        } else {
+          $resultado[$viaje[$i]][$par_ij] = floatval($volumen/$num_viajes);
+        }
       }
     }
   }
@@ -58,7 +69,7 @@ foreach($orig_dest as $origen_id => $destinos) {
 
 $resultado_map = Array();
 
-// sumar cada arreglo  con el indicador de cada para origen-destino
+// sumar cada arreglo  con el indicador de cada par origen-destino
 foreach($resultado as $paradero_id => $indicadores) {
   $resultado_map[$paradero_id] = array_sum($indicadores);
 }
