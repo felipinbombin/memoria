@@ -8,14 +8,14 @@ set -o errexit
 # como procedimientos 
 
 # crea los archivos csv usados para generar los archivos csv con los arcos y su peso.
-GENERAR_VIAJE_CSV=true
+GENERAR_VIAJE_CSV=false
 # crea el csv de paradas con toda su información (nombre, longitud, latitud, ...)
 GENERAR_CSV_PARADAS=false
 # convierte los archivos csv en formato pajek para generar ids, conocer cantidad de nodos y 
 # además obtener una secuenta de arcos codificada.
-GENERAR_PAJEK=true
-# calcula el pagerank para cada nodo del grafo por medio de la libraria igraph
-CALCULAR_PAGERANK=true
+GENERAR_PAJEK=false
+# calcula las propiedades para cada nodo del grafo por medio de la libraria igraph
+CALCULAR_PROPIEDADES_GRAFO=true
 # genera un csv a partir del archivo de generado por igraph para poder ser mostrado en la herramienta cartodb.com 
 GENERAR_CARTODB=true
 # concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en cartodb.com
@@ -24,8 +24,8 @@ CONCATENAR_HORAS=false
 ####################################################################################
 # Ruta de los directorios usados por el script
 RUTA_MEMORIA=/home/cephei/Desktop/memoria
-RUTA_CODIGO=$RUTA_MEMORIA/codigo/pagerank
-RUTA_DATOS=$RUTA_MEMORIA/datos/pagerank
+RUTA_CODIGO=$RUTA_MEMORIA/codigo/propiedades_grafo
+RUTA_DATOS=$RUTA_MEMORIA/datos/propiedades_grafo
 RUTA_DATOS_CSV=$RUTA_DATOS/csv
 RUTA_DATOS_PAJEK=$RUTA_DATOS/pajek
 RUTA_DATOS_IGRAPH=$RUTA_DATOS/igraph
@@ -244,7 +244,7 @@ if [ "$GENERAR_PAJEK" = true ]; then
   done
 fi
 
-if [ "$CALCULAR_PAGERANK" = true ]; then
+if [ "$CALCULAR_PROPIEDADES_GRAFO" = true ]; then
   ####################################################################################
   rm -f $RUTA_DATOS_IGRAPH/*.csv
 
@@ -252,13 +252,13 @@ if [ "$CALCULAR_PAGERANK" = true ]; then
   # Hay que agregar la línea 'include /usr/local/lib' en el archivo '/etc/ld.so.conf'
   # y luego cargar el archivo ejecutando el comando 'ldconfig'
   
-  NOMBRE_EJECUTABLE="calcular_pagerank"
+  NOMBRE_EJECUTABLE="calcular_propiedades_grafo"
     
   # Compilar código
-  gcc $RUTA_CODIGO/calcular_pagerank.c -I$RUTA_IGRAPH_H -L$RUTA_IGRAPH_LIB -ligraph -o $NOMBRE_EJECUTABLE
+  gcc $RUTA_CODIGO/calcular_propiedades_grafo.c -I$RUTA_IGRAPH_H -L$RUTA_IGRAPH_LIB -ligraph -o $NOMBRE_EJECUTABLE
 
   for ARCHIVO_PAJEK in $RUTA_DATOS_PAJEK/*.net; do
-    echo "CALCULAR PAGERANK: Procesando $ARCHIVO_PAJEK"
+    echo "CALCULAR PROPIEDADES: Procesando $ARCHIVO_PAJEK"
 
     NOMBRE_CSV=$(echo "$ARCHIVO_PAJEK" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
 
@@ -278,7 +278,7 @@ if [ "$GENERAR_CARTODB" = true ]; then
   for ARCHIVO_CSV in $RUTA_DATOS_IGRAPH/*.csv; do
     echo "GENERANDO CARTODB: Procesando $ARCHIVO_CSV"
     HORA=$(echo "$ARCHIVO_CSV" | cut -d '-' -f 1 | rev | cut -d '/' -f 1 | rev)
-    php $RUTA_CODIGO/pagerank2cartodb.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CARTODB/ $HORA
+    php $RUTA_CODIGO/propiedades2cartodb.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CARTODB/ $HORA
   done
 fi
 
