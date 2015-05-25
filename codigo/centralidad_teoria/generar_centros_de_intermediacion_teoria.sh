@@ -14,11 +14,11 @@ GENERAR_CSV_PARADAS=false
 # generar archivos pajek
 GENERAR_PAJEK=false
 # calcula la centralidad de intermediación  para cada nodo del grafo
-CALCULAR_CENTRALIDAD_DE_INTERMEDIACION_TEORICA=false
+CALCULAR_CENTRALIDAD_DE_INTERMEDIACION_TEORICA=true
 # genera un csv a partir del archivo de generado por el calculo de la centralidad para poder ser mostrado en la herramienta cartodb.com 
 GENERAR_CARTODB=true
 # concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en cartodb.com
-CONCATENAR_HORAS=true
+CONCATENAR_HORAS=false
 
 ####################################################################################
 # Ruta de los directorios usados por el script
@@ -142,7 +142,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
                     WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida)) = '2013-04-19' 
                     GROUP BY par_subida, par_bajada) 
-              To '$RUTA_DATOS_CSV_ETAPA/${TRAMO}_viernes_etapa.csv' WITH DELIMITER ';' CSV;"
+              To '$RUTA_DATOS_CSV_ETAPA/${TRAMO}_sabado_etapa.csv' WITH DELIMITER ';' CSV;"
                                                                                             
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
 
@@ -169,7 +169,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
                     WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida)) = '2013-04-20' 
                     GROUP BY par_subida, par_bajada) 
-              To '$RUTA_DATOS_CSV_ETAPA/${TRAMO}_viernes_etapa.csv' WITH DELIMITER ';' CSV;"
+              To '$RUTA_DATOS_CSV_ETAPA/${TRAMO}_domingo_etapa.csv' WITH DELIMITER ';' CSV;"
                                                                                             
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
 

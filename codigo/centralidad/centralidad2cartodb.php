@@ -47,7 +47,7 @@ if ($archivo_csv === false) {
 // se quita la primera linea y se agrega encabezado de csv
 $lineas = explode("\n", $contenido_csv);
 $lineas = array_slice($lineas, 1);
-$lineas = array_merge(array("Nombre latitud longitud".($hora==''?'':' hora')." centralidad"), $lineas);
+$lineas = array_merge(array("codigo,Nombre,latitud,longitud".($hora==''?'':',hora').",centralidad"), $lineas);
 $contenido_csv = implode("\n", $lineas);
 
 // se lee linea por linea
@@ -55,7 +55,7 @@ while (($linea = fgets($archivo_nombre_paraderos)) !== false) {
   $elementos = array_map("trim", split(";", $linea));
   
   $patron = '/"'.$elementos[0].'"/i';
-  $nuevo_texto = '"'.$elementos[1].'" '.$elementos[2].' '.$elementos[3].($hora==''?'':' '.$hora);
+  $nuevo_texto = '"'.$elementos[0].'","'.$elementos[1].'",'.$elementos[2].','.$elementos[3].($hora==''?'':','.$hora);
 
   $contenido_csv = preg_replace($patron, $nuevo_texto, $contenido_csv);
 }

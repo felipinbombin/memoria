@@ -12,9 +12,9 @@ GENERAR_VIAJE_CON_ETAPAS_CSV=false
 # crea el csv de paradas con toda su información (nombre, longitud, latitud, ...)
 GENERAR_CSV_PARADAS=false
 # calcula la centralidad de intermediación  para cada nodo del grafo
-CALCULAR_CENTRALIDAD_DE_INTERMEDIACION=false
+CALCULAR_CENTRALIDAD_DE_INTERMEDIACION=true
 # genera un csv a partir del archivo de generado por el calculo de la centralidad para poder ser mostrado en la herramienta cartodb.com 
-GENERAR_CARTODB=false
+GENERAR_CARTODB=true
 # concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en cartodb.com
 CONCATENAR_HORAS=false
 
@@ -38,7 +38,8 @@ chmod 775 -R $RUTA_DATOS
 # Estos deben tener la siguiente sintaxis XX-YY [XX-YY ...]
 # donde XX e YY son números enteros de dos dígitos en el rango [00-23]
 # y pueden ser iguales. Para concatenar varios tramos se usa el espacio. Ej: XX-YY ZZ-TT
-TRAMOS=(01-01 02-02 03-03 04-04 05-05 06-06 07-07 08-08 09-09 10-10 11-11 12-12 13-13 14-14 15-15 16-16 17-17 18-18 19-19 20-20 21-21 22-22 23-23 00-00 06-09 18-21)
+#TRAMOS=(01-01 02-02 03-03 04-04 05-05 06-06 07-07 08-08 09-09 10-10 11-11 12-12 13-13 14-14 15-15 16-16 17-17 18-18 19-19 20-20 21-21 22-22 23-23 00-00 06-09 18-21)
+TRAMOS=(06-09 18-21 00-23)
 
 # para filtrar por hora usar        : extract(hour from tiempo_subida)
 # para filtrar por fecha y hora usar: (date_trunc('hour', tiempo_subida))
@@ -61,7 +62,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
-
+<<comentario1
   # Hora para el tramo lunes-jueves (14-04-2013 al 17-04-2013)
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
@@ -129,7 +130,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
-
+comentario1
 fi
 
 NOMBRE_PARADAS_CSV="PARADAS.csv"
