@@ -15,7 +15,8 @@ int main(int argc, char *argv[])
 {
   igraph_t grafo;
   // Vector con el pagerank de cada nodo
-  igraph_vector_t resultado;
+  igraph_vector_t resultado_degree;
+  igraph_vector_t resultado_strength;
   igraph_real_t valor = 1;
   // Iterador
   long int i;
@@ -62,11 +63,18 @@ int main(int argc, char *argv[])
      igraph_vector_insert(&pesos, i, EAN(&grafo, STR(enames, 0), i));
   }
 
-  igraph_vector_init(&resultado, 0);
+  igraph_vector_init(&resultado_degree, 0);
+  igraph_vector_init(&resultado_strength, 0);
 
-  if(igraph_pagerank(&grafo, IGRAPH_PAGERANK_ALGO_PRPACK, 
-        &resultado, &valor, igraph_vss_all(), igraph_is_directed(&grafo), 0.85, &pesos, NULL) != 0) {
-    printf("ERROR: no se pudo calcular el pagerank.");
+  // IGRAPH_ALL: cuenta los arcos de entrada como de salida
+  if(igraph_degree(&grafo, &resultado_degree, igraph_vss_all(), IGRAPH_ALL, 0) != 0) {
+    printf("ERROR: no se pudo calcular el strength");
+    return 1;
+  }
+
+  // IGRAPH_ALL: la suma de todos los pesos de sus arcos incidentes (los arcos que llegan o salen del nodo)
+  if(igraph_strength(&grafo, &resultado_strength, igraph_vss_all(), IGRAPH_ALL, 0, &pesos) != 0) {
+    printf("ERROR: no se pudo calcular el strength");
     return 1;
   }
 
@@ -75,9 +83,9 @@ int main(int argc, char *argv[])
   //print_vector(&resultado, stdout);
   
   // Se imprime csv (id_paradero, pagerank)
-  printf("paradero_id pagerank\n");
+  printf("paradero_id degree strength\n");
   for (i=0; i<igraph_vcount(&grafo); i++) {
-    printf("\"%s\" %f\n", VAS(&grafo, STR(vnames,0), i), VECTOR(resultado)[i]);
+    printf("\"%s\" %f %f\n", VAS(&grafo, STR(vnames,0), i), VECTOR(resultado_degree)[i], VECTOR(resultado_strength)[i]);
   }
 
   igraph_strvector_destroy(&enames);
