@@ -19,7 +19,7 @@ COLORES=(
 "#C895C5" "#320033" "#FF6832" "#66E1D3" "#CFCDAC" )
 
 ID=1
-NOMBRE="comunidad_semana_viaje"
+NOMBRE="comunidades"
 for COLOR in ${COLORES[@]}; do
   echo "#$NOMBRE[_1er_nivel=$ID] {marker-fill: $COLOR;} "
   ID=$(( ID+1 ))
