@@ -63,7 +63,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
 <<comentario1
-  # Hora para el tramo lunes-jueves (14-04-2013 al 17-04-2013)
+  # Hora para el tramo lunes-jueves (15-04-2013 al 18-04-2013)
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
@@ -72,7 +72,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
                            SUM(factor_expansion) AS peso 
                     FROM viaje_util 
                     WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-14' AND '2013-04-17' 
+                          (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-15' AND '2013-04-18' 
                     GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                              par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
                     To '$RUTA_DATOS_CSV/${TRAMO}_lunes_a_jueves_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
@@ -80,24 +80,7 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
   
-  # Hora para el tramo viernes (18-04-2013)
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                           par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
-                           SUM(factor_expansion) AS peso 
-                    FROM viaje_util 
-                    WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida_1)) = '2013-04-18' 
-                    GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                             par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_viernes_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
-
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
-
-  # Hora para el tramo sábado (19-04-2013)
+  # Hora para el tramo viernes (19-04-2013)
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
@@ -109,12 +92,12 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
                           (date_trunc('day', tiempo_subida_1)) = '2013-04-19' 
                     GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                              par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_sabado_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
+                    To '$RUTA_DATOS_CSV/${TRAMO}_viernes_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
-  
-  # Hora para el tramo domingo (20-04-2013)
+
+  # Hora para el tramo sábado (20-04-2013)
   for TRAMO in ${TRAMOS[@]}; do
     CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
     HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
@@ -124,6 +107,23 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
                     FROM viaje_util 
                     WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
                           (date_trunc('day', tiempo_subida_1)) = '2013-04-20' 
+                    GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
+                             par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
+                    To '$RUTA_DATOS_CSV/${TRAMO}_sabado_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
+
+    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
+  done
+  
+  # Hora para el tramo domingo (21-04-2013)
+  for TRAMO in ${TRAMOS[@]}; do
+    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
+    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
+    CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
+                           par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
+                           SUM(factor_expansion) AS peso 
+                    FROM viaje_util 
+                    WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
+                          (date_trunc('day', tiempo_subida_1)) = '2013-04-21' 
                     GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
                              par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
                     To '$RUTA_DATOS_CSV/${TRAMO}_domingo_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
