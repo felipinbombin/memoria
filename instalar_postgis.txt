@@ -1,0 +1,30 @@
+
+Manual para instalar postgis en Debian 7: http://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS21Debian7src
+
+Procedimiento:
+  1- Instalar librerias requeridas: "sudo apt-get install build-essential postgresql-9.1 postgresql-server-dev-9.1 libxml2-dev libgdal-dev libproj-dev libjson0-dev xsltproc docbook-xsl docbook-mathml"
+  2- Instalar GEOS (Geometry Engine - Open Source is a C++ port of Java Topology Suite (JTS). As such, it aims to contain the complete functionality of JTS in C++. This includes all the OpenGIS Simple Features for SQL spatial predicate functions and spatial operators, as well as specific JTS enhanced topology functions) con el siguiente código:
+    wget http://download.osgeo.org/geos/geos-3.4.2.tar.bz2
+    tar xfj geos-3.4.2.tar.bz2
+    cd geos-3.4.2
+    ./configure
+    make
+    sudo make install
+    cd ..
+  3- Instalar POSTGIS:
+    wget http://download.osgeo.org/postgis/source/postgis-2.1.8.tar.gz
+    tar xfz postgis-2.1.8.tar.gz
+    cd postgis-2.1.8
+    ./configure
+    make
+    sudo make install
+    sudo ldconfig
+    sudo make comments-install
+  4- Permitir trabajar desde el shell:
+    sudo ln -sf /usr/share/postgresql-common/pg_wrapper /usr/local/bin/shp2pgsql
+    sudo ln -sf /usr/share/postgresql-common/pg_wrapper /usr/local/bin/pgsql2shp
+    sudo ln -sf /usr/share/postgresql-common/pg_wrapper /usr/local/bin/raster2pgsql
+  5- Activando características espaciales en una base de datos:
+    5.1- conectarse a la base de datos.
+    5.2- activar el modulo: CREATE EXTENSION postgis;
+    5.3- activar soporte topologico: CREATE EXTENSION postgis_topology;
