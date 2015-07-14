@@ -101,10 +101,15 @@ if [ "$GENERAR_COMUNIDADES" = true ]; then
 
     # -i 'pajek'   Indica el formato de archivo de entrada
     # --two-level  Optimiza una partición de dos niveles de la red
-    # -d           Asume que los arcos tienen dirección
+    # --directed   Asume que los arcos tienen dirección
     # --zero-based Considera que la enumeración de los indices comienza desde cero.
-    # --code-rate cantidad de pasos que realiza el peatón antes de ser codificada su acción.
-    $RUTA_INFOMAP/Infomap --code-rate 1 -i 'pajek' --two-level -d "$ARCHIVO_NET" "$RUTA_DATOS_INFOMAP"
+    # --code-rate  Cantidad de pasos que realiza el peatón antes de ser codificada su acción.
+    # --undirdir   Considera la red sin dirección para definir el flujo y con dirección para minimizar el código de descripción de éste.
+    # --include-self-links -k incluye arcos con mismo origen y destino
+    # --num-trials número de calculos de optimización, retorna la mejor.
+    $RUTA_INFOMAP/Infomap -i 'pajek' --two-level --code-rate 1.261595 --num-trials 10000 --directed --undirdir "$ARCHIVO_NET" "$RUTA_DATOS_INFOMAP"
+    # 44 comunidades
+    #$RUTA_INFOMAP/Infomap -i 'pajek' --two-level --code-rate 1.261595 -num-trials 3 --directed --undirdir "$ARCHIVO_NET" "$RUTA_DATOS_INFOMAP"
   done 
 fi
 
@@ -117,6 +122,9 @@ if [ "$GENERAR_CARTODB" = true ]; then
 
     php $RUTA_CODIGO/tree2cartodb.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_TREE $RUTA_DATOS_CARTODB/ 
   done
+
+  # se copian los archivos resultantes en la carpeta que se conparte con windows para ver los por qgis
+  cp -r $RUTA_DATOS_CARTODB/*.csv /home/cephei/Desktop/
 fi
 
 # cambiamos el dueño de los archivos para poder verlos en el entorno de escritorio

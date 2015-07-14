@@ -2,7 +2,7 @@
 // convierte un archivo .csv (paradero_id pagerank) a un csv para ser mostrado en cartodb.
 
 if ($argc < 3) {
-  echo "USO: php pagerank2cartodb.php <ruta archivo nombre paraderos> <ruta archivo csv> <ruta archivo salida> <hora datos>".PHP_EOL;
+  echo "USO: php propiedades2cartodb.php <ruta archivo nombre paraderos> <ruta archivo csv> <ruta archivo salida> <hora datos>".PHP_EOL;
   exit(1);
 }
 
@@ -47,7 +47,7 @@ if ($archivo_csv === false) {
 // se quita la primera linea y se agrega encabezado de csv
 $lineas = explode("\n", $contenido_csv);
 $lineas = array_slice($lineas, 1);
-$lineas = array_merge(array("Nombre latitud longitud".($hora==''?'':' hora')." pagerank"), $lineas);
+$lineas = array_merge(array("Nombre latitud longitud".($hora==''?'':' hora')." degree_all degree_in degree_out strength_in strength_out"), $lineas);
 $contenido_csv = implode("\n", $lineas);
 
 // se lee linea por linea
