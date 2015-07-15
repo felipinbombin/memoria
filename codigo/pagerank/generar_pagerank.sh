@@ -8,12 +8,12 @@ set -o errexit
 # como procedimientos 
 
 # crea los archivos csv usados para generar los archivos csv con los arcos y su peso.
-GENERAR_VIAJE_CSV=true
+GENERAR_VIAJE_CSV=false
 # crea el csv de paradas con toda su información (nombre, longitud, latitud, ...)
 GENERAR_CSV_PARADAS=false
 # convierte los archivos csv en formato pajek para generar ids, conocer cantidad de nodos y 
 # además obtener una secuenta de arcos codificada.
-GENERAR_PAJEK=true
+GENERAR_PAJEK=false
 # calcula el pagerank para cada nodo del grafo por medio de la libraria igraph
 CALCULAR_PAGERANK=true
 # genera un csv a partir del archivo de generado por igraph para poder ser mostrado en la herramienta cartodb.com 
