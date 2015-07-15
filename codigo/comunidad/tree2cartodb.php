@@ -47,7 +47,7 @@ if ($archivo_tree === false) {
 // se quita la primera linea y se agrega encabezado de csv
 $lineas = explode("\n", $contenido_tree);
 $lineas = array_slice($lineas, 1);
-$lineas = array_merge(array("1er_nivel 2do_nivel PageRank Nombre latitud longitud".($hora==''?'':' hora')), $lineas);
+$lineas = array_merge(array("1er_nivel 2do_nivel PageRank Nombre latitud longitud".($hora==''?'':' hora')." id_nodo_pajek"), $lineas);
 $contenido_tree = implode("\n", $lineas);
 
 // se reemplaza el : por un espacio para que el archivo cumpla con el estandar csv
@@ -56,8 +56,8 @@ $contenido_tree = str_replace(':', ' ', $contenido_tree);
 // se lee linea por linea
 while (($linea = fgets($archivo_nombre_paraderos)) !== false) {
   $elementos = array_map("trim", split(";", $linea));
-  $patron = '/"'.$elementos[0].'" [0-9]*/i';
-  $nuevo_texto = '"'.$elementos[1].'" '.$elementos[2].' '.$elementos[3].' '.$hora;
+  $patron = '/"'.$elementos[0].'" /i';
+  $nuevo_texto = '"'.$elementos[1].'" '.$elementos[2].' '.$elementos[3].($hora==''?'':" $hora").' ';
 
   $contenido_tree = preg_replace($patron, $nuevo_texto, $contenido_tree);
 }

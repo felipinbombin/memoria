@@ -14,7 +14,7 @@ GENERAR_PAJEK=false
 # crea el csv de paradas con toda su información (nombre, longitud, latitud, ...)
 GENERAR_CSV_PARADAS=false
 # genera las comunidades en dos niveles, por medio del framework infomap
-GENERAR_COMUNIDADES=true
+GENERAR_COMUNIDADES=false
 # genera un csv a partir del archivo de comunidades para poder ser mostrado en la herramienta cartodb.com 
 GENERAR_CARTODB=true
 
