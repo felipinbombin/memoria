@@ -32,3 +32,4 @@ Procedimiento:
 OTROS:
   - cargar shapefile en base de datos: http://suite.opengeo.org/4.1/dataadmin/pgGettingStarted/shp2pgsql.html
   - subir shapefile eod2012 a postgis "sudo -u postgres -i shp2pgsql -I -s 4326 /home/cephei/Desktop/eod2012/zonificacion_eod2012.shp eod2012 | sudo -u postgres -i psql -d memoria"
+  - importar csv con campos latitud y longitud: http://www.kevfoo.com/2012/01/Importing-CSV-to-PostGIS/

@@ -15,17 +15,18 @@ CARGAR_NODOS_CON_ZONA=false
 CALCULAR_ZONA=false
 # genera un csv con dos columnas, una contiene el id del nodo en el pajek y el otro la zona eod2012 que la intersecta.
 GENERAR_PAR_NODO_ZONA=false
-# calcula el pagerank para cada nodo del grafo por medio de la libraria igraph y asigna una comunidad a cada zona. 
-# Crea una archivo sql con la asignación.
+# calcula el pagerank para cada nodo del grafo por medio de la libraria igraph. Crea una archivo sql con la asignación.
 CALCULAR_PAGERANK=false
+# Asigna la comunidad a cada zona.
+ASIGNAR_COMUNIDAD_A_ZONA=false
 # Crea una columna en la tabla eod2012 para asignar la comunidad, lo anterior usando el script generado en el paso anterior.
 ASIGNAR_COMUNIDAD_A_SHAPEFILE=true
 
 ####################################################################################
 # Ruta de los directorios usados por el script
 RUTA_MEMORIA=/home/cephei/Desktop/memoria
-RUTA_CODIGO=$RUTA_MEMORIA/codigo/asignar_comunidad_por_zona
-RUTA_DATOS=$RUTA_MEMORIA/datos/asignar_comunidad_por_zona
+RUTA_CODIGO=$RUTA_MEMORIA/codigo/asignar_comunidad_por_zona2
+RUTA_DATOS=$RUTA_MEMORIA/datos/asignar_comunidad_por_zona2
 RUTA_DATOS_CSV=$RUTA_DATOS/csv
 RUTA_DATOS_PAJEK=$RUTA_DATOS/pajek
 RUTA_DATOS_SQL=$RUTA_DATOS/sql
@@ -94,7 +95,6 @@ fi
 
 if [ "$CALCULAR_PAGERANK" = true ]; then
   ####################################################################################
-  rm -f $RUTA_DATOS_SQL/*.sql
 
   # IMPORTANTE: si no encuentra lib en share files al compilar hacer lo siguiente
   # Hay que agregar la línea 'include /usr/local/lib' en el archivo '/etc/ld.so.conf'
@@ -111,7 +111,34 @@ if [ "$CALCULAR_PAGERANK" = true ]; then
     NOMBRE_CSV=$(echo "$ARCHIVO_PAJEK" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
 
     # Ejecutar código
-    $RUTA_CODIGO/$NOMBRE_EJECUTABLE $ARCHIVO_PAJEK $RUTA_DATOS_CSV/par_nodo_zona.csv > $RUTA_DATOS_SQL/$NOMBRE_CSV.sql
+    $RUTA_CODIGO/$NOMBRE_EJECUTABLE $ARCHIVO_PAJEK $RUTA_DATOS_CSV/par_nodo_zona.csv > $RUTA_DATOS_CSV/par_nodo_zona_comunidad.csv
+
+  done 
+
+  # se elimina ejecutable
+  rm -f $RUTA_CODIGO/$NOMBRE_EJECUTABLE
+fi
+
+if [ "$ASIGNAR_COMUNIDAD_A_ZONA" = true ]; then
+  ####################################################################################
+  rm -f $RUTA_DATOS_SQL/*.sql
+
+  # IMPORTANTE: si no encuentra lib en share files al compilar hacer lo siguiente
+  # Hay que agregar la línea 'include /usr/local/lib' en el archivo '/etc/ld.so.conf'
+  # y luego cargar el archivo ejecutando el comando 'ldconfig'
+
+  NOMBRE_EJECUTABLE="asignar_comunidad_a_zona"
+
+  # Compilar código
+  gcc $RUTA_CODIGO/$NOMBRE_EJECUTABLE.c -I$RUTA_IGRAPH_H -L$RUTA_IGRAPH_LIB -ligraph -o $NOMBRE_EJECUTABLE
+
+  for ARCHIVO_PAJEK in $RUTA_DATOS_PAJEK/*.net; do
+    echo "ASIGNAR COMUNIDAD A ZONA: Procesando $ARCHIVO_PAJEK"
+
+    NOMBRE_CSV=$(echo "$ARCHIVO_PAJEK" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
+    
+    # Ejecutar código
+    $RUTA_CODIGO/$NOMBRE_EJECUTABLE $ARCHIVO_PAJEK $RUTA_DATOS_CSV/par_nodo_zona_comunidad.csv > $RUTA_DATOS_SQL/$NOMBRE_CSV.sql
 
   done 
 
@@ -123,8 +150,8 @@ if [ "$ASIGNAR_COMUNIDAD_A_SHAPEFILE" = true ]; then
   ####################################################################################
   rm -f -R $RUTA_DATOS_SHAPE/*.csv
 
-  sudo -u postgres -i psql -d memoria -c "ALTER TABLE eod2012 DROP COLUMN IF EXISTS comunidad_id"
-  sudo -u postgres -i psql -d memoria -c "ALTER TABLE eod2012 ADD COLUMN comunidad_id INTEGER NOT NULL DEFAULT -1"
+  sudo -u postgres -i psql -d memoria -c "ALTER TABLE eod2012 DROP COLUMN IF EXISTS comunidad_id2"
+  sudo -u postgres -i psql -d memoria -c "ALTER TABLE eod2012 ADD COLUMN comunidad_id2 INTEGER NOT NULL DEFAULT -1"
 
   for ARCHIVO_SQL in $RUTA_DATOS_SQL/*.sql; do
     echo "ACTUALIZANDO SHAPE EOD2012: Procesando $ARCHIVO_SQL"
@@ -132,7 +159,7 @@ if [ "$ASIGNAR_COMUNIDAD_A_SHAPEFILE" = true ]; then
     sudo -u postgres -i psql -d memoria -f $ARCHIVO_SQL
   done
 
-  sudo -u postgres -i pgsql2shp -f $RUTA_DATOS_SHAPE/zona_con_comunidad memoria "SELECT zona, comuna, area, comunidad_id, geom FROM eod2012"
+  sudo -u postgres -i pgsql2shp -f $RUTA_DATOS_SHAPE/zona_con_comunidad2 memoria "SELECT zona, comuna, area, comunidad_id2, geom FROM eod2012"
 fi
 
 # cambiamos el dueño de los archivos para poder verlos en el entorno de escritorio
