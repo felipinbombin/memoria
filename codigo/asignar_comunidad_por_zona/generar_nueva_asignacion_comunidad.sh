@@ -17,7 +17,7 @@ CALCULAR_ZONA=false
 GENERAR_PAR_NODO_ZONA=false
 # calcula el pagerank para cada nodo del grafo por medio de la libraria igraph y asigna una comunidad a cada zona. 
 # Crea una archivo sql con la asignación.
-CALCULAR_PAGERANK=false
+CALCULAR_PAGERANK=true
 # Crea una columna en la tabla eod2012 para asignar la comunidad, lo anterior usando el script generado en el paso anterior.
 ASIGNAR_COMUNIDAD_A_SHAPEFILE=true
 

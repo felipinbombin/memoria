@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
   FILE *archivo_pajek;
   FILE *archivo_zonas;
 
-  igraph_vector_t gtypes, vtypes, etypes;
-  igraph_strvector_t gnames, vnames, enames;
+  igraph_vector_t vtypes;
+  igraph_strvector_t vnames;
   
   long indice_max_pagerank_local;
 
@@ -149,6 +149,7 @@ int main(int argc, char *argv[])
    ****************************************************************/
   fprintf(stderr, "La matriz y el grafo han sido formados exitosamente.\n");
 
+  // por cada zona
   for (i=0; i<filas; i++) {
     
     igraph_vector_init(&resultado_pagerank, 0);
@@ -161,14 +162,10 @@ int main(int argc, char *argv[])
     igraph_induced_subgraph(&grafo, &subgrafo, igraph_vss_vector(&nodos_de_zona), IGRAPH_SUBGRAPH_AUTO);
     
     // Obtener vector de atributos
-    igraph_vector_init(&gtypes, 0);
     igraph_vector_init(&vtypes, 0);
-    igraph_vector_init(&etypes, 0);
-    igraph_strvector_init(&gnames, 0);
     igraph_strvector_init(&vnames, 0);
-    igraph_strvector_init(&enames, 0);
 
-    igraph_cattribute_list(&subgrafo, &gnames, &gtypes, &vnames, &vtypes, &enames, &etypes);
+    igraph_cattribute_list(&subgrafo, 0, 0, &vnames, &vtypes, 0, 0);
     
     for (j=0; j<igraph_ecount(&subgrafo); j++) {
       igraph_vector_insert(&pesos, j, EAN(&subgrafo, "weight", j));
@@ -181,30 +178,47 @@ int main(int argc, char *argv[])
       printf("ERROR: no se pudo calcular el pagerank.");
       return(-1);
     }
-    
-    // Obtener nodo con maximo pagerank 
-    indice_max_pagerank_local = igraph_vector_which_max(&resultado_pagerank);
+
+    // si la zona no contiene nodos 
+    if (igraph_vector_size(&resultado_pagerank) == 0) {
+      comunidad_id = -1;
+    } else {
+      // tomamos el máximo pagerank que pertenezca a alguna de las comunidades mas significativa.
+      for (j=0; j<igraph_vector_size(&resultado_pagerank); j++) {
+        // Obtener nodo con maximo pagerank 
+        indice_max_pagerank_local = igraph_vector_which_max(&resultado_pagerank);
+        
+        if (i+1 == 176) {
+          fprintf(stderr, "N° nodos: %d |valor del indice de la zona 176: %d | comunidad_id: ", igraph_vector_size(&resultado_pagerank), indice_max_pagerank_local);
+          igraph_real_fprintf(stderr, VAN(&subgrafo, "comunidad_id", indice_max_pagerank_local));
+          fprintf(stderr, "\n");
+        }
+
+        comunidad_id = VAN(&subgrafo, "comunidad_id", indice_max_pagerank_local);
+
+        if (comunidad_id == 2 || comunidad_id == 3 || comunidad_id == 4 || comunidad_id == 5 ||
+            comunidad_id == 6 || comunidad_id == 7 || comunidad_id == 8 || comunidad_id == 9 ||
+            comunidad_id == 10 || comunidad_id == 11) {
+          break;
+        } else {
+          // si no pertenece, buscar el segundo máximo.
+          VECTOR(resultado_pagerank)[indice_max_pagerank_local] = -1;
+          comunidad_id = -1;
+        }
+      }
+    }
     // obtenemos su comunidad_id e imprimir una consulta sql para actualizar el campo en la tabla que contiene
     // los datos de la eod2012
     fprintf(stdout, "UPDATE eod2012 SET comunidad_id = "); 
-    
-    if (indice_max_pagerank_local != -1)
-      igraph_real_fprintf(stdout, VAN(&subgrafo, "comunidad_id", indice_max_pagerank_local));
-    else
+
+    if (indice_max_pagerank_local != -1) {
+      igraph_real_fprintf(stdout, comunidad_id);
+    } else {
       fprintf(stdout, " -1");
+    }
 
     fprintf(stdout, " WHERE zona = %d;\n", i + 1); 
-    
-    /*
-    // Se imprime csv (id_paradero, comunidad_id, pagerank)
-    printf("paradero_id comunidad_id pagerank\n");
-    for (j=0; j<igraph_vcount(&subgrafo); j++) {      
-      fprintf(stderr, "\"%s\" ", VAS(&subgrafo, STR(vnames,0), j)); 
-      igraph_real_fprintf(stderr, VAN(&subgrafo, "comunidad_id", j));
-      fprintf(stderr," ");
-      fprintf(stderr, "%f\n", VECTOR(resultado_pagerank)[j]);
-    }
-    */
+
     //printf("El grafo tiene %d vertices y %d arcos\n", igraph_vcount(&grafo), igraph_ecount(&grafo));
     //printf("cantidad de pagerank: %d", igraph_vector_size(&resultado));
     //print_vector(&resultado, stdout);
@@ -215,12 +229,9 @@ int main(int argc, char *argv[])
     igraph_vector_destroy(&nodos_de_zona);
     igraph_vector_destroy(&pesos);
 
-    igraph_strvector_destroy(&enames);
     igraph_strvector_destroy(&vnames);
-    igraph_strvector_destroy(&gnames);
-    igraph_vector_destroy(&etypes);
     igraph_vector_destroy(&vtypes);
-    igraph_vector_destroy(&gtypes);
+
   }
 
   igraph_destroy(&grafo);
