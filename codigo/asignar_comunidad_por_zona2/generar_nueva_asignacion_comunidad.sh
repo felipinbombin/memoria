@@ -16,9 +16,9 @@ CALCULAR_ZONA=false
 # genera un csv con dos columnas, una contiene el id del nodo en el pajek y el otro la zona eod2012 que la intersecta.
 GENERAR_PAR_NODO_ZONA=false
 # calcula el pagerank para cada nodo del grafo por medio de la libraria igraph. Crea una archivo sql con la asignación.
-CALCULAR_PAGERANK=false
+CALCULAR_PAGERANK=true
 # Asigna la comunidad a cada zona.
-ASIGNAR_COMUNIDAD_A_ZONA=false
+ASIGNAR_COMUNIDAD_A_ZONA=true
 # Crea una columna en la tabla eod2012 para asignar la comunidad, lo anterior usando el script generado en el paso anterior.
 ASIGNAR_COMUNIDAD_A_SHAPEFILE=true
 
@@ -106,7 +106,7 @@ if [ "$CALCULAR_PAGERANK" = true ]; then
   gcc $RUTA_CODIGO/calcular_pagerank.c -I$RUTA_IGRAPH_H -L$RUTA_IGRAPH_LIB -ligraph -o $NOMBRE_EJECUTABLE
 
   for ARCHIVO_PAJEK in $RUTA_DATOS_PAJEK/*.net; do
-    echo "CALCULAR PAGERANK POR ZONA: Procesando $ARCHIVO_PAJEK"
+    echo "CALCULAR PAGERANK POR COMUNIDAD: Procesando $ARCHIVO_PAJEK"
 
     NOMBRE_CSV=$(echo "$ARCHIVO_PAJEK" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
 

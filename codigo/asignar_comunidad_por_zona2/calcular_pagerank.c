@@ -71,10 +71,11 @@ int main(int argc, char *argv[])
   // Archivo pajek de la red completa. Lo importante es que contiene el grafo completo de la red.
   FILE *archivo_pajek;
   FILE *archivo_zonas;
+  FILE *salida;
 
-  igraph_vector_t gtypes, vtypes, etypes;
-  igraph_strvector_t gnames, vnames, enames;
-  
+  igraph_vector_t vtypes;
+  igraph_strvector_t vnames;
+
   long indice_max_pagerank_local;
 
   /****************************************************************
@@ -93,7 +94,7 @@ int main(int argc, char *argv[])
   // Se abren los archivos, "rt" significa abrir un archivo para leer texto.
   archivo_pajek= fopen(argv[1], "rt");
   archivo_zonas= fopen(argv[2], "rt");// nodo_id comienza desde cero.
-  
+
   if(archivo_pajek == NULL) 
   {
     perror("Error al abrir archivo pajek.");
@@ -149,13 +150,16 @@ int main(int argc, char *argv[])
   fclose(archivo_pajek);
   fclose(archivo_zonas);
 
+  // salida del csv, con stderr se muestra en la consola
+  salida = stdout;
+
   /****************************************************************
    * Procedimiento                                                *
    ****************************************************************/
   fprintf(stderr, "La matriz y el grafo han sido formados exitosamente.\n");
 
   // Se imprime csv (nodo_id, comunidad_id, zona_id, pagerank)
-  fprintf(stdout, "nodo_id comunidad_id zona_id pagerank_por_comunidad\n");
+  fprintf(salida, "nodo_id comunidad_id zona_id pagerank_por_comunidad\n");
 
   // por cada comunidad
   for (i=0; i<filas; i++) {
@@ -170,14 +174,10 @@ int main(int argc, char *argv[])
     igraph_induced_subgraph(&grafo, &subgrafo, igraph_vss_vector(&nodos_de_zona), IGRAPH_SUBGRAPH_AUTO);
 
     // Obtener vector de atributos
-    igraph_vector_init(&gtypes, 0);
     igraph_vector_init(&vtypes, 0);
-    igraph_vector_init(&etypes, 0);
-    igraph_strvector_init(&gnames, 0);
     igraph_strvector_init(&vnames, 0);
-    igraph_strvector_init(&enames, 0);
 
-    igraph_cattribute_list(&subgrafo, &gnames, &gtypes, &vnames, &vtypes, &enames, &etypes);
+    igraph_cattribute_list(&subgrafo, 0, 0, &vnames, &vtypes, 0, 0);
 
     for (j=0; j<igraph_ecount(&subgrafo); j++) {
       igraph_vector_insert(&pesos, j, EAN(&subgrafo, "weight", j));
@@ -192,18 +192,22 @@ int main(int argc, char *argv[])
     }
 
     for (j=0; j<igraph_vcount(&subgrafo); j++) {      
-      igraph_real_fprintf(stdout, VAN(&subgrafo, "nodo_id_grafo_original", j)); 
-      fprintf(stdout,";");
-      igraph_real_fprintf(stdout, VAN(&subgrafo, "comunidad_id", j));
-      fprintf(stdout,";");
-      igraph_real_fprintf(stdout, VAN(&subgrafo, "zona_id", j));
-      fprintf(stdout,";");
-      fprintf(stdout, "%f\n", VECTOR(resultado_pagerank)[j]);
+      igraph_real_fprintf(salida, VAN(&subgrafo, "nodo_id_grafo_original", j)); 
+      fprintf(salida,";");
+      igraph_real_fprintf(salida, VAN(&subgrafo, "comunidad_id", j));
+      fprintf(salida,";");
+      igraph_real_fprintf(salida, VAN(&subgrafo, "zona_id", j));
+      fprintf(salida,";");
+      // si la comunidad es la {2,3,4,5,6,7,8,9,10,11} se imprime su pagerank, ya que son
+      // las comunidades significativas, el resto es cero.
+      if (i+1 == 2 || i+1 == 3 || i+1 == 4 || i+1 == 5 || i+1 == 6 ||
+          i+1 == 7 || i+1 == 8 || i+1 == 9 || i+1 == 10 || i+1 == 11) {
+        igraph_real_fprintf(salida, VECTOR(resultado_pagerank)[j]);
+      } else {
+        igraph_real_fprintf(salida, 0);
+      }
+      fprintf(salida, "\n");
     }
-
-    //printf("El grafo tiene %d vertices y %d arcos\n", igraph_vcount(&grafo), igraph_ecount(&grafo));
-    //printf("cantidad de pagerank: %d", igraph_vector_size(&resultado));
-    //print_vector(&resultado, stdout);
 
     igraph_destroy(&subgrafo);
 
@@ -211,12 +215,8 @@ int main(int argc, char *argv[])
     igraph_vector_destroy(&nodos_de_zona);
     igraph_vector_destroy(&pesos);
 
-    igraph_strvector_destroy(&enames);
     igraph_strvector_destroy(&vnames);
-    igraph_strvector_destroy(&gnames);
-    igraph_vector_destroy(&etypes);
     igraph_vector_destroy(&vtypes);
-    igraph_vector_destroy(&gtypes);
   }
 
   igraph_destroy(&grafo);

@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  // se ignora la primera línea
+  // se ignora la primera línea. Es el encabezado
   fgets(linea, 1024, archivo_zonas);
 
   // Llenado de la matriz.
@@ -182,10 +182,16 @@ int main(int argc, char *argv[])
     indice_max_pagerank_local = igraph_vector_which_max(&resultado_pagerank);
 
     fprintf(stdout, "UPDATE eod2012 SET comunidad_id2 = ");
-    if (indice_max_pagerank_local != -1)
+    // si la comunidad es la {2,3,4,5,6,7,8,9,10,11} se imprime su pagerank, ya que son
+    // las comunidades significativas, el resto es cero.
+    comunidad_id = VAN(&subgrafo, "comunidad_id", indice_max_pagerank_local);
+    if (indice_max_pagerank_local != -1 && 
+       (comunidad_id == 2 || comunidad_id == 3 || comunidad_id == 4 || comunidad_id == 5 || comunidad_id == 6 ||
+        comunidad_id == 7 || comunidad_id == 8 || comunidad_id == 9 || comunidad_id == 10 || comunidad_id == 11)) {
       igraph_real_fprintf(stdout, VAN(&subgrafo, "comunidad_id", indice_max_pagerank_local));
-    else
+    } else {
       fprintf(stdout, " -1");
+    }
     fprintf(stdout, " WHERE zona = %d;\n", i + 1);
 
     igraph_destroy(&subgrafo);
