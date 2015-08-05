@@ -20,6 +20,10 @@ int main(int argc, char *argv[])
   igraph_vector_t resultado_degree_out;
   igraph_vector_t resultado_strength_in;
   igraph_vector_t resultado_strength_out;
+  igraph_vector_t resultado_closeness_all;
+  igraph_vector_t resultado_closeness_in;
+  igraph_vector_t resultado_closeness_out;
+
   igraph_real_t valor = 1;
   // Iterador
   long int i;
@@ -71,6 +75,9 @@ int main(int argc, char *argv[])
   igraph_vector_init(&resultado_degree_out, 0);
   igraph_vector_init(&resultado_strength_in, 0);
   igraph_vector_init(&resultado_strength_out, 0);
+  igraph_vector_init(&resultado_closeness_all, 0);
+  igraph_vector_init(&resultado_closeness_in, 0);
+  igraph_vector_init(&resultado_closeness_out, 0);
 
   // IGRAPH_ALL: cuenta los arcos de entrada como de salida.
   // IGRAPH_OUT: suma el peso de los arcos de salida de un nodo.
@@ -100,20 +107,39 @@ int main(int argc, char *argv[])
     printf("ERROR: no se pudo calcular el strength_out");
     return 1;
   }
+
+  if(igraph_closeness(&grafo, &resultado_closeness_all, igraph_vss_all(), IGRAPH_ALL, &pesos, 1) != 0) {
+    printf("ERROR: no se pudo calcular el closeness_all");
+    return 1;
+  }
+
+  if(igraph_closeness(&grafo, &resultado_closeness_in, igraph_vss_all(), IGRAPH_IN, &pesos, 1) != 0) {
+    printf("ERROR: no se pudo calcular el closeness_in");
+    return 1;
+  }
+
+  if(igraph_closeness(&grafo, &resultado_closeness_out, igraph_vss_all(), IGRAPH_OUT, &pesos, 1) != 0) {
+    printf("ERROR: no se pudo calcular el closeness_out");
+    return 1;
+  }
+
   //printf("El grafo tiene %d vertices y %d arcos\n", igraph_vcount(&grafo), igraph_ecount(&grafo));
   //printf("cantidad de pagerank: %d", igraph_vector_size(&resultado));
   //print_vector(&resultado, stdout);
   
   // Se imprime csv (id_paradero, pagerank)
-  printf("paradero_id degree_all degree_in degree_out strength_in stregth_out\n");
+  printf("paradero_id degree_all degree_in degree_out strength_in stregth_out closeness_all closeness_in closeness_out\n");
   for (i=0; i<igraph_vcount(&grafo); i++) {
-    printf("\"%s\" %f %f %f %f %f\n", 
+    printf("\"%s\" %f %f %f %f %f %f %f %f\n", 
         VAS(&grafo, STR(vnames,0), i), 
         VECTOR(resultado_degree_all)[i], 
         VECTOR(resultado_degree_in)[i], 
         VECTOR(resultado_degree_out)[i], 
         VECTOR(resultado_strength_in)[i],
-        VECTOR(resultado_strength_out)[i]);
+        VECTOR(resultado_strength_out)[i],
+        VECTOR(resultado_closeness_all)[i],
+        VECTOR(resultado_closeness_in)[i],
+        VECTOR(resultado_closeness_out)[i]);
   }
 
   igraph_strvector_destroy(&enames);

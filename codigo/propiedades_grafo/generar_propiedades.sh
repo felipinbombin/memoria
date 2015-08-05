@@ -18,8 +18,6 @@ GENERAR_PAJEK=false
 CALCULAR_PROPIEDADES_GRAFO=true
 # genera un csv a partir del archivo de generado por igraph para poder ser mostrado en la herramienta cartodb.com 
 GENERAR_CARTODB=true
-# concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en cartodb.com
-CONCATENAR_HORAS=false
 
 ####################################################################################
 # Ruta de los directorios usados por el script
@@ -52,7 +50,6 @@ TRAMOS=(06-09 18-21 00-23)
 # para diltrar por fecha usar       : (date_trunc('day', tiempo_subida))
 
 if [ "$GENERAR_VIAJE_CSV" = true ]; then
-  ####################################################################################
   rm -f $RUTA_DATOS_CSV/*.csv
 
   # CALCULO POR HORA DE LA SEMANA COMPLETA
@@ -83,143 +80,6 @@ if [ "$GENERAR_VIAJE_CSV" = true ]; then
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
-<<COMENTARIO1
-  # Hora para el tramo lunes-jueves (15-04-2013 al 18-04-2013)
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso 
-                    FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso 
-                          FROM viaje_util 
-                          WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-15' AND '2013-04-18' 
-                          GROUP BY par_subida_1, par_bajada_1  
-                          UNION 
-                          SELECT par_subida_1, par_bajada_2, SUM(factor_expansion) AS peso 
-                          FROM viaje_util 
-                          WHERE netapa=2 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-15' AND '2013-04-18' 
-                          GROUP BY par_subida_1, par_bajada_2 
-                          UNION 
-                          SELECT par_subida_1, par_bajada_3, SUM(factor_expansion) AS peso   
-                          FROM viaje_util 
-                          WHERE netapa=3 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-15' AND '2013-04-18'  
-                          GROUP BY par_subida_1, par_bajada_3 
-                          UNION 
-                          SELECT par_subida_1, par_bajada_4, SUM(factor_expansion) AS peso   
-                          FROM viaje_util 
-                          WHERE netapa=4 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-15' AND '2013-04-18'  
-                          GROUP BY par_subida_1, par_bajada_4) AS viaje 
-                    GROUP BY par_subida, par_bajada) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_lunes_a_jueves_viaje.csv' WITH DELIMITER ';' CSV;"
-
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
-  
-  # Hora para el tramo viernes (19-04-2013)
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso 
-                    FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso 
-                          FROM viaje_util 
-                          WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-19' 
-                          GROUP BY par_subida_1, par_bajada_1  
-                          UNION 
-                          SELECT par_subida_1, par_bajada_2, SUM(factor_expansion) AS peso 
-                          FROM viaje_util 
-                          WHERE netapa=2 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-19' 
-                          GROUP BY par_subida_1, par_bajada_2 
-                          UNION 
-                          SELECT par_subida_1, par_bajada_3, SUM(factor_expansion) AS peso   
-                          FROM viaje_util 
-                          WHERE netapa=3 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-19'  
-                          GROUP BY par_subida_1, par_bajada_3 
-                          UNION 
-                          SELECT par_subida_1, par_bajada_4, SUM(factor_expansion) AS peso   
-                          FROM viaje_util 
-                          WHERE netapa=4 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-19'  
-                          GROUP BY par_subida_1, par_bajada_4) AS viaje 
-                    GROUP BY par_subida, par_bajada) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_viernes_viaje.csv' WITH DELIMITER ';' CSV;"
-
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
-
-  # Hora para el tramo sábado (20-04-2013)
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso  
-                    FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso 
-                          FROM viaje_util 
-                          WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-20' 
-                          GROUP BY par_subida_1, par_bajada_1  
-                          UNION 
-                          SELECT par_subida_1, par_bajada_2, SUM(factor_expansion) AS peso 
-                          FROM viaje_util 
-                          WHERE netapa=2 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-20' 
-                          GROUP BY par_subida_1, par_bajada_2 
-                          UNION 
-                          SELECT par_subida_1, par_bajada_3, SUM(factor_expansion) AS peso   
-                          FROM viaje_util 
-                          WHERE netapa=3 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-20'  
-                          GROUP BY par_subida_1, par_bajada_3 
-                          UNION 
-                          SELECT par_subida_1, par_bajada_4, SUM(factor_expansion) AS peso   
-                          FROM viaje_util 
-                          WHERE netapa=4 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-20'  
-                          GROUP BY par_subida_1, par_bajada_4) AS viaje 
-                    GROUP BY par_subida, par_bajada) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_sabado_viaje.csv' WITH DELIMITER ';' CSV;"
-
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
-  
-  # Hora para el tramo domingo (21-04-2013)
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso 
-                    FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso 
-                          FROM viaje_util 
-                          WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-21' 
-                          GROUP BY par_subida_1, par_bajada_1  
-                          UNION 
-                          SELECT par_subida_1, par_bajada_2, SUM(factor_expansion) AS peso 
-                          FROM viaje_util 
-                          WHERE netapa=2 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-21' 
-                          GROUP BY par_subida_1, par_bajada_2 
-                          UNION 
-                          SELECT par_subida_1, par_bajada_3, SUM(factor_expansion) AS peso   
-                          FROM viaje_util 
-                          WHERE netapa=3 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-21'  
-                          GROUP BY par_subida_1, par_bajada_3 
-                          UNION 
-                          SELECT par_subida_1, par_bajada_4, SUM(factor_expansion) AS peso   
-                          FROM viaje_util 
-                          WHERE netapa=4 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                                (date_trunc('day', tiempo_subida_1)) = '2013-04-21'  
-                          GROUP BY par_subida_1, par_bajada_4) AS viaje 
-                    GROUP BY par_subida, par_bajada) 
-                    To '$RUTA_DATOS_CSV/${TRAMO}_domingo_viaje.csv' WITH DELIMITER ';' CSV;"
-
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
-COMENTARIO1
 fi
 
 NOMBRE_PARADAS_CSV="PARADAS.csv"
@@ -235,7 +95,6 @@ if [ "$GENERAR_CSV_PARADAS" = true ]; then
 fi 
 
 if [ "$GENERAR_PAJEK" = true ]; then
-  ####################################################################################
   rm -f $RUTA_DATOS_PAJEK/*.net
 
   for ARCHIVO_CSV in $RUTA_DATOS_CSV/*.csv; do
@@ -245,7 +104,6 @@ if [ "$GENERAR_PAJEK" = true ]; then
 fi
 
 if [ "$CALCULAR_PROPIEDADES_GRAFO" = true ]; then
-  ####################################################################################
   rm -f $RUTA_DATOS_IGRAPH/*.csv
 
   # IMPORTANTE: si no encuentra lib en share files al compilar hacer lo siguiente
@@ -272,7 +130,6 @@ if [ "$CALCULAR_PROPIEDADES_GRAFO" = true ]; then
 fi
 
 if [ "$GENERAR_CARTODB" = true ]; then
-  ####################################################################################
   rm -f -R $RUTA_DATOS_CARTODB/*.csv
 
   for ARCHIVO_CSV in $RUTA_DATOS_IGRAPH/*.csv; do
@@ -281,35 +138,6 @@ if [ "$GENERAR_CARTODB" = true ]; then
     php $RUTA_CODIGO/propiedades2cartodb.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CARTODB/ $HORA
   done
 fi
-
-if [ "$CONCATENAR_HORAS" = true ]; then
-  ####################################################################################
-
-  ENCABEZADO="Nombre latitud longitud fecha pagerank"
-  ARCHIVOS=("lunes_a_jueves" "viernes" "sabado" "domingo" "semana")
-
-  for ARCHIVO in ${ARCHIVOS[@]}; do
-
-    rm -f $RUTA_DATOS_CARTODB/$ARCHIVO.csv
-
-    echo "CONCATENANDO HORAS: Procesando $ARCHIVO"
-
-    for ARCHIVO_CSV in $RUTA_DATOS_CARTODB/*$ARCHIVO*.csv; do
-      # los archivos con ese tramo horario no me interesa concatenarlos
-      if [[ $ARCHIVO_CSV == *06-09* ]] || [[ $ARCHIVO_CSV == *18-21* ]] ; then
-        continue
-      fi 
-      cat $ARCHIVO_CSV >> $RUTA_DATOS_CARTODB/$ARCHIVO.csv
-    done 
-
-    # se eliminan los encabezados del archivo(uno por archivo concatenado)
-    sed -i '/^Nombre latitud/d' $RUTA_DATOS_CARTODB/$ARCHIVO.csv
-    # se agrega encabezado
-    echo "$ENCABEZADO" | cat - $RUTA_DATOS_CARTODB/$ARCHIVO.csv > $RUTA_DATOS_CARTODB/tmp && mv $RUTA_DATOS_CARTODB/tmp $RUTA_DATOS_CARTODB/$ARCHIVO.csv
-  done
-  
-  rm -f $RUTA_DATOS_CARTODB/tmp
-fi 
 
 # cambiamos el dueño de los archivos para poder verlos en el entorno de escritorio
 chown -R cephei $RUTA_DATOS
