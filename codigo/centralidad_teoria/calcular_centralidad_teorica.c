@@ -38,31 +38,21 @@ int main(int argc, char *argv[])
   fclose(archivo_pajek);
 
   // ************************************************
-  igraph_vector_t gtypes, vtypes, etypes;
-  igraph_strvector_t gnames, vnames, enames;
+  igraph_strvector_t vnames, enames;
   
-  igraph_vector_init(&gtypes, 0);
-  igraph_vector_init(&vtypes, 0);
-  igraph_vector_init(&etypes, 0);
-
-  igraph_strvector_init(&gnames, 0);
   igraph_strvector_init(&vnames, 0);
   igraph_strvector_init(&enames, 0);
 
-  igraph_cattribute_list(&grafo, &gnames, &gtypes, &vnames, &vtypes, &enames, &etypes);
+  igraph_cattribute_list(&grafo, 0, 0, &vnames, 0, &enames, 0);
 
   igraph_vector_init(&pesos, 0);
 
   // se crea el vector de pesos
   for (i=0; i<igraph_ecount(&grafo); i++) {
-     //printf("%s=", STR(enames, 0));
-     //igraph_real_printf(EAN(&grafo, STR(enames, 0), i));
-     //putchar('\n');
-     // se agregan los pesos al vector
      igraph_vector_insert(&pesos, i, EAN(&grafo, STR(enames, 0), i));
   }
   
-  // obtener peso máximo de los pesos
+  // obtener peso máximo
   igraph_real_t max_peso = igraph_vector_max(&pesos);
 
   // vector con pesos contrarrestados para que aquellos pesos más altos sean los más bajos y
@@ -72,8 +62,9 @@ int main(int argc, char *argv[])
   igraph_vector_init(&peso_complemento, igraph_vector_size(&pesos));
   // se suma 1 porque el 0.00 queda como -0.00 y se lanza error por peso negativo
   igraph_vector_fill(&peso_complemento, max_peso+1);
+  // restar elemento a elemento
   igraph_vector_sub(&pesos, &peso_complemento);
-  // para que quede positivo
+  // para que los valores queden positivo
   igraph_vector_scale(&pesos, -1);
 
   //fprintf(stderr, "El indice con peso máximo (%f) es %d\n", max_peso, igraph_vector_which_max(&pesos));
@@ -100,11 +91,6 @@ int main(int argc, char *argv[])
   
   igraph_strvector_destroy(&enames);
   igraph_strvector_destroy(&vnames);
-  igraph_strvector_destroy(&gnames);
-
-  igraph_vector_destroy(&etypes);
-  igraph_vector_destroy(&vtypes);
-  igraph_vector_destroy(&gtypes);
 
   igraph_destroy(&grafo);
 

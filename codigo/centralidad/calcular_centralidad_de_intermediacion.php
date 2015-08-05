@@ -5,7 +5,6 @@
  *  1 - Los viajes más cortos para nosotros son los viajes hechos por la gente (todas las configuraciones registradas).
  *  2 - El cálculo del indicador para un nodo k es la cantidad de veces que aparece éste en los viajes.
  */
-//ini_set('memory_limit', '50M');
 
 if ($argc !== 3) {
   echo "Uso: calcular_centralidad_de_intermediacion <CSV_VIAJES> <RUTA_SALIDA>".PHP_EOL;
@@ -40,6 +39,9 @@ while (($linea = fgets($archivo_viajes)) !== false) {
   // el viaje se divide entre todos sus paraderos de subida y bajada más el factor de expansión formando un arreglo.
   $viaje = explode(';', $linea);
 
+  // $viaje[0] = 'paradero de subida inicial del viaje'
+  // count($viaje)-2 = 'paradero de bajada final del viaje, se resta 2 porque los arreglos indexan desde 0 y 
+  //                    porque el último elemento es la cantidad de gente que realizó el viaje.'
   $orig_dest[$viaje[0]][$viaje[count($viaje)-2]][] = $viaje;
 }
 
@@ -52,7 +54,7 @@ $par_ij = 0;
 // recorremos la matriz
 foreach($orig_dest as $origen_id => $destinos) {
   foreach($destinos as $destino_id => $viajes) {
-    // $viajes tiene todos los viajes que van desde 'origen_id' a 'destino_id'
+    // $viajes tiene todos los viajes que van desde 'origen_id' a 'destino_id', distintos.
 
     //$num_viajes = count($viajes);
 

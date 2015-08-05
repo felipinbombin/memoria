@@ -12,13 +12,11 @@ GENERAR_VIAJE_CON_ETAPAS_CSV=false
 # crea el csv de paradas con toda su información (nombre, longitud, latitud, ...)
 GENERAR_CSV_PARADAS=false
 # generar archivos pajek
-GENERAR_PAJEK=false
+GENERAR_PAJEK=true
 # calcula la centralidad de intermediación  para cada nodo del grafo
 CALCULAR_CENTRALIDAD_DE_INTERMEDIACION_TEORICA=true
 # genera un csv a partir del archivo de generado por el calculo de la centralidad para poder ser mostrado en la herramienta cartodb.com 
 GENERAR_CARTODB=true
-# concatena los archivos creados por hora en un solo archivo para mostrar una secuencia en cartodb.com
-CONCATENAR_HORAS=false
 
 ####################################################################################
 # Ruta de los directorios usados por el script
@@ -52,7 +50,6 @@ TRAMOS=(06-09 18-21)
 # para diltrar por fecha usar       : (date_trunc('day', tiempo_subida))
 
 if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
-  ####################################################################################
   rm -f $RUTA_DATOS_CSV_ETAPA/*.csv
   rm -f $RUTA_DATOS_CSV_VIAJE/*.csv
 
@@ -67,126 +64,31 @@ if [ "$GENERAR_VIAJE_CON_ETAPAS_CSV" = true ]; then
    
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
 
-    CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                           par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, SUM(factor_expansion) AS peso 
-                    FROM viaje_util 
-                    WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION 
-                    GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                             par_subida_3, par_bajada_3, par_subida_4, par_bajada_4)  
-              To '$RUTA_DATOS_CSV_VIAJE/${TRAMO}_semana_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
-
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
-
-  # Hora para el tramo lunes-jueves (15-04-2013 al 18-04-2013)
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso 
-                    FROM etapa_util 
-                    WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida)) BETWEEN '2013-04-15' AND '2013-04-18' 
+    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(peso) AS peso 
+                    FROM (SELECT par_subida_1 AS par_subida, par_bajada_1 AS par_bajada, SUM(factor_expansion) AS peso
+                          FROM viaje_util 
+                          WHERE netapa=1 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION 
+                          GROUP BY par_subida_1, par_bajada_1  
+                          UNION 
+                          SELECT par_subida_1, par_bajada_2, SUM(factor_expansion) AS peso 
+                          FROM viaje_util 
+                          WHERE netapa=2 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION 
+                          GROUP BY par_subida_1, par_bajada_2 
+                          UNION 
+                          SELECT par_subida_1, par_bajada_3, SUM(factor_expansion) AS peso 
+                          FROM viaje_util 
+                          WHERE netapa=3 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION 
+                          GROUP BY par_subida_1, par_bajada_3 
+                          UNION 
+                          SELECT par_subida_1, par_bajada_4, SUM(factor_expansion) AS peso 
+                          FROM viaje_util 
+                          WHERE netapa=4 AND extract(hour from tiempo_subida_1) BETWEEN $CONDICION 
+                          GROUP BY par_subida_1, par_bajada_4) AS viaje 
                     GROUP BY par_subida, par_bajada) 
-              To '$RUTA_DATOS_CSV_ETAPA/${TRAMO}_lunes_a_jueves_etapa.csv' WITH DELIMITER ';' CSV;"
- 
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-
-    CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                           par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
-                           SUM(factor_expansion) AS peso 
-                    FROM viaje_util 
-                    WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida_1)) BETWEEN '2013-04-15' AND '2013-04-18' 
-                    GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                             par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-              To '$RUTA_DATOS_CSV_VIAJE/${TRAMO}_lunes_a_jueves_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
+              To '$RUTA_DATOS_CSV_VIAJE/${TRAMO}_semana_viaje.csv' WITH DELIMITER ';' CSV;"
 
     sudo -u postgres -i psql -d memoria -c "$CONSULTA"
   done
-  
-  # Hora para el tramo viernes (19-04-2013)
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso 
-                    FROM etapa_util 
-                    WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida)) = '2013-04-19' 
-                    GROUP BY par_subida, par_bajada) 
-              To '$RUTA_DATOS_CSV_ETAPA/${TRAMO}_viernes_etapa.csv' WITH DELIMITER ';' CSV;"
-                                                                                            
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-
-    CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                           par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
-                           SUM(factor_expansion) AS peso 
-                    FROM viaje_util 
-                    WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida_1)) = '2013-04-19' 
-                    GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                             par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-                    To '$RUTA_DATOS_CSV_VIAJE/${TRAMO}_viernes_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
-
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
-
-  # Hora para el tramo sábado (20-04-2013)
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso 
-                    FROM etapa_util 
-                    WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida)) = '2013-04-20' 
-                    GROUP BY par_subida, par_bajada) 
-              To '$RUTA_DATOS_CSV_ETAPA/${TRAMO}_sabado_etapa.csv' WITH DELIMITER ';' CSV;"
-                                                                                            
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-
-    CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                           par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
-                           SUM(factor_expansion) AS peso 
-                    FROM viaje_util 
-                    WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida_1)) = '2013-04-20' 
-                    GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                             par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-                    To '$RUTA_DATOS_CSV_VIAJE/${TRAMO}_sabado_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
-
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
-  
-  # Hora para el tramo domingo (21-04-2013)
-  for TRAMO in ${TRAMOS[@]}; do
-    CONDICION=$(echo "$TRAMO" | sed -r 's/-/ AND /g')
-    HORA=$(echo "$TRAMO" | cut -d '-' -f 1)
-    
-    CONSULTA="copy (SELECT par_subida, par_bajada, SUM(factor_expansion) AS peso 
-                    FROM etapa_util 
-                    WHERE extract(hour from tiempo_subida) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida)) = '2013-04-21' 
-                    GROUP BY par_subida, par_bajada) 
-              To '$RUTA_DATOS_CSV_ETAPA/${TRAMO}_domingo_etapa.csv' WITH DELIMITER ';' CSV;"
-                                                                                            
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-
-
-    CONSULTA="copy (SELECT par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                           par_subida_3, par_bajada_3, par_subida_4, par_bajada_4, 
-                           SUM(factor_expansion) AS peso 
-                    FROM viaje_util 
-                    WHERE extract(hour from tiempo_subida_1) BETWEEN $CONDICION AND 
-                          (date_trunc('day', tiempo_subida_1)) = '2013-04-21' 
-                    GROUP BY par_subida_1, par_bajada_1, par_subida_2, par_bajada_2, 
-                             par_subida_3, par_bajada_3, par_subida_4, par_bajada_4) 
-                    To '$RUTA_DATOS_CSV_VIAJE/${TRAMO}_domingo_viaje_con_etapas.csv' WITH DELIMITER ';' CSV;"
-
-    sudo -u postgres -i psql -d memoria -c "$CONSULTA"
-  done
-
 fi
 
 NOMBRE_PARADAS_CSV="PARADAS.csv"
@@ -202,7 +104,6 @@ if [ "$GENERAR_CSV_PARADAS" = true ]; then
 fi 
 
 if [ "$GENERAR_PAJEK" = true ]; then
-  ####################################################################################
   rm -f $RUTA_DATOS_PAJEK/*.net
 
   # se ocupan los datos de la tabla de etapas que están en los datos del pagerank
@@ -213,7 +114,6 @@ if [ "$GENERAR_PAJEK" = true ]; then
 fi
 
 if [ "$CALCULAR_CENTRALIDAD_DE_INTERMEDIACION_TEORICA" = true ]; then
-  ####################################################################################
   rm -f $RUTA_DATOS_CENTRALIDAD/*.csv
 
   # IMPORTANTE: si no encuentra lib en share files al compilar hacer lo siguiente
@@ -226,7 +126,7 @@ if [ "$CALCULAR_CENTRALIDAD_DE_INTERMEDIACION_TEORICA" = true ]; then
   gcc $RUTA_CODIGO/calcular_centralidad_teorica.c -I$RUTA_IGRAPH_H -L$RUTA_IGRAPH_LIB -ligraph -o $NOMBRE_EJECUTABLE
 
   for ARCHIVO_PAJEK in $RUTA_DATOS_PAJEK/*.net; do
-    echo "CALCULAR betweeness centrality: Procesando $ARCHIVO_PAJEK"
+    echo "CALCULAR BETWEENESS CENTRALITY: Procesando $ARCHIVO_PAJEK"
 
     NOMBRE_CSV=$(echo "$ARCHIVO_PAJEK" | cut -d '.' -f 1 | rev | cut -d '/' -f 1 | rev)
 
@@ -240,7 +140,6 @@ if [ "$CALCULAR_CENTRALIDAD_DE_INTERMEDIACION_TEORICA" = true ]; then
 fi
 
 if [ "$GENERAR_CARTODB" = true ]; then
-  ####################################################################################
   rm -f -R $RUTA_DATOS_CARTODB/*.csv
 
   for ARCHIVO_CSV in $RUTA_DATOS_CENTRALIDAD/*.csv; do
@@ -249,35 +148,6 @@ if [ "$GENERAR_CARTODB" = true ]; then
     php $RUTA_CODIGO/centralidad2cartodb.php $RUTA_DATOS/$NOMBRE_PARADAS_CSV $ARCHIVO_CSV $RUTA_DATOS_CARTODB/ $HORA
   done
 fi
-
-if [ "$CONCATENAR_HORAS" = true ]; then
-  ####################################################################################
-
-  ENCABEZADO="Nombre latitud longitud fecha centralidad"
-  ARCHIVOS=("lunes_a_jueves" "viernes" "sabado" "domingo" "semana")
-
-  for ARCHIVO in ${ARCHIVOS[@]}; do
-
-    rm -f $RUTA_DATOS_CARTODB/$ARCHIVO.csv
-
-    echo "CONCATENANDO HORAS: Procesando $ARCHIVO"
-
-    for ARCHIVO_CSV in $RUTA_DATOS_CARTODB/*$ARCHIVO*.csv; do
-      # los archivos con ese tramo horario no me interesa concatenarlos
-      if [[ $ARCHIVO_CSV == *06-09* ]] || [[ $ARCHIVO_CSV == *18-21* ]] ; then
-        continue
-      fi 
-      cat $ARCHIVO_CSV >> $RUTA_DATOS_CARTODB/$ARCHIVO.csv
-    done 
-
-    # se eliminan los encabezados del archivo(uno por archivo concatenado)
-    sed -i '/^Nombre latitud/d' $RUTA_DATOS_CARTODB/$ARCHIVO.csv
-    # se agrega encabezado
-    echo "$ENCABEZADO" | cat - $RUTA_DATOS_CARTODB/$ARCHIVO.csv > $RUTA_DATOS_CARTODB/tmp && mv $RUTA_DATOS_CARTODB/tmp $RUTA_DATOS_CARTODB/$ARCHIVO.csv
-  done
-  
-  rm -f $RUTA_DATOS_CARTODB/tmp
-fi 
 
 # cambiamos el dueño de los archivos para poder verlos en el entorno de escritorio
 chown -R cephei $RUTA_DATOS
