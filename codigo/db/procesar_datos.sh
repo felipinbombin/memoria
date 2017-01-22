@@ -11,15 +11,15 @@ GENERAR_BD_Y_CARGAR_DATOS=false
 # Elimina los registros existentes en las tablas etapa_util, viaje_util, parada_util
 # y luego las llena nuevamente a partir de las tablas etapas, viajes, redparadas y estaciones_metro
 # (esta última primero se modifica para que haga el match con los datos en las tablas etapa_util y viaje_util). 
-FILTRAR_DATOS=false
+FILTRAR_DATOS=true
 
 RUTA_BACKUP=/home/cephei/Desktop/backup
 RUTA_ARCHIVOS=/home/cephei/Desktop/memoria
-RUTA_CODIGO=$RUTA_ARCHIVOS/codigo
+RUTA_CODIGO=$RUTA_ARCHIVOS/codigo/db
 NOMBRE_BD="memoria"
 
 if [ "$GENERAR_BD_Y_CARGAR_DATOS" = true ]; then
-    
+  
   sudo -u postgres -i psql -f $RUTA_CODIGO/crear_db.sql
   sudo -u postgres -i psql -d $NOMBRE_BD -f $RUTA_CODIGO/estructura_db.sql
 
@@ -30,6 +30,6 @@ if [ "$GENERAR_BD_Y_CARGAR_DATOS" = true ]; then
 fi
 
 if [ "$FILTRAR_DATOS" = true ]; then
-  sudo -u postgres -i psql -d $NOMBRE_BD -f $RUTA_CODIGO/filtrar_datos.sql
+  sudo -u postgres -i psql -d $NOMBRE_BD -f $RUTA_CODIGO/filtrar_normalizar_datos.sql
 fi
 

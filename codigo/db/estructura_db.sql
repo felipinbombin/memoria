@@ -50,7 +50,7 @@ ALTER TABLE public.etapas OWNER TO felipe;
 
 -- crear tabla de viajes
 CREATE TABLE viajes (
-  id character varying(20),
+  id bigint,
   nviaje integer,
   netapa integer,
   etapas character varying(1000),
@@ -251,7 +251,9 @@ CREATE TABLE parada_util (
   codigo character varying(30),
   nombre character varying(500),
   latitud double precision,
-  longitud double precision
+  longitud double precision,
+  comuna character varying(100),
+  diseno_777 character varying(100)
 );
 
 ALTER TABLE public.parada_util OWNER TO felipe;

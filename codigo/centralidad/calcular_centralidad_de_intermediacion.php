@@ -56,18 +56,19 @@ foreach($orig_dest as $origen_id => $destinos) {
   foreach($destinos as $destino_id => $viajes) {
     // $viajes tiene todos los viajes que van desde 'origen_id' a 'destino_id', distintos.
 
-    //$num_viajes = count($viajes);
+    $num_viajes = count($viajes);
 
     // Variante considerando el factor de expansión.
+    /*
     $num_viajes = 0;
     foreach($viajes as $viaje) {
       $num_viajes = $num_viajes + $viaje[count($viaje)-1];
     }
-
+    */
     foreach($viajes as $viaje) {
 
-      $volumen = $viaje[count($viaje)-1]; // Variante considerando el factor de expansión
-      //$volumen = 1;
+      //$volumen = $viaje[count($viaje)-1]; // Variante considerando el factor de expansión
+      $volumen = 1;
 
       $fraccion = $num_viajes==0?0:$volumen/$num_viajes;
 
