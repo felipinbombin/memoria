@@ -1,5 +1,8 @@
 \timing on
 
+-- Se elimina registro presente en tabla de etapas pero no en tabla viajes
+DELETE FROM etapas where id=4294527652;
+
 -- Se eliminan todos los datos que estén presentes.
 DELETE FROM etapa_util;
 DELETE FROM viaje_util;
