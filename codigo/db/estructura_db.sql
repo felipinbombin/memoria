@@ -229,7 +229,7 @@ ALTER TABLE public.etapa_util OWNER TO felipe;
 
 -- crear tabla de viaje_util
 CREATE TABLE viaje_util (
-  id character varying(20),
+  id bigint,
   nviaje integer,
   netapa integer,
   par_subida_1 character varying(50),

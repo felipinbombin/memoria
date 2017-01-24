@@ -8,14 +8,19 @@ DELETE FROM etapa_util;
 DELETE FROM viaje_util;
 DELETE FROM parada_util;
 
+-- Se cambia el factor_exp_etapa NULL por 0 para cuadrar la cantidad de registros
+-- entre la tabla viaje_util y etapa_util
+UPDATE etapas SET factor_exp_etapa = 0 WHERE factor_exp_etapa IS NULL;
+UPDATE viajes SET factorexpansion = 0 WHERE factorexpansion IS NULL;
+
 -- Se quitan etapas sin paradero de subida o bajada y se guardan
 -- en tabla etapa_util
 INSERT INTO etapa_util
 SELECT id, nviaje, netapa, tiempo_subida, par_subida, par_bajada, factor_exp_etapa
 FROM etapas 
-WHERE par_subida IS NOT NULL AND 
-      par_bajada IS NOT NULL AND 
-      tiempo_subida IS NOT NULL AND 
+WHERE par_subida       IS NOT NULL AND 
+      par_bajada       IS NOT NULL AND 
+      tiempo_subida    IS NOT NULL AND 
       factor_exp_etapa IS NOT NULL;  
 
 -- Se quitan viajes con falta de información
@@ -32,10 +37,15 @@ SELECT id, nviaje, netapa,
        factorexpansion
 FROM viajes
 WHERE netapa=4 AND netapassinbajada = 0 AND 
-      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL AND  
-      paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL AND tiempobajada_1era < tiemposubida_2da AND
-      paraderosubida_3era IS NOT NULL AND paraderobajada_3era IS NOT NULL AND tiempobajada_2da < tiemposubida_3era AND
-      paraderosubida_4ta  IS NOT NULL AND paraderobajada_4ta  IS NOT NULL AND tiempobajada_3era < tiemposubida_4ta AND factorexpansion IS NOT NULL;
+      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND 
+      tiemposubida_1era   IS NOT NULL AND  
+      paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL AND 
+      tiempobajada_1era < tiemposubida_2da AND
+      paraderosubida_3era IS NOT NULL AND paraderobajada_3era IS NOT NULL AND 
+      tiempobajada_2da < tiemposubida_3era AND
+      paraderosubida_4ta  IS NOT NULL AND paraderobajada_4ta  IS NOT NULL AND 
+      tiempobajada_3era < tiemposubida_4ta AND 
+      factorexpansion IS NOT NULL;
 
 -- Viajes con 3 etapas
 INSERT INTO viaje_util
@@ -47,9 +57,13 @@ SELECT id, nviaje, netapa,
        factorexpansion
 FROM viajes
 WHERE netapa=3 AND netapassinbajada = 0 AND 
-      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL AND  
-      paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL AND tiempobajada_1era < tiemposubida_2da AND
-      paraderosubida_3era IS NOT NULL AND paraderobajada_3era IS NOT NULL AND tiempobajada_2da < tiemposubida_3era AND factorexpansion IS NOT NULL;
+      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND 
+      tiemposubida_1era   IS NOT NULL AND  
+      paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL AND 
+      tiempobajada_1era < tiemposubida_2da AND
+      paraderosubida_3era IS NOT NULL AND paraderobajada_3era IS NOT NULL AND 
+      tiempobajada_2da < tiemposubida_3era AND 
+      factorexpansion     IS NOT NULL;
 
 -- Viajes con 2 etapas
 INSERT INTO viaje_util
@@ -61,8 +75,11 @@ SELECT id, nviaje, netapa,
        factorexpansion
 FROM viajes
 WHERE netapa=2 AND netapassinbajada = 0 AND 
-      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL AND  
-      paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL AND tiempobajada_1era < tiemposubida_2da AND factorexpansion IS NOT NULL;
+      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND 
+      tiemposubida_1era   IS NOT NULL AND  
+      paraderosubida_2da  IS NOT NULL AND paraderobajada_2da  IS NOT NULL AND 
+      tiempobajada_1era < tiemposubida_2da AND 
+      factorexpansion     IS NOT NULL;
 
 -- Viajes con 1 etapa
 INSERT INTO viaje_util
@@ -74,16 +91,17 @@ SELECT id, nviaje, netapa,
        factorexpansion
 FROM viajes
 WHERE netapa=1 AND netapassinbajada = 0 AND 
-      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND tiemposubida_1era IS NOT NULL AND factorexpansion IS NOT NULL;
+      paraderosubida_1era IS NOT NULL AND paraderobajada_1era IS NOT NULL AND 
+      tiemposubida_1era   IS NOT NULL AND 
+      factorexpansion     IS NOT NULL;
+
 
 -- Eliminar registros de la tabla de etapas que fueron eliminados por la condicion de tiempo en la tabla de viajes
 -- para ser consistentes entre la tabla de viajes y etapas
-
-DELETE FROM etapa_util WHERE (NOT EXISTS (SELECT * 
-                                          FROM viaje_util 
-                                          WHERE cast(etapa_util.id as text)=viaje_util.id AND 
-                                                etapa_util.nviaje=viaje_util.nviaje));
-
+DELETE FROM etapa_util WHERE NOT EXISTS (SELECT * 
+                                         FROM viaje_util 
+                                         WHERE etapa_util.id    =viaje_util.id AND 
+                                               etapa_util.nviaje=viaje_util.nviaje);
 
 -- Se cambian algunos codigos para que coincidan con los registros en las tablas etapa_util y viaje_util
 UPDATE estaciones_metro SET codigotrx = upper(codigotrx);
