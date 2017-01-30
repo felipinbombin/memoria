@@ -39,13 +39,13 @@ int main(int argc, char *argv[])
   igraph_t grafo;
   // subgrafo presente en una zona eod2012
   igraph_t subgrafo;
-  // Matriz de zonas. Una fila contiene todos los nodos presentes en una zona.
+  // Matriz de comunidades. Una fila contiene todos los nodos presentes en una comunidad.
   igraph_matrix_t matriz;
-  // las filas corresponden a la cantidad de zonas presentes en la eod2012
-  long int filas = 866; 
-  // las columnas corresponde a la cantidad máxima de nodos que hay en una zona.
-  long int columnas = 107;
-  // vector con las columnas usadas por cada zona (las zonas tienen cantidad de nodos variable)
+  // las filas corresponden a la cantidad de comunidades presentes en el archivo par_nodos_zona.csv
+  long int filas = 41; 
+  // las columnas corresponde a la cantidad máxima de nodos que hay en una comunidad.
+  long int columnas = 1926;
+  // vector con las columnas usadas por cada comunidad (las zonas tienen cantidad de nodos variable)
   igraph_vector_t columnas_ocupadas;
 
   // Vector con los nodos de zona.
@@ -71,17 +71,18 @@ int main(int argc, char *argv[])
   // Archivo pajek de la red completa. Lo importante es que contiene el grafo completo de la red.
   FILE *archivo_pajek;
   FILE *archivo_zonas;
+  FILE *salida;
 
   igraph_vector_t vtypes;
   igraph_strvector_t vnames;
-  
+
   long indice_max_pagerank_local;
 
   /****************************************************************
    * Inicialización de variables                                  *
    ****************************************************************/
   valor = 1;
-  // incialmente todas las zonas tienen 0 nodos dentro de ella.
+  // incialmente todas las comunidades tienen 0 nodos dentro de ella.
   igraph_vector_init(&columnas_ocupadas, filas);
   igraph_vector_fill(&columnas_ocupadas, 0);
 
@@ -93,7 +94,7 @@ int main(int argc, char *argv[])
   // Se abren los archivos, "rt" significa abrir un archivo para leer texto.
   archivo_pajek= fopen(argv[1], "rt");
   archivo_zonas= fopen(argv[2], "rt");// nodo_id comienza desde cero.
-  
+
   if(archivo_pajek == NULL) 
   {
     perror("Error al abrir archivo pajek.");
@@ -126,14 +127,19 @@ int main(int argc, char *argv[])
     comunidad_id = atoi(obtener_campo(linea_para_comunidad, 3));
 
     // se resta uno porque los vectores y matrices indexan desde 0.
-    zona--;
+    comunidad_id--;
 
-    // Se inserta el nodo en la zona (fila) correspondiente.
-    igraph_matrix_set(&matriz, zona, VECTOR(columnas_ocupadas)[zona], nodo_id);
+    // Se inserta el nodo en la comunidad (fila) correspondiente.
+    igraph_matrix_set(&matriz, comunidad_id, VECTOR(columnas_ocupadas)[comunidad_id], nodo_id);
     // Marcar columna ocupada para esa zona.
-    VECTOR(columnas_ocupadas)[zona] = VECTOR(columnas_ocupadas)[zona] + 1;
+    VECTOR(columnas_ocupadas)[comunidad_id] = VECTOR(columnas_ocupadas)[comunidad_id] + 1;
     // se agrega el atributo "comunidad_id a cada vertice del grafo". 
+    comunidad_id++; 
     SETVAN(&grafo, "comunidad_id", nodo_id, comunidad_id);
+    // se agrega el atributo "zona_id a cada vertice del grafo". 
+    SETVAN(&grafo, "zona_id", nodo_id, zona);
+    // el nodo_id del grafo original
+    SETVAN(&grafo, "nodo_id_grafo_original", nodo_id, nodo_id);
 
     free(linea_para_nodo_id);
     free(linea_para_zona);
@@ -144,14 +150,20 @@ int main(int argc, char *argv[])
   fclose(archivo_pajek);
   fclose(archivo_zonas);
 
+  // salida del csv, con stderr se muestra en la consola
+  salida = stdout;
+
   /****************************************************************
    * Procedimiento                                                *
    ****************************************************************/
   fprintf(stderr, "La matriz y el grafo han sido formados exitosamente.\n");
 
-  // por cada zona
+  // Se imprime csv (nodo_id, comunidad_id, zona_id, pagerank)
+  fprintf(salida, "nodo_id comunidad_id zona_id pagerank_por_comunidad\n");
+
+  // por cada comunidad
   for (i=0; i<filas; i++) {
-    
+
     igraph_vector_init(&resultado_pagerank, 0);
     igraph_vector_init(&nodos_de_zona, 0);
     igraph_vector_init(&pesos, 0);
@@ -160,13 +172,13 @@ int main(int argc, char *argv[])
     igraph_matrix_get_row(&matriz, &nodos_de_zona, i);
     igraph_vector_resize(&nodos_de_zona, VECTOR(columnas_ocupadas)[i]); 
     igraph_induced_subgraph(&grafo, &subgrafo, igraph_vss_vector(&nodos_de_zona), IGRAPH_SUBGRAPH_AUTO);
-    
+
     // Obtener vector de atributos
     igraph_vector_init(&vtypes, 0);
     igraph_strvector_init(&vnames, 0);
 
     igraph_cattribute_list(&subgrafo, 0, 0, &vnames, &vtypes, 0, 0);
-    
+
     for (j=0; j<igraph_ecount(&subgrafo); j++) {
       igraph_vector_insert(&pesos, j, EAN(&subgrafo, "weight", j));
     }
@@ -179,49 +191,23 @@ int main(int argc, char *argv[])
       return(-1);
     }
 
-    // si la zona no contiene nodos 
-    if (igraph_vector_size(&resultado_pagerank) == 0) {
-      comunidad_id = -1;
-    } else {
-      // tomamos el máximo pagerank que pertenezca a alguna de las comunidades mas significativa.
-      for (j=0; j<igraph_vector_size(&resultado_pagerank); j++) {
-        // Obtener nodo con maximo pagerank 
-        indice_max_pagerank_local = igraph_vector_which_max(&resultado_pagerank);
-        
-        if (i+1 == 176) {
-          fprintf(stderr, "N° nodos: %d |valor del indice de la zona 176: %d | comunidad_id: ", igraph_vector_size(&resultado_pagerank), indice_max_pagerank_local);
-          igraph_real_fprintf(stderr, VAN(&subgrafo, "comunidad_id", indice_max_pagerank_local));
-          fprintf(stderr, "\n");
-        }
-
-        comunidad_id = VAN(&subgrafo, "comunidad_id", indice_max_pagerank_local);
-
-        if (comunidad_id == 2 || comunidad_id == 3 || comunidad_id == 4 || comunidad_id == 5 ||
-            comunidad_id == 6 || comunidad_id == 7 || comunidad_id == 8 || comunidad_id == 9 ||
-            comunidad_id == 10 || comunidad_id == 11) {
-          break;
-        } else {
-          // si no pertenece, buscar el segundo máximo.
-          VECTOR(resultado_pagerank)[indice_max_pagerank_local] = -1;
-          comunidad_id = -1;
-        }
+    for (j=0; j<igraph_vcount(&subgrafo); j++) {      
+      igraph_real_fprintf(salida, VAN(&subgrafo, "nodo_id_grafo_original", j)); 
+      fprintf(salida,";");
+      igraph_real_fprintf(salida, VAN(&subgrafo, "comunidad_id", j));
+      fprintf(salida,";");
+      igraph_real_fprintf(salida, VAN(&subgrafo, "zona_id", j));
+      fprintf(salida,";");
+      // si la comunidad es la {2,3,4,5,6,7,8,9,10,11} se imprime su pagerank, ya que son
+      // las comunidades significativas, el resto es cero.
+      if (i+1 == 2 || i+1 == 3 || i+1 == 4 || i+1 == 5 || i+1 == 6 ||
+          i+1 == 7 || i+1 == 8 || i+1 == 9 || i+1 == 10 || i+1 == 11) {
+        igraph_real_fprintf(salida, VECTOR(resultado_pagerank)[j]);
+      } else {
+        igraph_real_fprintf(salida, 0);
       }
+      fprintf(salida, "\n");
     }
-    // obtenemos su comunidad_id e imprimir una consulta sql para actualizar el campo en la tabla que contiene
-    // los datos de la eod2012
-    fprintf(stdout, "UPDATE eod2012 SET comunidad_id = "); 
-
-    if (indice_max_pagerank_local != -1) {
-      igraph_real_fprintf(stdout, comunidad_id);
-    } else {
-      fprintf(stdout, " -1");
-    }
-
-    fprintf(stdout, " WHERE zona = %d;\n", i + 1); 
-
-    //printf("El grafo tiene %d vertices y %d arcos\n", igraph_vcount(&grafo), igraph_ecount(&grafo));
-    //printf("cantidad de pagerank: %d", igraph_vector_size(&resultado));
-    //print_vector(&resultado, stdout);
 
     igraph_destroy(&subgrafo);
 
@@ -231,7 +217,6 @@ int main(int argc, char *argv[])
 
     igraph_strvector_destroy(&vnames);
     igraph_vector_destroy(&vtypes);
-
   }
 
   igraph_destroy(&grafo);
